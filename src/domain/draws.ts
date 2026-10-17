@@ -30,6 +30,7 @@ export function roundRobin(size: number) {
   return fixtures;
 }
 export type DrawSource =
+  | { seed: number }
   | { group: number; place: number }
   | { match: number; outcome: "winner" | "loser" };
 export type ClassificationMatch = {
@@ -74,4 +75,18 @@ export function classificationGraph(sources: DrawSource[]) {
   }
   expand(sources, 1, 1, size);
   return matches;
+}
+
+export function balancedSeedOrder(size: number): number[] {
+  if (
+    !Number.isInteger(size) ||
+    size < 2 ||
+    size > 32 ||
+    (size & (size - 1)) !== 0
+  )
+    throw new Error("Unsupported seeded knockout size");
+  let order = [1, 2];
+  for (let capacity = 4; capacity <= size; capacity *= 2)
+    order = order.flatMap((seed) => [seed, capacity + 1 - seed]);
+  return order;
 }

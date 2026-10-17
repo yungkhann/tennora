@@ -3,6 +3,7 @@ import {
   snakePosition,
   roundRobin,
   classificationGraph,
+  balancedSeedOrder,
 } from "../../src/domain/draws";
 it("snakes 24 seeds evenly through A–D without duplicate group slots", () => {
   const positions = Array.from({ length: 24 }, (_, i) =>
@@ -61,7 +62,9 @@ it("classification produces all eight places via acyclic winner/loser paths in t
     const resolve = (s: typeof m.a): string =>
       "group" in s
         ? `${s.group}:${s.place}`
-        : participants.get(s.match)![s.outcome];
+        : "match" in s
+          ? participants.get(s.match)![s.outcome]
+          : String(s.seed);
     const a = resolve(m.a),
       b = resolve(m.b);
     expect(a).not.toBe(b);
@@ -82,4 +85,45 @@ it.each([0, 1, 3, 6])("rejects invalid classification entry count %i", (size) =>
       Array.from({ length: size }, (_, i) => ({ group: i + 1, place: 1 })),
     ),
   ).toThrow(),
+);
+
+it.each([2, 4, 8, 16, 32])(
+  "balanced seed map %i separates favourites and classifies every place",
+  (size) => {
+    const order = balancedSeedOrder(size);
+    expect([...order].sort((a, b) => a - b)).toEqual(
+      Array.from({ length: size }, (_, i) => i + 1),
+    );
+    expect(order.slice(0, size / 2)).toContain(1);
+    if (size > 2) expect(order.slice(size / 2)).toContain(2);
+    const graph = classificationGraph(order.map((seed) => ({ seed }))),
+      results = new Map<number, { winner: number; loser: number }>(),
+      places = new Map<number, number>();
+    for (const m of graph) {
+      const resolve = (s: typeof m.a): number =>
+        "seed" in s
+          ? s.seed
+          : "match" in s
+            ? results.get(s.match)![s.outcome]
+            : 0;
+      const a = resolve(m.a),
+        b = resolve(m.b);
+      expect(a).not.toBe(b);
+      const winner = Math.min(a, b),
+        loser = Math.max(a, b);
+      results.set(m.number, { winner, loser });
+      if (m.to - m.from === 1) {
+        places.set(m.from, winner);
+        places.set(m.to, loser);
+      }
+    }
+    expect(graph).toHaveLength((size * Math.log2(size)) / 2);
+    expect([...places.entries()].sort((a, b) => a[0] - b[0])).toEqual(
+      Array.from({ length: size }, (_, i) => [i + 1, i + 1]),
+    );
+  },
+);
+it.each([1, 3, 6, 64, 1024])(
+  "rejects unsupported standalone knockout size %i",
+  (size) => expect(() => balancedSeedOrder(size)).toThrow(),
 );

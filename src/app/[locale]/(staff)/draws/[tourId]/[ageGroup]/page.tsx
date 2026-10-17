@@ -121,7 +121,9 @@ export default async function Page({
   const label = (group: (typeof groups)[number]) =>
     group.stages.kind === "round_robin"
       ? `${t.group} ${group.label}`
-      : `${t.knockout} ${group.stages.ordinal - 1}`;
+      : group.stages.ordinal === 1
+        ? t.knockout
+        : `${t.knockout} ${group.stages.ordinal - 1}`;
   const teamName = (id: string | null) =>
     namesResult?.data?.find((e) => e.subteam_id === id)?.subteams.teams.name ??
     t.toBeDetermined;

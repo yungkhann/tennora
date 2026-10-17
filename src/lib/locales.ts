@@ -96,7 +96,7 @@ const en = {
   seedRosterRequired:
     "Every club needs at least three active eligible boys and two active eligible girls on its season roster before this draw can be seeded.",
   drawUnsupported:
-    "This stage format needs a supported draw map. The confirmed four-group, three-bracket map and standalone round-robin groups are available.",
+    "This stage format needs a supported draw map. Available maps: the confirmed four-group, three-bracket format; standalone round-robin groups; and seeded knockout sizes 2, 4, 8, 16 or 32.",
   drawGroups: "Draw groups and brackets",
   frozenSeeds: "Frozen seeds",
   frozenRating: "Frozen team rating",
@@ -463,7 +463,7 @@ const ru: Messages = {
   seedRosterRequired:
     "Для посева в составе каждого клуба должны быть минимум три активных мальчика и две активные девочки этого возраста.",
   drawUnsupported:
-    "Для этого формата нужна поддерживаемая схема жеребьёвки. Доступны утверждённые четыре группы с тремя сетками и отдельные круговые группы.",
+    "Для этого формата нужна поддерживаемая схема жеребьёвки. Доступны утверждённые четыре группы с тремя сетками, отдельные круговые группы и посеянные сетки на 2, 4, 8, 16 или 32 участника.",
   drawGroups: "Группы и сетки жеребьёвки",
   frozenSeeds: "Зафиксированный посев",
   frozenRating: "Зафиксированный рейтинг команды",
@@ -829,7 +829,7 @@ const kk: Messages = {
   seedRosterRequired:
     "Себу үшін әр клубтың маусым құрамында осы жастағы кемінде үш белсенді ұл және екі белсенді қыз болуы керек.",
   drawUnsupported:
-    "Бұл пішімге қолдау көрсетілетін жеребе сызбасы керек. Бекітілген төрт топ пен үш тор, сондай-ақ жеке айналмалы топтар қолжетімді.",
+    "Бұл пішімге қолдау көрсетілетін жеребе сызбасы керек. Бекітілген төрт топ пен үш тор, жеке айналмалы топтар және 2, 4, 8, 16 не 32 қатысушыға себілген торлар қолжетімді.",
   drawGroups: "Жеребе топтары мен торлары",
   frozenSeeds: "Бекітілген себу",
   frozenRating: "Бекітілген команда рейтингі",

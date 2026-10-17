@@ -39,3 +39,11 @@ D3a integration inventory refinement: also update `src/features/lineups/access.t
 D3a verification inventory also includes `scripts/test-standings-concurrency.mjs` and its package script, proving two overlapping Organizer requests retain exactly one final tie receipt/audit.
 
 D3a is verified in MILESTONE_D3A_VERIFICATION.md. FR-7 also requires Organizer adjustment before publication: D3c will append an audited draft seed adjustment while preserving the chosen frozen player/rating inputs, rebuild its graph and reject published changes. D is not complete until this gate is verified.
+
+## D3b — seeded standalone knockout draws
+
+D3a is committed as `dc68819`. Exact planned files: `supabase/migrations/202610180002_seeded_knockout.sql`, `supabase/tests/010_knockout.sql`, regenerated types, `src/domain/draws.ts`, `tests/unit/draws.test.ts`, draw route/locales, `tests/e2e/knockout.spec.ts`, a fixture option for the existing draw helper, and milestone/database/status documentation.
+
+Provide immutable balanced seed-map data for practical power-of-two sizes 2, 4, 8, 16 and 32. Initial participants come from frozen entry sources; later rounds retain winner/loser edges and all-place classification. Opposite halves keep seeds 1/2 apart until the final, quarters keep the top four apart, and every entry appears once. Unsupported sizes/maps fail explicitly without a partial graph. Source readiness validates frozen entry identity/draw as well as earlier results. Existing confirmed 4x6/three-bracket generation remains unchanged. D3c will add Organizer seed adjustment; do not mark D complete before that verification.
+
+D3b is verified in MILESTONE_D3B_VERIFICATION.md; D3c remains before completing Task D.

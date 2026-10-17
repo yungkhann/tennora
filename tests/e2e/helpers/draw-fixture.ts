@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { buildStageTemplate } from "../../../src/domain/stage-templates";
 import type { Database } from "../../../src/lib/supabase/database.types";
-export async function drawFixture() {
+export async function drawFixture(options: { knockoutSize?: number } = {}) {
   const backend = process.env.NEXT_PUBLIC_SUPABASE_URL!,
     secret = process.env.E2E_SUPABASE_SERVICE_ROLE_KEY!;
   if (new URL(backend).hostname !== "127.0.0.1" || !secret)
@@ -299,11 +299,11 @@ export async function drawFixture() {
         template_id: template,
         template_name: `Draw Template ${token}`,
         definition: buildStageTemplate({
-          kind: "composite",
+          kind: options.knockoutSize ? "knockout" : "composite",
           groupCount: 4,
           groupSize: 6,
           bracketCount: 3,
-          knockoutSize: 8,
+          knockoutSize: options.knockoutSize ?? 8,
         }),
       }),
     );
@@ -326,7 +326,7 @@ export async function drawFixture() {
         timezone_name: "Asia/Almaty",
       }),
     );
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < (options.knockoutSize ?? 24); i++) {
       const club = randomUUID();
       clubs.push(club);
       check(

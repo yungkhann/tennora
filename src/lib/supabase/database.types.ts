@@ -379,6 +379,22 @@ export type Database = {
           },
         ];
       };
+      knockout_seed_maps: {
+        Row: {
+          seeds: NonNullable<Json>;
+          size: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          seeds: NonNullable<Json>;
+          size: number;
+        };
+        Update: {
+          seeds?: NonNullable<Json>;
+          size?: number;
+        };
+        Relationships: [];
+      };
       lineup_replacements: {
         Row: {
           changed_at: string;
@@ -553,6 +569,7 @@ export type Database = {
           match_id: string;
           outcome: string | null;
           side: string;
+          source_entry_id: string | null;
           source_group_id: string | null;
           source_match_id: string | null;
           source_place: number | null;
@@ -564,6 +581,7 @@ export type Database = {
           match_id: string;
           outcome?: string | null;
           side: string;
+          source_entry_id?: string | null;
           source_group_id?: string | null;
           source_match_id?: string | null;
           source_place?: number | null;
@@ -574,6 +592,7 @@ export type Database = {
           match_id?: string;
           outcome?: string | null;
           side?: string;
+          source_entry_id?: string | null;
           source_group_id?: string | null;
           source_match_id?: string | null;
           source_place?: number | null;
@@ -586,6 +605,13 @@ export type Database = {
             columns: ["match_id"];
             isOneToOne: false;
             referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_sources_source_entry_id_fkey";
+            columns: ["source_entry_id"];
+            isOneToOne: false;
+            referencedRelation: "draw_entries";
             referencedColumns: ["id"];
           },
           {

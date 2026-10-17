@@ -1,0 +1,11 @@
+# D3b — standalone seeded knockout draws
+
+18 October 2026. Part of Task D; Organizer pre-publication seed adjustment remains D3c.
+
+Migration 019 supports immutable balanced seed maps for 2, 4, 8, 16 and 32 participants. The draw freezes the selected map along with existing top-three-boy/top-two-girl rating snapshots. Initial bracket sources reference same-draw frozen entries; subsequent matches use explicit winner/loser sources. All-place classification is retained, and source readiness validates actual participants against their entry/result source. Unsupported sizes reject generation before a partial draw exists. The confirmed 24-club composite format is unchanged.
+
+The localized staff page labels a standalone root bracket correctly, displays frozen players/ratings, known opening participants and unresolved later dependencies, and exposes lineup links only for known published matches. Setup errors list the actual supported map families/sizes. A fixture option supplies an eight-team standalone format without changing default composite fixtures.
+
+Verification: typecheck, zero-warning lint, 104 unit tests, production build, formatting/diff checks; 413 pgTAP assertions on the existing database and a project recreated from empty volumes with all nineteen migrations. The temporary project was stopped. The new SQL fixture plays all 80 matches of a 32-team bracket, verifies all 32 seed placements when favourites win, checks every reference-map permutation/opposite-half property, and rejects unsupported maps/direct mutations/anonymous reads. TypeScript reference tests simulate all five supported sizes and every classification placement. Desktop/mobile browser checks generate and publish an eight-team, twelve-match draw and open its four ready first-round lineups; composite draw, joint lineup and standings regression cases also pass.
+
+During verification, the refactored generator needed the existing explicit audit-role enum cast restored, and browser expectations were corrected to use the existing translated label “Knockout bracket.” Both issues were resolved before final checks. This batch does not implement live scoring, completed-result correction or hosted event-day performance.
