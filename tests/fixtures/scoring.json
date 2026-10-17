@@ -1,0 +1,828 @@
+{
+  "cases": [
+    {
+      "name": "three straight sets",
+      "initial": {
+        "initial_server": "a",
+        "sets": [
+          {
+            "a": 0,
+            "b": 0
+          }
+        ],
+        "timeouts": {
+          "a": false,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        }
+      ],
+      "expected": {
+        "sets_a": 3,
+        "sets_b": 0,
+        "winner": "a",
+        "set_number": 3,
+        "points_a": 11,
+        "points_b": 0,
+        "server": null
+      }
+    },
+    {
+      "name": "deuce uses win by two",
+      "initial": {
+        "initial_server": "a",
+        "sets": [
+          {
+            "a": 0,
+            "b": 0
+          }
+        ],
+        "timeouts": {
+          "a": false,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        }
+      ],
+      "expected": {
+        "sets_a": 1,
+        "sets_b": 0,
+        "winner": null,
+        "set_number": 2,
+        "points_a": 0,
+        "points_b": 0,
+        "server": "b"
+      }
+    },
+    {
+      "name": "deciding fifth set",
+      "initial": {
+        "initial_server": "b",
+        "sets": [
+          {
+            "a": 0,
+            "b": 0
+          }
+        ],
+        "timeouts": {
+          "a": false,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        }
+      ],
+      "expected": {
+        "sets_a": 3,
+        "sets_b": 2,
+        "winner": "a",
+        "set_number": 5,
+        "points_a": 12,
+        "points_b": 10,
+        "server": null
+      }
+    },
+    {
+      "name": "undo restores previous set and retains timeout use",
+      "initial": {
+        "initial_server": "a",
+        "sets": [
+          {
+            "a": 0,
+            "b": 0
+          }
+        ],
+        "timeouts": {
+          "a": false,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "undo_point",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "a"
+        },
+        {
+          "kind": "undo_set"
+        },
+        {
+          "kind": "timeout",
+          "side": "a"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "undo_point",
+          "side": "b"
+        }
+      ],
+      "expected": {
+        "sets_a": 0,
+        "sets_b": 0,
+        "winner": null,
+        "set_number": 1,
+        "points_a": 0,
+        "points_b": 0,
+        "server": "a"
+      }
+    },
+    {
+      "name": "deuce has no sport-specific point cap",
+      "initial": {
+        "initial_server": "a",
+        "sets": [
+          {
+            "a": 1000000000,
+            "b": 1000000000
+          }
+        ],
+        "timeouts": {
+          "a": false,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "point",
+          "side": "b"
+        },
+        {
+          "kind": "point",
+          "side": "b"
+        }
+      ],
+      "expected": {
+        "sets_a": 0,
+        "sets_b": 1,
+        "winner": null,
+        "set_number": 2,
+        "points_a": 0,
+        "points_b": 0,
+        "server": "b"
+      }
+    },
+    {
+      "name": "completed game undo is a pure transition, RPC authority is separate",
+      "initial": {
+        "initial_server": "a",
+        "sets": [
+          {
+            "a": 11,
+            "b": 0
+          },
+          {
+            "a": 11,
+            "b": 0
+          },
+          {
+            "a": 11,
+            "b": 0
+          }
+        ],
+        "timeouts": {
+          "a": true,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "undo_point",
+          "side": "a"
+        }
+      ],
+      "expected": {
+        "sets_a": 2,
+        "sets_b": 0,
+        "winner": null,
+        "set_number": 3,
+        "points_a": 10,
+        "points_b": 0,
+        "server": "b"
+      }
+    }
+  ],
+  "elo": [
+    {
+      "a": 1000,
+      "b": 1000,
+      "winner": "a",
+      "k": 32,
+      "expected": {
+        "a": 1016,
+        "b": 984
+      }
+    },
+    {
+      "a": 1200,
+      "b": 1800,
+      "winner": "a",
+      "k": 32,
+      "expected": {
+        "a": 1231,
+        "b": 1769
+      }
+    },
+    {
+      "a": 1200,
+      "b": 1800,
+      "winner": "b",
+      "k": 32,
+      "expected": {
+        "a": 1199,
+        "b": 1801
+      }
+    },
+    {
+      "a": 1000,
+      "b": 1000,
+      "winner": "a",
+      "k": 1,
+      "expected": {
+        "a": 1001,
+        "b": 1000
+      }
+    },
+    {
+      "a": 0,
+      "b": 0,
+      "winner": "a",
+      "k": 32,
+      "expected": {
+        "a": 16,
+        "b": 0
+      }
+    },
+    {
+      "a": 1000,
+      "b": 1000,
+      "winner": "a",
+      "k": 250000,
+      "expected": {
+        "a": 126000,
+        "b": 0
+      }
+    },
+    {
+      "a": 1234,
+      "b": 500,
+      "winner": "b",
+      "k": 32,
+      "automatic": true,
+      "expected": {
+        "a": 1234,
+        "b": 500
+      }
+    },
+    {
+      "a": 9007199254740990,
+      "b": 9007199254740990,
+      "winner": "a",
+      "k": 1,
+      "expected": {
+        "a": 9007199254740991,
+        "b": 9007199254740990
+      }
+    }
+  ]
+}

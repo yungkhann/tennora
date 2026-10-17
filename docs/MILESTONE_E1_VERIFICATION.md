@@ -1,0 +1,13 @@
+# E1 — scoring and Elo rule parity
+
+18 October 2026. Task E remains in progress; E2 transactions/judge UI and E3 completed-result correction/replay are not implemented by this batch.
+
+Pure TypeScript scoring/Elo modules and migration 021's immutable private PostgreSQL helpers implement canonical best-of-five scoring, 11-point/two-margin sets, deuce without a sport-specific cap, set-by-set first-server alternation, two-point/deuce serve rotation, score undo, once-per-player timeout usage and first-to-three team outcomes. Score summaries derive serve/end indicators; the future RPC must derive an undo-point side from the actual last active event and enforce completed-result authority. Undo-set semantics are recorded as delegated decision I05. Timeout deadlines remain an E2 transaction check.
+
+Elo follows the confirmed 400-point formula, rounds individual whole results, floors at zero and returns unchanged ratings for automatic losses. Adding rounded deltas to integer ratings preserves half-point behavior near supported precision limits. The pure large-K vector intentionally demonstrates that the existing provisional 100000 database storage ceiling needs alignment before E2 writes live played results; this batch does not change current ratings, bounds or history. Numerical guards reject invalid/unsafe inputs rather than truncating them.
+
+Verification: typecheck, zero-warning lint, 125 unit tests, production build and formatting/diff checks pass. All 473 pgTAP assertions pass on the existing database and a disposable project recreated from empty volumes with all twenty-one migrations; the temporary project was stopped. Public generated types are unchanged because the new helpers remain private. Staff and anonymous execution is denied directly.
+
+`npm run test:scoring-parity` compares every resulting state and summary across 1,743 shared/generated transitions, including points, undo, used timeouts, first server, deuce and completed-state transitions. All 508 shared/generated Elo vectors and four team outcomes match exactly. Human vectors include straight/fifth-set wins, one-billion-point deuce, undo across a set boundary, duplicate timeout denial, whole-rating half-point rounding, minimum zero, automatic losses and the integer precision boundary. The pure completed-game undo is not an authorization bypass: no public command calls it yet.
+
+No browser/UI/auth transport changed, so this batch does not rerun the unchanged browser suite; its latest complete 27-case evidence is D3c. E2 must add command receipts, immutable event/result/rating histories, table/day authorization, concurrency barriers, actual timeout deadlines, synchronous result/Elo/advancement and safe snapshots before exposing scoring controls.

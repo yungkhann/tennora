@@ -8,7 +8,7 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
 | C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                   |
 | D - Draws/lineups         | Complete    | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
-| E - Scoring/Elo           | Not started | D06-D08; transactional, duplicate/concurrent and parity proofs                                  |
+| E - Scoring/Elo           | In progress | E1 rule/parity foundation; E2 transactions/UI and E3 correction remain                          |
 | F - Hall operations       | Not started | D09 venue/rest/finals/device policy                                                             |
 | G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                            |
 | H - Readiness             | Not started | Provider/recovery feasibility and complete integration evidence                                 |
@@ -33,3 +33,7 @@ The explicitly requested first Organizer was provisioned via a normal email-veri
 ## D: delivered
 
 See MILESTONE_D_BATCH.md for the exact D1 draw/seed/match-graph inventory. C15–C18 settle seeding, classification, group ties and the snake/crossover map. D1 is verified in MILESTONE_D1_VERIFICATION.md. C19/C20 resolve replacements before singles start and both-team unresolved matches. D2 lineup submission/reveal/replacements is verified in MILESTONE_D2_VERIFICATION.md. D3a standings/source advancement is verified in MILESTONE_D3A_VERIFICATION.md. D3b standalone knockout generation is verified in MILESTONE_D3B_VERIFICATION.md. D3c Organizer seed adjustments are verified in MILESTONE_D3C_VERIFICATION.md. Task D is complete; transactional scoring/Elo and completed-result corrections are E. C25 delegates remaining choices from the PDF without further questions.
+
+## E: in progress
+
+E1 private scoring/Elo rules and TypeScript/PostgreSQL parity are verified in MILESTONE_E1_VERIFICATION.md. E2 authoritative score/event/result/Elo transactions and judge controls, then E3 completed-result corrections/dependency resolution/replay remain. Task E is not complete until those integration gates pass. See MILESTONE_E_BATCH.md for exact inventory and preconditions.
