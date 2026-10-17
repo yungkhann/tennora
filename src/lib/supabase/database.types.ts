@@ -600,6 +600,43 @@ export type Database = {
           },
         ];
       };
+      season_configuration_snapshots: {
+        Row: {
+          configuration: NonNullable<Json>;
+          created_at: string;
+          created_by: string;
+          season_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          configuration: NonNullable<Json>;
+          created_at?: string;
+          created_by: string;
+          season_id: string;
+        };
+        Update: {
+          configuration?: NonNullable<Json>;
+          created_at?: string;
+          created_by?: string;
+          season_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "season_configuration_snapshots_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "season_configuration_snapshots_season_id_fkey";
+            columns: ["season_id"];
+            isOneToOne: true;
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       season_team_entries: {
         Row: {
           created_at: string;
@@ -779,6 +816,75 @@ export type Database = {
           },
         ];
       };
+      stage_templates: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          definition: NonNullable<Json>;
+          entry_count: number;
+          id: string;
+          name: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          definition: NonNullable<Json>;
+          entry_count: number;
+          id: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          definition?: NonNullable<Json>;
+          entry_count?: number;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stage_templates_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      stages: {
+        Row: {
+          configuration: NonNullable<Json>;
+          id: string;
+          kind: string;
+          ordinal: number;
+          plan_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          configuration: NonNullable<Json>;
+          id?: string;
+          kind: string;
+          ordinal: number;
+          plan_id: string;
+        };
+        Update: {
+          configuration?: NonNullable<Json>;
+          id?: string;
+          kind?: string;
+          ordinal?: number;
+          plan_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stages_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "tour_stage_plans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       subteam_trainers: {
         Row: {
           created_at: string;
@@ -870,6 +976,114 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      tour_stage_plans: {
+        Row: {
+          age_group: Database["public"]["Enums"]["age_group"];
+          created_at: string;
+          created_by: string;
+          id: string;
+          revision: number;
+          template_id: string;
+          tour_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          age_group: Database["public"]["Enums"]["age_group"];
+          created_at?: string;
+          created_by: string;
+          id: string;
+          revision: number;
+          template_id: string;
+          tour_id: string;
+        };
+        Update: {
+          age_group?: Database["public"]["Enums"]["age_group"];
+          created_at?: string;
+          created_by?: string;
+          id?: string;
+          revision?: number;
+          template_id?: string;
+          tour_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tour_stage_plans_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tour_stage_plans_template_id_fkey";
+            columns: ["template_id"];
+            isOneToOne: false;
+            referencedRelation: "stage_templates";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tour_stage_plans_tour_id_fkey";
+            columns: ["tour_id"];
+            isOneToOne: false;
+            referencedRelation: "tours";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tournament_settings: {
+        Row: {
+          created_by: string;
+          effective_at: string;
+          finals_priority: boolean;
+          id: string;
+          k_factor: number;
+          rest_minutes: number;
+          revision: number;
+          table_count: number;
+          tour_id: string;
+          venue_timezone: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_by: string;
+          effective_at?: string;
+          finals_priority: boolean;
+          id: string;
+          k_factor: number;
+          rest_minutes: number;
+          revision: number;
+          table_count: number;
+          tour_id: string;
+          venue_timezone: string;
+        };
+        Update: {
+          created_by?: string;
+          effective_at?: string;
+          finals_priority?: boolean;
+          id?: string;
+          k_factor?: number;
+          rest_minutes?: number;
+          revision?: number;
+          table_count?: number;
+          tour_id?: string;
+          venue_timezone?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tournament_settings_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tournament_settings_tour_id_fkey";
+            columns: ["tour_id"];
+            isOneToOne: false;
+            referencedRelation: "tours";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       tours: {
         Row: {
@@ -1052,8 +1266,20 @@ export type Database = {
         };
         Returns: string;
       };
+      configure_tour_stages: {
+        Args: {
+          age_groups: Database["public"]["Enums"]["age_group"][];
+          template: string;
+          tournament: string;
+        };
+        Returns: undefined;
+      };
       create_organization: {
         Args: { organization_name: string; organization_slug: string };
+        Returns: string;
+      };
+      create_stage_template: {
+        Args: { definition: Json; template_id: string; template_name: string };
         Returns: string;
       };
       drop_player: {
@@ -1122,6 +1348,23 @@ export type Database = {
           tour_ordinal: number;
         };
         Returns: string;
+      };
+      save_tournament_settings: {
+        Args: {
+          expected_revision: number;
+          k: number;
+          prioritize_finals: boolean;
+          rest: number;
+          settings_id: string;
+          tables: number;
+          timezone_name: string;
+          tournament: string;
+        };
+        Returns: string;
+      };
+      season_configuration_readiness: {
+        Args: { parent_season: string };
+        Returns: Json;
       };
       set_player_trainer: {
         Args: {

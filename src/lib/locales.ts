@@ -4,6 +4,62 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  configureTournament: "Configure tournament",
+  configurationIntro:
+    "Configure settings and stage plans before starting the season. Previous revisions are retained.",
+  kFactor: "Elo K-factor",
+  changeK: "Change K for future results",
+  saveSettings: "Save tournament settings",
+  settingsInvalid:
+    "Check settings or refresh to load the latest revision. K must be positive.",
+  settingsHelp:
+    "Each save preserves a version. After season start only K can change, affecting future calculations; earlier results retain their K.",
+  tableCount: "Number of tables",
+  restMinutes: "Minimum rest (minutes)",
+  finalsPriority: "Finals priority",
+  finalsFirst: "Finals first after required rest",
+  normalOrder: "Normal match order",
+  venueTimezone: "Venue timezone",
+  newTemplate: "Create stage template",
+  template: "Stage template",
+  stageFormat: "Format",
+  composite: "Groups followed by knockout brackets",
+  roundRobin: "Round-robin groups",
+  knockout: "Knockout bracket",
+  groupCount: "Number of groups",
+  groupSize: "Clubs per group",
+  bracketCount: "Number of knockout brackets",
+  knockoutSize: "Entries in knockout bracket",
+  groupPlaces: "Group places",
+  entries: "Entries",
+  revision: "Version",
+  applyTemplate: "Apply template",
+  templateHelp:
+    "For a composite, consecutive group places are divided equally between brackets. Each bracket must have a power-of-two entry count. Defaults: four groups of six, then three brackets of eight (places 1–2, 3–4, 5–6). Templates are immutable; create a new one to change the format.",
+  templateInvalid:
+    "Check the format. Placement bands must cover every group place once and produce valid knockout sizes.",
+  stagePlans: "Stage plans",
+  noStagePlan: "Stage plan not configured.",
+  stagePlanHelp:
+    "Apply a reusable template to the selected age groups. Replacing a draft plan preserves its earlier stages.",
+  stagePlanInvalid:
+    "Select a template and at least one age group. The season must still be a draft.",
+  planHistory: "Stage plan history",
+  drawsPending:
+    "This configures stages and qualification bands. Draw generation, bracket seed order and standings follow in the draw task.",
+  tournamentSettings: "Tournament settings",
+  settingsHistory: "Settings history",
+  startSeason: "Start season",
+  startConfirm:
+    "I confirm the season configuration. Starting freezes dates, registrations and stage plans; only prospective K changes remain available.",
+  notReady: "Complete the readiness checklist before starting.",
+  ready: "Ready to start",
+  no_tours: "Add at least one tournament.",
+  missing_settings: "Configure settings for every tournament.",
+  missing_stage_plans: "Configure all three age groups in every tournament.",
+  entry_count_mismatch:
+    "Registered clubs must match every stage plan’s entry count.",
+  registeredClubs: "Registered clubs",
   photos: "Photos and consent",
   uploadPhoto: "Upload photo for review",
   photoFile: "Player photo (JPEG, PNG or WebP; max 2 MiB)",
@@ -129,7 +185,7 @@ const en = {
   seasonsIntro:
     "Set the eligibility year and dates, then add the tournaments in order.",
   seasonReadiness:
-    "Season start will become available after stage and settings setup is implemented.",
+    "Season start requires settings, stages for all age groups and matching club registrations.",
 
   league: "Table tennis league",
   workspace: "Workspace",
@@ -208,6 +264,62 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  configureTournament: "Настроить турнир",
+  configurationIntro:
+    "Настройте параметры и этапы до начала сезона. Предыдущие версии сохраняются.",
+  kFactor: "Коэффициент K для Эло",
+  changeK: "Изменить K для будущих результатов",
+  saveSettings: "Сохранить параметры турнира",
+  settingsInvalid:
+    "Проверьте параметры или обновите страницу для загрузки последней версии. K должен быть положительным.",
+  settingsHelp:
+    "Каждое сохранение создаёт версию. После старта сезона меняется только K для будущих расчётов; прежние результаты сохраняют свой K.",
+  tableCount: "Количество столов",
+  restMinutes: "Минимальный отдых (минуты)",
+  finalsPriority: "Приоритет финалов",
+  finalsFirst: "Финалы в приоритете после обязательного отдыха",
+  normalOrder: "Обычный порядок матчей",
+  venueTimezone: "Часовой пояс зала",
+  newTemplate: "Создать шаблон этапов",
+  template: "Шаблон этапов",
+  stageFormat: "Формат",
+  composite: "Группы, затем сетки на выбывание",
+  roundRobin: "Круговые группы",
+  knockout: "Сетка на выбывание",
+  groupCount: "Количество групп",
+  groupSize: "Клубов в группе",
+  bracketCount: "Количество сеток на выбывание",
+  knockoutSize: "Участников в сетке",
+  groupPlaces: "Места в группе",
+  entries: "Участники",
+  revision: "Версия",
+  applyTemplate: "Применить шаблон",
+  templateHelp:
+    "В составном формате места в группах поровну распределяются по сеткам. Число участников сетки — степень двойки. По умолчанию: четыре группы по шесть, затем три сетки по восемь (места 1–2, 3–4, 5–6). Шаблон неизменяем; для другого формата создайте новый.",
+  templateInvalid:
+    "Проверьте формат. Все места должны входить ровно в одну сетку с допустимым числом участников.",
+  stagePlans: "Планы этапов",
+  noStagePlan: "План этапов не настроен.",
+  stagePlanHelp:
+    "Примените шаблон к выбранным возрастам. Замена плана до старта сохраняет предыдущие этапы.",
+  stagePlanInvalid:
+    "Выберите шаблон и хотя бы одну возрастную группу. Сезон ещё не должен быть запущен.",
+  planHistory: "История планов этапов",
+  drawsPending:
+    "Здесь настраиваются этапы и переходы по местам. Генерация жеребьёвки, посев в сетки и таблицы результатов появятся на этапе жеребьёвок.",
+  tournamentSettings: "Параметры турнира",
+  settingsHistory: "История параметров",
+  startSeason: "Начать сезон",
+  startConfirm:
+    "Подтверждаю конфигурацию сезона. Старт блокирует даты, регистрацию клубов и планы этапов; доступны только будущие изменения K.",
+  notReady: "Перед стартом завершите проверку готовности.",
+  ready: "Готов к старту",
+  no_tours: "Добавьте хотя бы один турнир.",
+  missing_settings: "Настройте параметры каждого турнира.",
+  missing_stage_plans: "Настройте все три возраста в каждом турнире.",
+  entry_count_mismatch:
+    "Число зарегистрированных клубов должно соответствовать каждому плану этапов.",
+  registeredClubs: "Зарегистрировано клубов",
   photos: "Фото и согласие",
   uploadPhoto: "Загрузить фото на проверку",
   photoFile: "Фото игрока (JPEG, PNG или WebP; до 2 МиБ)",
@@ -336,7 +448,7 @@ const ru: Messages = {
   seasonsIntro:
     "Укажите год для определения возраста и даты сезона, затем добавьте турниры по порядку.",
   seasonReadiness:
-    "Запуск сезона станет доступен после реализации настройки этапов и параметров турниров.",
+    "Для старта нужны параметры турниров, этапы всех возрастов и соответствующее число клубов.",
 
   league: "Лига настольного тенниса",
   workspace: "Рабочее пространство",
@@ -413,6 +525,62 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  configureTournament: "Турнирді баптау",
+  configurationIntro:
+    "Маусым басталғанша параметрлер мен кезеңдерді баптаңыз. Алдыңғы нұсқалар сақталады.",
+  kFactor: "Эло K коэффициенті",
+  changeK: "Болашақ нәтижелер үшін K өзгерту",
+  saveSettings: "Турнир параметрлерін сақтау",
+  settingsInvalid:
+    "Параметрлерді тексеріңіз немесе соңғы нұсқаны жүктеу үшін бетті жаңартыңыз. K оң сан болуы керек.",
+  settingsHelp:
+    "Әр сақтау нұсқа жасайды. Маусым басталған соң тек K болашақ есептеулер үшін өзгереді; бұрынғы нәтижелер өз K мәнін сақтайды.",
+  tableCount: "Үстел саны",
+  restMinutes: "Ең аз демалыс (минут)",
+  finalsPriority: "Финалдардың басымдығы",
+  finalsFirst: "Міндетті демалыстан кейін финалдар бірінші",
+  normalOrder: "Қалыпты матч реті",
+  venueTimezone: "Залдың уақыт белдеуі",
+  newTemplate: "Кезең үлгісін жасау",
+  template: "Кезең үлгісі",
+  stageFormat: "Пішім",
+  composite: "Топтар, кейін шығару торлары",
+  roundRobin: "Айналмалы топтар",
+  knockout: "Шығару торы",
+  groupCount: "Топ саны",
+  groupSize: "Топтағы клуб саны",
+  bracketCount: "Шығару торларының саны",
+  knockoutSize: "Тордағы қатысушы саны",
+  groupPlaces: "Топтағы орындар",
+  entries: "Қатысушылар",
+  revision: "Нұсқа",
+  applyTemplate: "Үлгіні қолдану",
+  templateHelp:
+    "Құрама пішімде топ орындары торларға тең бөлінеді. Тор қатысушыларының саны екінің дәрежесі болуы керек. Әдепкісі: алтыдан төрт топ, кейін сегізден үш тор (1–2, 3–4, 5–6 орындар). Үлгі өзгермейді; басқа пішім үшін жаңасын жасаңыз.",
+  templateInvalid:
+    "Пішімді тексеріңіз. Әр орын қатысушылар саны жарамды бір ғана торға кіруі керек.",
+  stagePlans: "Кезең жоспарлары",
+  noStagePlan: "Кезең жоспары бапталмаған.",
+  stagePlanHelp:
+    "Үлгіні таңдалған жас топтарына қолданыңыз. Басталғанға дейін жоспарды ауыстыру бұрынғы кезеңдерді сақтайды.",
+  stagePlanInvalid:
+    "Үлгіні және кемінде бір жас тобын таңдаңыз. Маусым әлі басталмаған болуы керек.",
+  planHistory: "Кезең жоспарларының тарихы",
+  drawsPending:
+    "Мұнда кезеңдер мен орын бойынша өту бапталады. Жеребе жасау, тордағы себу реті және нәтижелер жеребе тапсырмасында қосылады.",
+  tournamentSettings: "Турнир параметрлері",
+  settingsHistory: "Параметрлер тарихы",
+  startSeason: "Маусымды бастау",
+  startConfirm:
+    "Маусым баптауын растаймын. Бастау күндерді, клуб тіркеуін және кезең жоспарларын бекітеді; тек болашақ K өзгерістері қолжетімді болады.",
+  notReady: "Бастамас бұрын дайындық тізімін аяқтаңыз.",
+  ready: "Бастауға дайын",
+  no_tours: "Кемінде бір турнир қосыңыз.",
+  missing_settings: "Әр турнирдің параметрлерін баптаңыз.",
+  missing_stage_plans: "Әр турнирде үш жас тобын да баптаңыз.",
+  entry_count_mismatch:
+    "Тіркелген клуб саны әр кезең жоспарының қатысушы санына сәйкес болуы керек.",
+  registeredClubs: "Тіркелген клубтар",
   photos: "Фото және келісім",
   uploadPhoto: "Фотоны тексеруге жүктеу",
   photoFile: "Ойыншы фотосы (JPEG, PNG немесе WebP; 2 МиБ дейін)",
@@ -539,7 +707,7 @@ const kk: Messages = {
   seasonsIntro:
     "Жасты анықтайтын жылды және маусым күндерін көрсетіп, турнирлерді ретімен қосыңыз.",
   seasonReadiness:
-    "Кезеңдер мен турнир параметрлерін баптау іске асырылғаннан кейін маусымды бастау қолжетімді болады.",
+    "Бастау үшін турнир параметрлері, барлық жас кезеңдері және сәйкес клуб саны қажет.",
 
   league: "Үстел теннисі лигасы",
   workspace: "Жұмыс кеңістігі",

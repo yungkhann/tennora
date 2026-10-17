@@ -18,7 +18,7 @@ Planned files: `202610170005_teams_players.sql`, `src/features/{teams,players}/`
 
 Expand inventory before editing. Private object storage/consent, controlled approved photo delivery/revocation, versioned settings and pre-season stage configuration; 24 clubs/72 subteams/360+ synthetic players. No real minors' data or consent evidence is introduced by fixture testing. D06/D09/D10 gate affected defaults/operational policy; do not invent them.
 
-C1 is implemented and verified in MILESTONE_C1_VERIFICATION.md. C2 clubs/players/rosters is now verified in MILESTONE_C2_VERIFICATION.md. C3a photos/consent is verified in MILESTONE_C3A_VERIFICATION.md; C3b settings/stages/start readiness remains pending.
+C1 is implemented and verified in MILESTONE_C1_VERIFICATION.md. C2 clubs/players/rosters is now verified in MILESTONE_C2_VERIFICATION.md. C3a photos/consent is verified in MILESTONE_C3A_VERIFICATION.md; C3b settings/stages/start readiness is verified in MILESTONE_C3B_VERIFICATION.md. Task C is complete.
 
 ### C2 exact first batch
 
@@ -37,3 +37,11 @@ Trainer uploads original photo and written guardian-consent evidence to private 
 Original uploads use the caller's JWT and path-bound RLS; an upload receipt reserves hashes/paths for retry consistency. The public JPEG is prepared from the privately stored original during Organizer review, with metadata removed, decoded format/pixel/size limits and no raw SVG/HTML delivery. Public route reads only the safe JPEG projection, never Auth/admin credentials or evidence. Storage objects remain private and immutable through ordinary staff APIs. No real player photos/evidence are seeded by tests.
 
 Each original/evidence file is limited to 2 MiB, the combined Server Action to 5 MB. Migration 010 removes PostgreSQL base64 line wrapping at the maximum projection size; 011 aligns database receipts and the private bucket with the upload limit. Browser tests exercise two full-size files through the actual action and Storage. Hosted adapter/native Sharp behavior remains a deployment gate.
+
+### C3b — settings, stage templates and season readiness inventory
+
+Exact files: `supabase/migrations/202610170012_tournament_configuration.sql`, `supabase/tests/006_configuration.sql`, regenerated database types, `src/domain/stage-templates.ts`, `src/features/configuration/{validation,actions,forms}.ts*`, localized Organizer tournament configuration route, season-page links, locale strings, `tests/unit/configuration.test.ts`, `tests/e2e/configuration.spec.ts`, and milestone/database/routes/status docs.
+
+Implement immutable per-tournament settings revisions (K, default twelve tables, 60-minute rest, finals first after rest, Asia/Almaty); after season start only prospective K changes are allowed. Preserve the settings ID and K for future result calculations in E. Reusable immutable data templates support round-robin, knockout and ordered round-robin-to-parallel-knockout composites. Placement bands route every source entry exactly once; bracket seed order and tie-breaks remain D04, with draw generation gated there. Each tour/age group receives an immutable stage-plan revision with individual stage rows. The confirmed format is four groups of six, followed by three eight-entry brackets with placement bands 1–2, 3–4, 5–6.
+
+Season start requires at least one tour, settings and all three age-group stage plans for every tour, and registered subteam counts matching their entry capacities. It records an immutable snapshot of the exact settings/plan IDs and locks pre-season configuration. Do not require full rosters at season start: C12 requires the full lineup at match start, and active season rosters can change later. Start readiness is not permission to generate draws before pending seeding/tie-break rules are resolved. Verify direct API role denials, immutable history, started-config locks, prospective K behavior, invalid template maps, readiness and responsive Organizer forms before completing C.

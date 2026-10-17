@@ -1,6 +1,6 @@
 # Tennora
 
-One table tennis league on Next.js App Router, TypeScript and Supabase. Implementation follows [the task ledger](docs/IMPLEMENTATION_PLAN.md). The staff foundation adds coexisting Organizer, Main Judge, Trainer and Line Judge roles. Season/tournament configuration, clubs, scoped Trainers, private players, season rosters, transfers and dropout history are implemented in C1/C2. Private photo/consent uploads and Organizer publication/revocation are implemented in C3a. Settings/stages, draws and scoring follow in C3b–G; public pages currently show explicit empty states. Original organization records/history are retained, but organization onboarding is retired.
+One table tennis league on Next.js App Router, TypeScript and Supabase. Implementation follows [the task ledger](docs/IMPLEMENTATION_PLAN.md). The staff foundation adds coexisting Organizer, Main Judge, Trainer and Line Judge roles. Season/tournament configuration, clubs, scoped Trainers, private players, season rosters, transfers and dropout history are implemented in C1/C2. Private photo/consent uploads and Organizer publication/revocation are implemented in C3a. Versioned tournament settings, stage templates and guarded season start complete Task C. Draws and scoring follow in D–G; public pages currently show explicit empty states. Original organization records/history are retained, but organization onboarding is retired.
 
 ## Run locally
 

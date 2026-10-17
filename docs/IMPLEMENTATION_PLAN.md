@@ -6,8 +6,8 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | ------------------------- | ----------- | ----------------------------------------------------------------------------------------------- |
 | A - Rebaseline            | Complete    | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                   |
 | B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
-| C - Seasons/teams/players | In progress | C1/C2/C3a verified; C3b settings/stages/start readiness remain                                  |
-| D - Draws/lineups         | Not started | D03-D05 and replacement semantics                                                               |
+| C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                   |
+| D - Draws/lineups         | Not started | C15–C18 settle draws; D03/D08 still gate affected lineup/replacement behavior                   |
 | E - Scoring/Elo           | Not started | D06-D08; transactional, duplicate/concurrent and parity proofs                                  |
 | F - Hall operations       | Not started | D09 venue/rest/finals/device policy                                                             |
 | G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                            |
@@ -24,8 +24,8 @@ Pending domain decisions gate their dependent tasks, not already-settled archite
 
 See MILESTONE_B_BATCH.md for scope and MILESTONE_B_VERIFICATION.md for measured evidence. Migrations 202610170002 and 202610170003 preserve legacy records while introducing staff roles, provisioning receipts and audited account/profile RPCs. Hosted rollout remains a later operational task.
 
-## C: partial delivery
+## C: delivered
 
-C1 seasons/tours and confirmed age eligibility are verified; see MILESTONE_C1_VERIFICATION.md. C2 clubs/players/rosters and scale fixture proof are verified in MILESTONE_C2_VERIFICATION.md. C3a private photos/consent and Organizer publication/revocation are verified in MILESTONE_C3A_VERIFICATION.md. C3b settings/stages and season-start readiness remain. C08 confirms Organizer-approved mid-season transfers and direct use of the active season roster. Season start remains explicitly blocked until full configuration readiness.
+C1 seasons/tours and confirmed age eligibility are verified; see MILESTONE_C1_VERIFICATION.md. C2 clubs/players/rosters and scale fixture proof are verified in MILESTONE_C2_VERIFICATION.md. C3a private photos/consent and Organizer publication/revocation are verified in MILESTONE_C3A_VERIFICATION.md. C3b versioned settings, reusable stage templates and season-start readiness are verified in MILESTONE_C3B_VERIFICATION.md. C08 confirms Organizer-approved mid-season transfers and direct use of the active season roster. Season start enforces configuration readiness and records an immutable settings/stage-plan snapshot. Draw generation remains Task D.
 
 The explicitly requested first Organizer was provisioned via a normal email-verification/password-setup invitation; see MILESTONE_B_INVITATION_VERIFICATION.md. Local delivery uses Mailpit. No preset password or automatic legacy-owner promotion is used.

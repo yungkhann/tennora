@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { StartSeasonForm } from "@/features/configuration/forms";
 import { randomUUID } from "node:crypto";
 import { requireStaff } from "@/lib/auth";
 import { localeOf, messages } from "@/lib/locales";
@@ -19,6 +21,28 @@ export default async function Page({
     .order("year", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw new Error(t.failed);
+  const readiness = await Promise.all(
+    seasons.map(async (s) => {
+      const result = await supabase.rpc("season_configuration_readiness", {
+        parent_season: s.id,
+      });
+      if (
+        result.error ||
+        !result.data ||
+        typeof result.data !== "object" ||
+        Array.isArray(result.data)
+      )
+        throw new Error(t.failed);
+      return {
+        id: s.id,
+        ready: result.data.ready === true,
+        clubs: Number(result.data.club_count),
+        problems: Array.isArray(result.data.problems)
+          ? result.data.problems
+          : [],
+      };
+    }),
+  );
   return (
     <>
       <h1 className="text-3xl font-semibold">{t.seasons}</h1>
@@ -50,6 +74,42 @@ export default async function Page({
                 ) : (
                   <p className="mt-5 text-sm">{t.configLocked}</p>
                 )}
+                {s.status === "draft" && (
+                  <section
+                    className="mt-5 grid gap-3 rounded-lg border p-4"
+                    aria-label={t.seasonReadiness}
+                  >
+                    <p className="text-sm">
+                      {t.registeredClubs}:{" "}
+                      {readiness.find((v) => v.id === s.id)?.clubs}
+                    </p>
+                    <ul className="grid gap-2 text-sm">
+                      {readiness
+                        .find((v) => v.id === s.id)
+                        ?.problems.map((code) => (
+                          <li key={String(code)}>
+                            {code === "no_tours"
+                              ? t.no_tours
+                              : code === "missing_settings"
+                                ? t.missing_settings
+                                : code === "missing_stage_plans"
+                                  ? t.missing_stage_plans
+                                  : t.entry_count_mismatch}
+                          </li>
+                        ))}
+                    </ul>
+                    {readiness.find((v) => v.id === s.id)?.ready && (
+                      <p className="text-sm font-semibold">{t.ready}</p>
+                    )}
+                    <StartSeasonForm
+                      locale={locale}
+                      seasonId={s.id}
+                      ready={
+                        readiness.find((v) => v.id === s.id)?.ready ?? false
+                      }
+                    />
+                  </section>
+                )}
                 <h3 className="mt-6 border-t pt-5 font-semibold">{t.tours}</h3>
                 <div className="mt-4 grid gap-4">
                   {s.tours.length ? (
@@ -63,6 +123,12 @@ export default async function Page({
                           <p className="mt-2 text-xs text-muted-foreground">
                             {tour.starts_on} — {tour.ends_on}
                           </p>
+                          <Link
+                            className="mt-4 inline-block text-sm font-semibold underline"
+                            href={`/${locale}/organizer/tournaments/${tour.id}`}
+                          >
+                            {t.configureTournament}
+                          </Link>
                           {s.status === "draft" && (
                             <details className="mt-4">
                               <summary className="cursor-pointer text-sm">

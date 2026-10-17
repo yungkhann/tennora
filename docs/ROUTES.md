@@ -2,7 +2,7 @@
 
 ## Current implementation
 
-Task B implements localized `/[locale]/login`, `/forgot-password`, `/reset-password`, `/workspace`, `/organizer/staff` and `/settings/profile` for ru/kk/en. C1 adds `/organizer/seasons`; C2 adds `/team`, `/team/[teamId]` and `/subteam/[subteamId]` with private scope checks. Callbacks remain unlocalized. Old auth/workspace bookmarks redirect to Russian equivalents; signup redirects to staff login. Organization onboarding is retired. `/` and `/live` retain transitional public pages until G. Historical routes: archive/PHASE_1_ROUTES.md.
+Task B implements localized `/[locale]/login`, `/forgot-password`, `/reset-password`, `/workspace`, `/organizer/staff` and `/settings/profile` for ru/kk/en. C1 adds `/organizer/seasons`; C2 adds `/team`, `/team/[teamId]` and `/subteam/[subteamId]` with private scope checks. C3b adds `/organizer/tournaments/[tourId]` for versioned settings and reusable stage plans; season pages expose readiness and the actual start action. Callbacks remain unlocalized. Old auth/workspace bookmarks redirect to Russian equivalents; signup redirects to staff login. Organization onboarding is retired. `/` and `/live` retain transitional public pages until G. Historical routes: archive/PHASE_1_ROUTES.md.
 
 ## Target public routes (milestone G)
 
@@ -27,22 +27,22 @@ Public responses contain no draft/hidden lineups, private DOB, trainer contacts 
 
 ## Target staff routes (milestones B-F)
 
-| Localized route                         | Required permission                                                       |
-| --------------------------------------- | ------------------------------------------------------------------------- |
-| /login, /forgot-password                | Public; recovery is enumeration-safe                                      |
-| /reset-password                         | Verified recovery/account session; can activate pending provisioned staff |
-| /workspace                              | Active staff landing page                                                 |
-| /organizer/staff                        | Organizer account/role/provisioning controls                              |
-| /organizer/seasons, /organizer/settings | Organizer only                                                            |
-| /hall                                   | Organizer/Main Judge operations                                           |
-| /team                                   | Assigned teams for Trainer; all teams for Organizer/Main Judge            |
-| /team/[teamId]                          | Authorized club management                                                |
-| /subteam/[subteamId]                    | Authorized roster management                                              |
-| /subteam/[subteamId]/tour/[tourId]      | Active season roster (no separate submission)                             |
-| /matches/[matchId]/lineup               | Own-team Trainer lineup submission                                        |
-| /matches/[matchId]/manage               | Organizer/Main Judge oversight                                            |
-| /linear-judge                           | Active Line Judge with venue-date/table assignment                        |
-| /settings/profile                       | Self profile; not role editing                                            |
+| Localized route                                     | Required permission                                                       |
+| --------------------------------------------------- | ------------------------------------------------------------------------- |
+| /login, /forgot-password                            | Public; recovery is enumeration-safe                                      |
+| /reset-password                                     | Verified recovery/account session; can activate pending provisioned staff |
+| /workspace                                          | Active staff landing page                                                 |
+| /organizer/staff                                    | Organizer account/role/provisioning controls                              |
+| /organizer/seasons, /organizer/tournaments/[tourId] | Organizer only                                                            |
+| /hall                                               | Organizer/Main Judge operations                                           |
+| /team                                               | Assigned teams for Trainer; all teams for Organizer/Main Judge            |
+| /team/[teamId]                                      | Authorized club management                                                |
+| /subteam/[subteamId]                                | Authorized roster management                                              |
+| /subteam/[subteamId]/tour/[tourId]                  | Active season roster (no separate submission)                             |
+| /matches/[matchId]/lineup                           | Own-team Trainer lineup submission                                        |
+| /matches/[matchId]/manage                           | Organizer/Main Judge oversight                                            |
+| /linear-judge                                       | Active Line Judge with venue-date/table assignment                        |
+| /settings/profile                                   | Self profile; not role editing                                            |
 
 Auth callbacks stay unlocalized `/auth/confirm` and `/auth/callback`. They accept only fixed token types and known local destinations. Auth routes and old bookmarks redirect safely to their localized equivalents; public signup is removed and provider signup disabled in B. Reset/activation must function before active staff access; ordinary private access requires active provisioning.
 
