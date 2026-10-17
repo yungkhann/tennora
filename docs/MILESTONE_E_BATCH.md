@@ -15,3 +15,15 @@ E2 introduces authoritative event/receipt/set/result/Elo transactions, actual ta
 E1 integration preconditions for E2: align provisional rating-history/player upper bounds with the confirmed formula, preserve nonnegative/finite/whole results, validate K precision at configuration time, and enforce undo target/finished-result authority in the public command rather than trusting the pure helper input. Timeout deadlines and table/day ownership remain E2 transaction checks.
 
 E1 is verified in MILESTONE_E1_VERIFICATION.md. No live scoring endpoint or rating-history write is implied by the private rule layer.
+
+## E2a — match-day authority and numeric storage prerequisites
+
+E1 is committed as `24a6014`. Exact planned files: `supabase/migrations/202610180005_match_day_authority.sql`, `supabase/tests/013_match_day_authority.sql`, regenerated public types, configuration validation/form K precision guard, and decisions/database/status/milestone docs.
+
+Use one physical hall for this single-league release. Table numbers are shared hall resources; a table/day has one current scoring owner, and a person cannot own two tables on the same venue date. Preserve immutable assignment revisions plus current heads. Organizer/Main Judge assigns an active Line Judge or releases a table; audited fallback assigns the acting Organizer/Main Judge only through explicit takeover with a reason. The scoring-owner predicate derives today's date from the tournament's saved venue timezone and rechecks active roles/current ownership. Assignment history does not grant an old tablet current write access. E2b binds this authority to actual match/table leases; F provides full allocation/rest/override operations and UI.
+
+Align the provisional player/rating-history ceiling with C10's actual formula while retaining nonnegative, finite, whole safe integers. E1's valid large-K vector reaches 126000; do not cap/alter the confirmed calculation to fit 100000. A read-only preflight found zero incompatible current/history rows and zero oversized K settings locally. Validate K precision in SQL and the existing configuration form before accepting a setting. Do not grant staff direct rating writes.
+
+E2a verification inventory refinement: add `scripts/test-table-owner-concurrency.mjs` and its package script. Simulate the future scoring lock order (owner-head share, then tour result lock) while a takeover waits. Assignment administration must not hold a tour row lock while waiting for the head, which would deadlock result completion.
+
+E2a is verified in MILESTONE_E2A_VERIFICATION.md. E2b must acquire a shared replay barrier, then the draw coordination lock, before match/game/player locks; it must hold the current table/day owner while scoring and acquire the tour/settings lock before player rating locks at completion. The ownership/result-lock race verifies assignment administration does not reverse that order.

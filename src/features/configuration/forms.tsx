@@ -49,6 +49,7 @@ export function SettingsForm({
         {t.kFactor}
         <Input
           name="k"
+          max={Number.MAX_SAFE_INTEGER}
           type="number"
           required
           min="0"

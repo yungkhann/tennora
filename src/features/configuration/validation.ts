@@ -10,7 +10,7 @@ export const settingsSchema = z.object({
   id: z.uuid(),
   tourId: z.uuid(),
   revision: integer(0, 2147483646),
-  k: requiredNumber.pipe(z.number().positive()),
+  k: requiredNumber.pipe(z.number().positive().max(Number.MAX_SAFE_INTEGER)),
   tables: integer(1, 128),
   rest: integer(0, 1440),
   finals: z.enum(["true", "false"]),

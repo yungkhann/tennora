@@ -448,6 +448,19 @@ export type Database = {
         };
         Relationships: [];
       };
+      league_tables: {
+        Row: {
+          number: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          number: number;
+        };
+        Update: {
+          number?: number;
+        };
+        Relationships: [];
+      };
       lineup_replacements: {
         Row: {
           changed_at: string;
@@ -1654,6 +1667,122 @@ export type Database = {
           },
         ];
       };
+      table_day_heads: {
+        Row: {
+          assignment_id: string;
+          staff_id: string | null;
+          table_number: number;
+          venue_day: string;
+          version: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          assignment_id: string;
+          staff_id?: string | null;
+          table_number: number;
+          venue_day: string;
+          version: number;
+        };
+        Update: {
+          assignment_id?: string;
+          staff_id?: string | null;
+          table_number?: number;
+          venue_day?: string;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "table_day_heads_assignment_id_fkey";
+            columns: ["assignment_id"];
+            isOneToOne: false;
+            referencedRelation: "table_judge_assignments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "table_day_heads_staff_id_fkey";
+            columns: ["staff_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "table_day_heads_table_number_fkey";
+            columns: ["table_number"];
+            isOneToOne: false;
+            referencedRelation: "league_tables";
+            referencedColumns: ["number"];
+          },
+        ];
+      };
+      table_judge_assignments: {
+        Row: {
+          context_tour_id: string;
+          created_at: string;
+          created_by: string;
+          id: string;
+          mode: string;
+          reason: string;
+          revision: number;
+          staff_id: string | null;
+          table_number: number;
+          venue_day: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          context_tour_id: string;
+          created_at?: string;
+          created_by: string;
+          id: string;
+          mode: string;
+          reason: string;
+          revision: number;
+          staff_id?: string | null;
+          table_number: number;
+          venue_day: string;
+        };
+        Update: {
+          context_tour_id?: string;
+          created_at?: string;
+          created_by?: string;
+          id?: string;
+          mode?: string;
+          reason?: string;
+          revision?: number;
+          staff_id?: string | null;
+          table_number?: number;
+          venue_day?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "table_judge_assignments_context_tour_id_fkey";
+            columns: ["context_tour_id"];
+            isOneToOne: false;
+            referencedRelation: "tours";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "table_judge_assignments_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "table_judge_assignments_staff_id_fkey";
+            columns: ["staff_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "table_judge_assignments_table_number_fkey";
+            columns: ["table_number"];
+            isOneToOne: false;
+            referencedRelation: "league_tables";
+            referencedColumns: ["number"];
+          },
+        ];
+      };
       team_match_results: {
         Row: {
           created_at: string;
@@ -2108,6 +2237,18 @@ export type Database = {
         Args: { birth_year: number; season_year: number };
         Returns: string;
       };
+      assign_table_judge: {
+        Args: {
+          assignment_id: string;
+          expected_version: number;
+          reason: string;
+          staff: string;
+          table_no: number;
+          tournament: string;
+          venue_day: string;
+        };
+        Returns: string;
+      };
       assign_team_trainer: {
         Args: { club: string; coached_subteams: string[]; trainer: string };
         Returns: undefined;
@@ -2370,6 +2511,17 @@ export type Database = {
           seed_a: number;
           seed_b: number;
           source_draw: string;
+        };
+        Returns: string;
+      };
+      takeover_table: {
+        Args: {
+          assignment_id: string;
+          expected_version: number;
+          reason: string;
+          table_no: number;
+          tournament: string;
+          venue_day: string;
         };
         Returns: string;
       };
