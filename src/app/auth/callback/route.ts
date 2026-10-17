@@ -15,5 +15,5 @@ export async function GET(request: NextRequest) {
       /* Invalid tokens and connectivity errors both fail closed. */
     }
   }
-  return authRedirect("/login?error=callback");
+  return authRedirect("/ru/login?error=callback");
 }

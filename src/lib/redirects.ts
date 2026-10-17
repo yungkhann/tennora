@@ -1,17 +1,11 @@
-// A destination is a route we own, never an arbitrary URL or protocol-relative path.
+// Only fixed app destinations; never arbitrary paths, queries or URLs.
 export function safeNext(value: string | null | undefined): string {
   if (
-    value === "/dashboard" ||
-    value === "/settings/profile" ||
-    value === "/reset-password"
-  )
-    return value;
-  if (
     value &&
-    /^\/dashboard\/organizations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      value,
-    )
+    /^\/(ru|kk|en)\/(workspace|settings\/profile|reset-password)$/.test(value)
   )
     return value;
-  return "/dashboard";
+  if (value === "/reset-password") return "/ru/reset-password";
+  if (value === "/settings/profile") return "/ru/settings/profile";
+  return "/ru/workspace";
 }

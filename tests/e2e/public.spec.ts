@@ -26,11 +26,14 @@ test("public navigation, accessible theme persistence and mobile layout", async 
     page.getByRole("heading", { name: "The courts are quiet for now" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Sign in", exact: true }).click();
-  await expect(page.getByLabel("Email address")).toBeVisible();
-  await page.getByRole("link", { name: "Create an account" }).click();
-  await expect(page.getByLabel("Your name")).toBeVisible();
+  await expect(page).toHaveURL(/\/ru\/login$/);
+  await expect(page.getByLabel("Электронная почта")).toBeVisible();
+  await page.goto("/register");
+  await expect(page).toHaveURL(/\/ru\/login$/);
   await expect(
-    page.getByText("At least 12 characters.", { exact: false }),
+    page.getByText("Аккаунты сотрудников создаёт организатор.", {
+      exact: false,
+    }),
   ).toBeVisible();
   expect(errors).toEqual([]);
 });
@@ -40,8 +43,8 @@ test("invalid callbacks fail closed without an external redirect", async ({
   await page.goto("/auth/callback?next=https://evil.example");
   await expect(page).toHaveURL(/\/login\?error=callback$/);
   await expect(
-    page.getByRole("alert").filter({ hasText: "This link" }),
-  ).toContainText("invalid or has expired");
+    page.getByRole("alert").filter({ hasText: "Ссылка" }),
+  ).toContainText("недействительна или устарела");
   await page.goto("/auth/confirm?token_hash=invalid&type=invite");
   await expect(page).toHaveURL(/\/login\?error=callback$/);
 });
@@ -50,19 +53,10 @@ test("protected workspace requires authentication or explicit setup", async ({
 }) => {
   const response = await page.goto("/dashboard");
   expect(response?.headers()["cache-control"]).toContain("no-store");
+  await expect(page).toHaveURL(/\/ru\/login$/);
   await expect(
-    page.getByRole("heading", {
-      name: /Welcome back\.|Connect your workspace/,
-    }),
+    page.getByRole("heading", { name: "Войти", exact: true }),
   ).toBeVisible();
-  if (
-    await page.getByRole("heading", { name: "Connect your workspace" }).count()
-  ) {
-    await page.goto("/register");
-    await expect(
-      page.getByRole("button", { name: "Create account", exact: true }),
-    ).toBeDisabled();
-  }
 });
 test("keyboard skip link leads to main content", async ({ page }) => {
   await page.goto("/");

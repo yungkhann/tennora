@@ -38,30 +38,42 @@ export type Database = {
         Row: {
           action: string;
           actor_id: string | null;
+          actor_role: Database["public"]["Enums"]["staff_role"] | null;
+          after_state: Json | null;
+          before_state: Json | null;
           created_at: string;
           details: NonNullable<Json>;
           entity_id: string;
+          entity_type: string | null;
           id: string;
-          organization_id: string;
+          organization_id: string | null;
         };
         ComputedFields: never;
         Insert: {
           action: string;
           actor_id?: string | null;
+          actor_role?: Database["public"]["Enums"]["staff_role"] | null;
+          after_state?: Json | null;
+          before_state?: Json | null;
           created_at?: string;
           details?: NonNullable<Json>;
           entity_id: string;
+          entity_type?: string | null;
           id?: string;
-          organization_id: string;
+          organization_id?: string | null;
         };
         Update: {
           action?: string;
           actor_id?: string | null;
+          actor_role?: Database["public"]["Enums"]["staff_role"] | null;
+          after_state?: Json | null;
+          before_state?: Json | null;
           created_at?: string;
           details?: NonNullable<Json>;
           entity_id?: string;
+          entity_type?: string | null;
           id?: string;
-          organization_id?: string;
+          organization_id?: string | null;
         };
         Relationships: [
           {
@@ -166,19 +178,170 @@ export type Database = {
         };
         Relationships: [];
       };
+      staff_accounts: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          display_name: string;
+          email: string;
+          id: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          display_name: string;
+          email: string;
+          id: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          display_name?: string;
+          email?: string;
+          id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "staff_accounts_id_fkey";
+            columns: ["id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      staff_jobs: {
+        Row: {
+          actor_id: string;
+          created_at: string;
+          display_name: string;
+          email: string;
+          id: string;
+          operation: string;
+          roles: Database["public"]["Enums"]["staff_role"][];
+          status: string;
+          target_id: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          actor_id: string;
+          created_at?: string;
+          display_name: string;
+          email: string;
+          id: string;
+          operation: string;
+          roles: Database["public"]["Enums"]["staff_role"][];
+          status?: string;
+          target_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          actor_id?: string;
+          created_at?: string;
+          display_name?: string;
+          email?: string;
+          id?: string;
+          operation?: string;
+          roles?: Database["public"]["Enums"]["staff_role"][];
+          status?: string;
+          target_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "staff_jobs_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      staff_roles: {
+        Row: {
+          role: Database["public"]["Enums"]["staff_role"];
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          role: Database["public"]["Enums"]["staff_role"];
+          user_id: string;
+        };
+        Update: {
+          role?: Database["public"]["Enums"]["staff_role"];
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "staff_roles_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
+      begin_staff_job: {
+        Args: {
+          desired_roles: Database["public"]["Enums"]["staff_role"][];
+          job_id: string;
+          job_operation: string;
+          staff_email: string;
+          staff_name: string;
+          target: string;
+        };
+        Returns: {
+          actor_id: string;
+          created_at: string;
+          display_name: string;
+          email: string;
+          id: string;
+          operation: string;
+          roles: Database["public"]["Enums"]["staff_role"][];
+          status: string;
+          target_id: string;
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "staff_jobs";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      bootstrap_organizer: { Args: { target: string }; Returns: undefined };
+      change_staff: {
+        Args: {
+          desired_roles: Database["public"]["Enums"]["staff_role"][];
+          is_active: boolean;
+          target: string;
+        };
+        Returns: string;
+      };
       create_organization: {
         Args: { organization_name: string; organization_slug: string };
         Returns: string;
       };
+      finish_staff_job: {
+        Args: { job_id: string; succeeded: boolean };
+        Returns: string;
+      };
+      update_staff_name: { Args: { new_name: string }; Returns: undefined };
     };
     Enums: {
       organization_role:
         "owner" | "tournament_director" | "scorekeeper" | "player";
+      staff_role: "organizer" | "main_judge" | "trainer" | "line_judge";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -315,6 +478,7 @@ export const Constants = {
         "scorekeeper",
         "player",
       ],
+      staff_role: ["organizer", "main_judge", "trainer", "line_judge"],
     },
   },
 } as const;

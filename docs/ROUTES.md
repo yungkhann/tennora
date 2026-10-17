@@ -2,7 +2,7 @@
 
 ## Current implementation
 
-Original Phase 1 routes still exist during Task A: `/`, `/live`, `/login`, `/register`, recovery/callback routes, `/dashboard`, organization detail and `/settings/profile`. They have not yet become league screens. Historical details: archive/PHASE_1_ROUTES.md.
+Task B implements localized `/[locale]/login`, `/forgot-password`, `/reset-password`, `/workspace`, `/organizer/staff` and `/settings/profile` for ru/kk/en. Callbacks remain unlocalized. Old auth/workspace bookmarks redirect to Russian equivalents; signup redirects to staff login. Organization onboarding is retired. `/` and `/live` retain transitional public pages until G. Historical routes: archive/PHASE_1_ROUTES.md.
 
 ## Target public routes (milestone G)
 

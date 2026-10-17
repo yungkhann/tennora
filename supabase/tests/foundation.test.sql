@@ -1,6 +1,9 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select plan(30);
+-- Exercise historical organization invariants under a transaction-only fixture grant.
+-- The staff suite separately proves production onboarding is revoked.
+grant execute on function public.create_organization(text,text) to authenticated;
 insert into auth.users (id, email, raw_user_meta_data) values
  ('11111111-1111-4111-8111-111111111111','alice@test.invalid','{"display_name":"Alice", "role":"platform_admin"}'),
  ('22222222-2222-4222-8222-222222222222','bob@test.invalid','{"display_name":"Bob"}');

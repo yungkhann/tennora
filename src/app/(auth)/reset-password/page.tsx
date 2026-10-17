@@ -1,20 +1,11 @@
-import { AuthForm } from "@/features/auth/auth-form";
-import { publicSupabaseEnv } from "@/lib/env";
-import { requireAccount } from "@/lib/auth";
-export const metadata = { title: "New password" };
+import { redirect } from "next/navigation";
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
-  const configured = !!publicSupabaseEnv();
-  if (configured) await requireAccount();
-  const query = await searchParams;
-  return (
-    <AuthForm
-      mode="reset"
-      configured={configured}
-      callbackError={query.error === "callback"}
-    />
+  const { error } = await searchParams;
+  redirect(
+    "/ru/reset-password" + (error === "callback" ? "?error=callback" : ""),
   );
 }

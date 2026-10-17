@@ -89,15 +89,14 @@ describe("callback destinations", () => {
     null,
     undefined,
   ])("fails closed for %s", (value) => {
-    expect(safeNext(value)).toBe("/dashboard");
+    expect(safeNext(value)).toBe("/ru/workspace");
   });
-  it.each([
-    "/settings/profile",
-    "/reset-password",
-    "/dashboard/organizations/11111111-1111-4111-8111-111111111111",
-  ])("allows known destination %s", (value) => {
-    expect(safeNext(value)).toBe(value);
-  });
+  it.each(["/ru/settings/profile", "/kk/reset-password", "/en/workspace"])(
+    "allows known destination %s",
+    (value) => {
+      expect(safeNext(value)).toBe(value);
+    },
+  );
 });
 describe("configuration boundary", () => {
   afterEach(() => vi.unstubAllEnvs());

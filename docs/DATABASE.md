@@ -2,7 +2,7 @@
 
 ## Implemented baseline
 
-Only 202610170001_foundation.sql currently exists: profiles -> auth.users, organizations, organization_members and audit_logs. These are the original Phase 1 tables with tenant RLS. Preserve their data and original tests until an additive transition is verified. They do not implement teams, players or league roles. Historical design is archived in archive/PHASE_1_DATABASE.md.
+202610170001_foundation.sql establishes profiles -> auth.users, organizations, organization_members and audit_logs. These are the original Phase 1 tables with tenant RLS. Their data/history remains preserved. Task B adds 202610170002_league_staff.sql and 202610170003_staff_profile.sql: staff_accounts, normalized staff_roles, provisioning/reset staff_jobs, additive league audit fields and audited RPCs. See MILESTONE_B_VERIFICATION.md. Teams and players are not implemented yet. Historical design is archived in archive/PHASE_1_DATABASE.md.
 
 ## Target league relationships
 
@@ -10,7 +10,7 @@ One league has seasons. A season registers clubs; each club has U13/U15/U17 subt
 
 | Area               | Planned records and essential invariants                                                                                                                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Staff              | staff_accounts keyed to Auth/profile ID, active/provisioning status; staff-role representation decided by D01; no self-granted roles or metadata privileges.                                                                   |
+| Staff              | staff_accounts keyed to Auth/profile ID, active/provisioning status; normalized coexisting staff_roles rows (D01/C06); no self-granted roles or metadata privileges.                                                           |
 | Trainer scope      | trainer_profiles, team/subteam trainer assignments; every subteam assignment belongs to a club that trainer may coach.                                                                                                         |
 | Teams              | teams, subteams unique(team, age_group), season_team_entries unique(season, team). No organization tenant is required for new league data.                                                                                     |
 | Players            | players with name, gender, hand/style, DOB, sports level, rating/status/external ID; roster memberships, player_status_events; max 10 active eligible members enforced under concurrent assignment. No Auth ID requirement.    |

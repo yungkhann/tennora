@@ -1,23 +1,28 @@
 # Tennora
 
-Multi-tenant tennis workspace built with Next.js App Router, TypeScript, Tailwind v4, locally owned shadcn/ui primitives and Supabase. **Phase 1 only**: auth, profiles, organization onboarding, tenant isolation and public/protected layouts. Tournament operations and live scoring are planned, not implemented.
+One table tennis league on Next.js App Router, TypeScript and Supabase. Implementation follows [the task ledger](docs/IMPLEMENTATION_PLAN.md). The staff foundation adds coexisting Organizer, Main Judge, Trainer and Line Judge roles. Season, club/player, tournament and scoring workflows follow in C–G; public pages currently show explicit empty states. Original organization records/history are retained, but organization onboarding is retired.
 
 ## Run locally
 
-Use Node 24 LTS (`nvm use`), npm, and Docker for local Supabase.
+Use Node 24 (`nvm use`), npm and Docker.
 
 ```sh
 npm ci
 npm run db:start
-npm run db:reset
+npx supabase migration up --local
 npm run db:env
+npm run dev -- --hostname 127.0.0.1
 ```
 
-`db:env` writes ignored local app/test environment files without printing keys and refuses to overwrite existing files. Alternatively, copy `.env.example` to `.env.local` and use `npx supabase status` to get the local API URL and publishable key (the legacy local anon key also works). Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000` in `.env.local`. Start with `npm run dev -- --hostname 127.0.0.1`. Open http://127.0.0.1:3000. Restart Next after changing environment values.
+`db:env` creates ignored `.env.local` and `.env.test.local`, without printing credentials or overwriting existing files. For existing files, configure the public URL/key/site origin and **server-only** `SUPABASE_SECRET_KEY` from `.env.example`. This secret is used only for Organizer-authorized Auth administration. Never put it in a `NEXT_PUBLIC_` variable. Restart Next after changing environment values. No production seed accounts/passwords are committed. Do not run `db:reset` against data you need; it is destructive.
 
-The app also runs without Supabase: public pages and auth layouts are inspectable, auth submission is disabled, and private pages show setup instructions. There is no mock login or production seed data.
+Public signup is disabled. To establish the first Organizer, explicitly create a confirmed Auth user with a strong password using trusted operator tooling/the Supabase dashboard, then run:
 
-Local confirmation/recovery emails appear in Mailpit at http://127.0.0.1:54324. Email confirmation is enabled. Create an account, open the local email, confirm, and create an organization in the workspace. Use a second account to check isolation. `db:reset` deletes local development data; use it only against the CLI's local stack.
+```sh
+node scripts/bootstrap-organizer.mjs <existing-auth-user-uuid>
+```
+
+Bootstrap refuses once an active Organizer exists. Legacy organization ownership and metadata never grant staff authority. Open `/ru/login`, `/kk/login` or `/en/login`. Organizer account management is at `/{locale}/organizer/staff`; multiple roles are allowed. The Organizer supplies an initial password and shares it securely outside the app; provisioning does not send invitation email. Existing Auth emails are not automatically linked. Retries use the reserved operation ID. Password recovery emails appear in local Mailpit at http://127.0.0.1:54324.
 
 ## Checks
 
@@ -26,31 +31,25 @@ npm run typecheck
 npm run lint
 npm test
 npm run build
-npm run test:e2e
 npm run test:db
+npm run test:e2e
+npm run test:auth
 ```
 
-Install browser engines once with `npx playwright install chromium`. `test:e2e` covers public/mobile layouts, theme persistence, callback denial and unauthenticated guards. `test:db` requires local Supabase and executes real pgTAP permission tests. Regenerate checked-in database types after schema changes with `npm run db:types`.
+Install Chromium with `npx playwright install chromium`. Database tests require local Supabase. Regenerate types with `npm run db:types`. Real Auth tests use the loopback backend and `E2E_SUPABASE_SERVICE_ROLE_KEY` in ignored `.env.test.local`, create disposable staff fixtures and clean them up. They require no pre-existing active Organizer in that local test database. The application also needs its server Auth admin secret for provisioning tests. Never target production with test credentials/fixtures.
 
-For real-backend browser tests, set `E2E_SUPABASE_SERVICE_ROLE_KEY` **only in `.env.test.local` or the test runner process** using the local `npx supabase status` output; then run `npm run test:auth`. These tests create disposable Auth users, exercise confirmation/login/recovery/profile/organization flows, and clean up their rows. Never use a production backend or put this key in a `NEXT_PUBLIC_` variable. Tests validate that the backend is loopback before using admin credentials.
+## Hosted setup
 
-## Hosted Supabase and Netlify
+Apply reviewed additive migrations to staging before production. Set the public environment values plus the isolated server secret in hosting. Disable **global public signup**, retain email login, require 12-character passwords, set the trusted HTTPS site origin and exact `/auth/callback` redirects, and configure SMTP/rate limits. In this CLI version `[auth.email].enable_signup` controls the email provider itself; keep it true while `[auth].enable_signup=false` blocks signup. Verify the hosted equivalent with both login and direct signup probes.
 
-1. Create a Supabase project. Apply the migration with your normal reviewed Supabase migration workflow (`supabase link` then `supabase db push`). No application service-role credential is needed.
-2. Set Auth Site URL to the deployed HTTPS origin. Allow the exact `/auth/callback` redirect for each trusted deployment origin. Enable email confirmations, set minimum password length to 12, and configure SMTP, provider rate limits and abuse protections for public registration.
-3. Configure email templates for cross-device confirmation. Confirmation link: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup`. Recovery link: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery`. Local template files are in `supabase/templates`.
-4. Connect this repository to Netlify and set the three public env variables from `.env.example`, with `NEXT_PUBLIC_SITE_URL` equal to the trusted HTTPS origin. The app uses SSR and Server Actions; no static export. Netlify automatically supplies its Next.js adapter.
-5. Run database tests in a disposable environment, then smoke-test real confirmation, recovery, logout and two-account tenant isolation on deployment. Deployment is not part of Phase 1 verification.
+Recovery template: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery`. The confirmation endpoint accepts recovery only. Sessions use HTTP-only cookies, server refresh and no-store responses; the public Supabase client has no persisted Auth session. Keep staging and production separate. Netlify uses its Next.js adapter with SSR/Server Actions, not static export. Local results are not deployment/readiness evidence.
 
-Supabase Auth enforces provider rate limits; application-wide rate limiting and observability are later production-readiness work. Password changes use a verified user session. Harden provider session lifetime/reauthentication settings for deployment. Organization role-management and platform-admin interfaces are intentionally deferred.
-
-## Project map
+## Project documents
 
 - [Product scope](docs/PRODUCT_SPEC.md)
-- [Architecture and official references](docs/ARCHITECTURE.md)
-- [Database relationships and policy model](docs/DATABASE.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Database](docs/DATABASE.md)
 - [Routes](docs/ROUTES.md)
-- [Milestones](docs/IMPLEMENTATION_PLAN.md)
-- [Verification results](docs/VERIFICATION.md)
-
-Design uses court green, chalk and tennis yellow, a system sans/Georgia pairing without remote font requests, and light/dark semantic tokens. Components follow shadcn/ui's locally owned Radix/CVA pattern; `components.json` supports adding components as needed.
+- [Milestones and status](docs/IMPLEMENTATION_PLAN.md)
+- [Decisions](docs/DECISIONS.md)
+- [Historical Phase 1 verification](docs/VERIFICATION.md)

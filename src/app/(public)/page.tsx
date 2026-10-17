@@ -9,7 +9,7 @@ export default function HomePage() {
         <section className="py-4 md:py-8">
           <p className="eyebrow mb-7 flex items-center gap-2">
             <span className="size-2 rounded-full bg-primary" />
-            The home of your tennis organization
+            One table tennis league
           </p>
           <h1 className="max-w-xl text-5xl leading-[1.08] font-semibold tracking-[-.055em] sm:text-6xl xl:text-7xl">
             A better day
@@ -20,13 +20,13 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="mt-7 max-w-md text-lg leading-8 text-muted-foreground">
-            Bring your club together. Give your organization a dedicated
-            workspace, and every member a place in the game.
+            A shared workspace for league staff. Organizers manage accounts;
+            each staff member receives the roles they need.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link href="/register">
-                Create your account <ArrowUpRight />
+              <Link href="/ru/login">
+                Staff sign in <ArrowUpRight />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
@@ -34,7 +34,7 @@ export default function HomePage() {
             </Button>
           </div>
           <p className="mt-5 text-xs text-muted-foreground">
-            One account. Every organization you belong to.
+            Staff accounts are created by the league Organizer.
           </p>
         </section>
         <div className="relative">
@@ -58,8 +58,8 @@ export default function HomePage() {
         {[
           {
             icon: Layers3,
-            title: "A space for each organization",
-            text: "Keep your clubs separate and switch between them with one account.",
+            title: "One league workspace",
+            text: "Staff access is managed centrally by the league Organizer.",
           },
           {
             icon: UsersRound,
@@ -69,7 +69,7 @@ export default function HomePage() {
           {
             icon: ShieldCheck,
             title: "Access with intention",
-            text: "Membership keeps your organization's private workspace in the right hands.",
+            text: "Staff roles control access, and account changes are audited.",
           },
         ].map(({ icon: Icon, title, text }) => (
           <div key={title} className="flex gap-4">

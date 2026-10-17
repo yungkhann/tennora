@@ -3,167 +3,110 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { publicSupabaseEnv, siteUrl } from "@/lib/env";
-import { requireAccount } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
+import { localeOf, messages } from "@/lib/locales";
 import {
-  invalidInput,
   loginSchema,
-  registrationSchema,
   recoverySchema,
   passwordSchema,
   profileSchema,
   type FormState,
 } from "@/lib/validation";
-const unavailable: FormState = {
-  status: "error",
-  message:
-    "Authentication is not configured. Follow the project setup guide, then try again.",
-};
-const networkError: FormState = {
-  status: "error",
-  message: "We could not connect. Please try again.",
-};
 export async function login(
   _previous: FormState,
   form: FormData,
 ): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = messages(locale);
   const parsed = loginSchema.safeParse(Object.fromEntries(form));
-  if (!parsed.success) return invalidInput(parsed.error);
-  if (!publicSupabaseEnv()) return unavailable;
+  if (!parsed.success) return { status: "error", message: t.invalid };
+  if (!publicSupabaseEnv()) return { status: "error", message: t.unavailable };
   try {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithPassword(parsed.data);
-    if (error)
-      return {
-        status: "error",
-        message:
-          "Unable to sign in. Check your email, password and email confirmation.",
-      };
+    const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
+    if (error || !data.user) return { status: "error", message: t.failed };
+    const staff = await supabase
+      .from("staff_accounts")
+      .select("id")
+      .eq("id", data.user.id)
+      .eq("active", true)
+      .maybeSingle();
+    if (staff.error || !staff.data) {
+      await supabase.auth.signOut({ scope: "local" });
+      return { status: "error", message: t.staffDenied };
+    }
   } catch {
-    return networkError;
+    return { status: "error", message: t.failed };
   }
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect(`/${locale}/workspace`);
 }
-export async function register(
-  _previous: FormState,
-  form: FormData,
-): Promise<FormState> {
-  const parsed = registrationSchema.safeParse(Object.fromEntries(form));
-  if (!parsed.success) return invalidInput(parsed.error);
-  if (!publicSupabaseEnv()) return unavailable;
-  let signedIn = false;
-  try {
-    const { email, password, displayName } = parsed.data;
-    const supabase = await createClient();
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { display_name: displayName },
-        emailRedirectTo: `${siteUrl()}/auth/callback?next=/dashboard`,
-      },
-    });
-    if (error)
-      return {
-        status: "error",
-        message:
-          "Unable to create an account. Try again, or sign in if you already have an account.",
-      };
-    signedIn = !!data.session;
-  } catch {
-    return networkError;
-  }
-  if (signedIn) {
-    revalidatePath("/", "layout");
-    redirect("/dashboard");
-  }
-  return {
-    status: "success",
-    message:
-      "Check your inbox for a confirmation link. If you already have an account, sign in instead.",
-  };
+// Retired action remains fail-closed for old deployed forms/bookmarks.
+export async function register(): Promise<FormState> {
+  return { status: "error", message: messages("ru").accountsOnly };
 }
 export async function requestRecovery(
   _previous: FormState,
   form: FormData,
 ): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = messages(locale);
   const parsed = recoverySchema.safeParse(Object.fromEntries(form));
-  if (!parsed.success) return invalidInput(parsed.error);
-  if (!publicSupabaseEnv()) return unavailable;
+  if (!parsed.success) return { status: "error", message: t.invalid };
+  if (!publicSupabaseEnv()) return { status: "error", message: t.unavailable };
   try {
     const supabase = await createClient();
-    // Do not expose account existence, provider errors or rate-limit differences.
     await supabase.auth.resetPasswordForEmail(parsed.data.email, {
-      redirectTo: `${siteUrl()}/auth/callback?next=/reset-password`,
+      redirectTo: `${siteUrl()}/auth/callback?next=/${locale}/reset-password`,
     });
   } catch {
-    return networkError;
+    /* Enumeration-safe response for provider and connection failures. */
   }
-  return {
-    status: "success",
-    message:
-      "If an account exists for this email, you will receive a password reset link.",
-  };
+  return { status: "success", message: t.recoveryDone };
 }
 export async function resetPassword(
   _previous: FormState,
   form: FormData,
 ): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = messages(locale);
   const parsed = passwordSchema.safeParse(Object.fromEntries(form));
-  if (!parsed.success) return invalidInput(parsed.error);
-  if (!publicSupabaseEnv()) return unavailable;
-  const { supabase } = await requireAccount();
+  if (!parsed.success) return { status: "error", message: t.minPassword };
+  const { supabase } = await requireStaff(locale);
   try {
-    const { error } = await supabase.auth.updateUser({
-      password: parsed.data.password,
-    });
-    if (error)
-      return {
-        status: "error",
-        message:
-          "Could not change your password. Use a new password or request another reset link.",
-      };
+    if (
+      (await supabase.auth.updateUser({ password: parsed.data.password })).error
+    )
+      return { status: "error", message: t.failed };
   } catch {
-    return networkError;
+    return { status: "error", message: t.failed };
   }
   revalidatePath("/", "layout");
-  return {
-    status: "success",
-    message:
-      "Your password has been updated. You can return to your workspace.",
-  };
+  return { status: "success", message: t.resetDone };
 }
 export async function updateProfile(
   _previous: FormState,
   form: FormData,
 ): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = messages(locale);
   const parsed = profileSchema.safeParse(Object.fromEntries(form));
-  if (!parsed.success) return invalidInput(parsed.error);
-  if (!publicSupabaseEnv()) return unavailable;
-  const { supabase, user } = await requireAccount();
-  try {
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ display_name: parsed.data.displayName })
-      .eq("id", user.id)
-      .select("id")
-      .single();
-    if (error || !data)
-      return {
-        status: "error",
-        message: "Could not save your profile. Please try again.",
-      };
-  } catch {
-    return networkError;
+  if (!parsed.success) return { status: "error", message: t.invalid };
+  const { supabase } = await requireStaff(locale);
+  const { error } = await supabase.rpc("update_staff_name", {
+    new_name: parsed.data.displayName,
+  });
+  if (error) return { status: "error", message: t.failed };
+  revalidatePath("/", "layout");
+  return { status: "success", message: t.saved };
+}
+export async function signOut(form: FormData) {
+  const locale = localeOf(form.get("locale"));
+  if (publicSupabaseEnv()) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signOut({ scope: "local" });
+    if (error) throw new Error(messages(locale).failed);
   }
   revalidatePath("/", "layout");
-  return { status: "success", message: "Your profile has been saved." };
-}
-export async function signOut() {
-  if (!publicSupabaseEnv()) redirect("/login");
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signOut({ scope: "local" });
-  if (error) throw new Error("Could not sign out. Please try again.");
-  revalidatePath("/", "layout");
-  redirect("/login");
+  redirect(`/${locale}/login`);
 }

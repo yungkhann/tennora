@@ -1,60 +1,42 @@
 "use client";
-import { useActionState, useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { FormFeedback } from "@/components/form-feedback";
 import { initialFormState } from "@/lib/validation";
+import { messages, type Locale } from "@/lib/locales";
 import { updateProfile } from "./actions";
 export function ProfileForm({
   displayName,
   email,
+  locale = "ru",
 }: {
   displayName: string;
   email: string;
+  locale?: Locale;
 }) {
-  const [name, setName] = useState(displayName);
-  const [state, action, pending] = useActionState(
-    updateProfile,
-    initialFormState,
-  );
+  const t = messages(locale),
+    [state, action, pending] = useActionState(updateProfile, initialFormState);
   return (
-    <form action={action} className="grid max-w-lg gap-6">
-      <div className="field">
-        <label htmlFor="displayName">Display name</label>
+    <form action={action} className="grid gap-5">
+      <input type="hidden" name="locale" value={locale} />
+      <label className="field">
+        {t.displayName}
         <Input
-          id="displayName"
           name="displayName"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          autoComplete="name"
+          defaultValue={displayName}
           minLength={2}
           maxLength={80}
           required
-          disabled={pending}
+          autoComplete="name"
         />
-      </div>
-      <div className="field">
-        <label htmlFor="profileEmail">Email address</label>
-        <Input
-          id="profileEmail"
-          value={email}
-          type="email"
-          readOnly
-          aria-describedby="email-hint"
-        />
-        <p id="email-hint" className="text-xs text-muted-foreground">
-          Your sign-in email. Email changes are not available in this release.
-        </p>
-      </div>
+      </label>
+      <label className="field">
+        {t.email}
+        <Input value={email} type="email" readOnly />
+      </label>
       <FormFeedback state={state} />
-      <Button
-        type="submit"
-        className="w-fit"
-        disabled={pending}
-        aria-busy={pending}
-      >
-        {pending ? "Saving…" : "Save profile"}
-      </Button>
+      <Button disabled={pending}>{pending ? t.working : t.save}</Button>
     </form>
   );
 }

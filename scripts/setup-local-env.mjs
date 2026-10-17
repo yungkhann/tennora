@@ -19,7 +19,11 @@ if (new URL(status.API_URL).hostname !== "127.0.0.1")
 const publicEnv = `NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000\nNEXT_PUBLIC_SUPABASE_URL=${status.API_URL}\nNEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${status.PUBLISHABLE_KEY ?? status.ANON_KEY}\n`;
 if (!(status.PUBLISHABLE_KEY ?? status.ANON_KEY) || !status.SERVICE_ROLE_KEY)
   throw new Error("Local Supabase keys are unavailable.");
-writeFileSync(".env.local", publicEnv, { mode: 0o600 });
+writeFileSync(
+  ".env.local",
+  `${publicEnv}SUPABASE_SECRET_KEY=${status.SERVICE_ROLE_KEY}\n`,
+  { mode: 0o600 },
+);
 writeFileSync(
   ".env.test.local",
   `${publicEnv}E2E_SUPABASE_SERVICE_ROLE_KEY=${status.SERVICE_ROLE_KEY}\n`,

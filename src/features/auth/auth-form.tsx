@@ -1,214 +1,121 @@
 "use client";
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormFeedback } from "@/components/form-feedback";
 import { initialFormState } from "@/lib/validation";
-import { login, register, requestRecovery, resetPassword } from "./actions";
-type Mode = "login" | "register" | "recovery" | "reset";
-const modes = {
-  login: {
-    action: login,
-    title: "Welcome back.",
-    description: "Your club. Your community. Your next day on court.",
-    submit: "Sign in",
-  },
-  register: {
-    action: register,
-    title: "Make yourself at home.",
-    description: "Create your account and find your place on court.",
-    submit: "Create account",
-  },
-  recovery: {
-    action: requestRecovery,
-    title: "Back in the game.",
-    description: "Enter your email and we'll send you a reset link.",
-    submit: "Send reset link",
-  },
-  reset: {
-    action: resetPassword,
-    title: "A fresh start.",
-    description: "Choose a new password for your account.",
-    submit: "Update password",
-  },
-};
+import { messages, type Locale } from "@/lib/locales";
+import { login, requestRecovery, resetPassword } from "./actions";
 export function AuthForm({
   mode,
   configured,
   callbackError = false,
+  staffDenied = false,
+  locale = "ru",
 }: {
-  mode: Mode;
+  mode: "login" | "recovery" | "reset";
   configured: boolean;
   callbackError?: boolean;
+  staffDenied?: boolean;
+  locale?: Locale;
 }) {
-  const settings = modes[mode];
+  const t = messages(locale);
   const [email, setEmail] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const [state, action, pending] = useActionState(
-    settings.action,
+    { login, recovery: requestRecovery, reset: resetPassword }[mode],
     initialFormState,
   );
-  const hasPassword = mode !== "recovery";
+  const title =
+    mode === "login"
+      ? t.signIn
+      : mode === "recovery"
+        ? t.recoveryTitle
+        : t.changePassword;
+  const submit =
+    mode === "login"
+      ? t.signIn
+      : mode === "recovery"
+        ? t.sendReset
+        : t.resetHeading;
   return (
     <>
-      <p className="eyebrow mb-3">
-        {mode === "register" ? "Join Tennora" : "Your Tennora account"}
-      </p>
-      <h1 className="text-3xl font-semibold tracking-[-.04em] sm:text-4xl">
-        {settings.title}
-      </h1>
-      <p className="mt-3 text-sm leading-6 text-muted-foreground">
-        {settings.description}
-      </p>
-      {!configured && (
-        <p
-          role="status"
-          className="mt-6 rounded-lg border border-border bg-muted p-4 text-sm leading-6"
-        >
-          Authentication is not configured. Follow the project README to connect
-          Supabase.
-        </p>
-      )}
+      <p className="eyebrow mb-3">{t.league}</p>
+      <h1 className="text-3xl font-semibold">{title}</h1>
+      <p className="mt-4 text-sm text-muted-foreground">{t.accountsOnly}</p>
+      {!configured && <p role="status">{t.unavailable}</p>}
       {callbackError && (
-        <p
-          role="alert"
-          className="mt-6 rounded-lg border border-destructive/30 p-4 text-sm text-destructive"
-        >
-          This link is invalid or has expired. Try signing in or request a new
-          reset link.
+        <p role="alert" className="mt-4 text-destructive">
+          {t.callbackError}
         </p>
       )}
-      <form
-        action={action}
-        className="mt-8 grid gap-5"
-        aria-label={settings.submit}
-      >
-        {mode === "register" && (
-          <div className="field">
-            <label htmlFor="displayName">Your name</label>
-            <Input
-              id="displayName"
-              name="displayName"
-              value={displayName}
-              onChange={(event) => setDisplayName(event.target.value)}
-              autoComplete="name"
-              placeholder="Alex Morgan"
-              minLength={2}
-              maxLength={80}
-              required
-              disabled={pending}
-            />
-          </div>
-        )}
+      {staffDenied && (
+        <p role="alert" className="mt-4 text-destructive">
+          {t.staffDenied}
+        </p>
+      )}
+      <form action={action} className="mt-8 grid gap-5" aria-label={submit}>
+        <input type="hidden" name="locale" value={locale} />
         {mode !== "reset" && (
-          <div className="field">
-            <label htmlFor="email">Email address</label>
+          <label className="field">
+            {t.email}
             <Input
-              id="email"
               name="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               type="email"
               autoComplete="email"
-              placeholder="you@yourclub.com"
-              maxLength={254}
               required
+              maxLength={254}
               disabled={pending}
             />
-          </div>
+          </label>
         )}
-        {hasPassword && (
-          <div className="field">
-            <div className="flex items-center justify-between gap-2">
-              <label htmlFor="password">
-                {mode === "reset" ? "New password" : "Password"}
-              </label>
-              {mode === "login" && (
-                <Link className="text-link text-xs" href="/forgot-password">
-                  Forgot password?
-                </Link>
-              )}
-            </div>
+        {mode !== "recovery" && (
+          <label className="field">
+            {t.password}
             <Input
-              id="password"
               name="password"
               type="password"
               autoComplete={
                 mode === "login" ? "current-password" : "new-password"
               }
+              required
               minLength={mode === "login" ? 1 : 12}
               maxLength={128}
-              required
               disabled={pending}
-              aria-describedby={mode !== "login" ? "password-hint" : undefined}
             />
-            {mode !== "login" && (
-              <p id="password-hint" className="text-xs text-muted-foreground">
-                At least 12 characters. Make it your own.
-              </p>
-            )}
-          </div>
+          </label>
         )}
         {mode === "reset" && (
-          <div className="field">
-            <label htmlFor="confirmPassword">Confirm new password</label>
+          <label className="field">
+            {t.confirmPassword}
             <Input
-              id="confirmPassword"
               name="confirmPassword"
               type="password"
               autoComplete="new-password"
               required
+              minLength={12}
               maxLength={128}
               disabled={pending}
             />
-          </div>
+          </label>
         )}
         <FormFeedback state={state} />
-        <Button
-          type="submit"
-          className="mt-1 w-full"
-          disabled={pending || !configured}
-          aria-busy={pending}
-        >
-          {pending ? (
-            <>
-              <LoaderCircle className="animate-spin" />
-              Please wait…
-            </>
-          ) : (
-            <>
-              {settings.submit}
-              <ArrowRight />
-            </>
-          )}
+        <Button disabled={pending || !configured}>
+          {pending ? t.working : submit}
         </Button>
       </form>
-      <p className="mt-7 text-center text-sm text-muted-foreground">
+      <div className="mt-6 flex flex-wrap gap-5 text-sm underline">
         {mode === "login" ? (
-          <>
-            New to Tennora?{" "}
-            <Link className="text-link" href="/register">
-              Create an account
-            </Link>
-          </>
-        ) : mode === "register" ? (
-          <>
-            Already a member?{" "}
-            <Link className="text-link" href="/login">
-              Sign in
-            </Link>
-          </>
+          <Link href={`/${locale}/forgot-password`}>{t.recovery}</Link>
         ) : (
-          <Link
-            className="text-link"
-            href={mode === "reset" ? "/dashboard" : "/login"}
-          >
-            {mode === "reset" ? "Return to workspace" : "Back to sign in"}
-          </Link>
+          <Link href={`/${locale}/login`}>{t.back}</Link>
         )}
-      </p>
+        {mode === "reset" && (
+          <Link href={`/${locale}/workspace`}>{t.workspace}</Link>
+        )}
+      </div>
     </>
   );
 }

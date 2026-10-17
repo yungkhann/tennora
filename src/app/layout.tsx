@@ -6,7 +6,8 @@ export const metadata: Metadata = {
     default: "Tennora — A better day on court",
     template: "%s · Tennora",
   },
-  description: "Your tennis organization, together in one workspace.",
+  description:
+    "One table tennis league. Staff workspaces and league operations.",
 };
 export default function RootLayout({
   children,

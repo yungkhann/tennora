@@ -22,7 +22,8 @@
     "check": "npm run typecheck && npm run lint && npm test && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:env": "node scripts/setup-local-env.mjs"
+    "db:env": "node scripts/setup-local-env.mjs",
+    "test:staff-concurrency": "node scripts/test-staff-concurrency.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.5.0",

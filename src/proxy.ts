@@ -12,6 +12,12 @@ export async function proxy(request: NextRequest) {
   noStore();
   if (!env) return response;
   const supabase = createServerClient(env.url, env.key, {
+    cookieOptions: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    },
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -32,6 +38,12 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
+    "/(ru|kk|en)/workspace/:path*",
+    "/(ru|kk|en)/organizer/:path*",
+    "/(ru|kk|en)/settings/:path*",
+    "/(ru|kk|en)/login",
+    "/(ru|kk|en)/forgot-password",
+    "/(ru|kk|en)/reset-password",
     "/settings/:path*",
     "/auth/:path*",
     "/login",

@@ -8,6 +8,12 @@ export async function createClient() {
   if (!env) throw new Error("Supabase is not configured.");
   const store = await cookies();
   return createServerClient<Database>(env.url, env.key, {
+    cookieOptions: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    },
     cookies: {
       getAll() {
         return store.getAll();
