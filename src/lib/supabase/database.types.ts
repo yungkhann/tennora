@@ -156,6 +156,158 @@ export type Database = {
         };
         Relationships: [];
       };
+      player_status_events: {
+        Row: {
+          created_at: string;
+          effective_at: string;
+          id: string;
+          player_id: string;
+          reason: string;
+          set_by: string;
+          status: Database["public"]["Enums"]["player_status"];
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          effective_at: string;
+          id?: string;
+          player_id: string;
+          reason: string;
+          set_by: string;
+          status: Database["public"]["Enums"]["player_status"];
+        };
+        Update: {
+          created_at?: string;
+          effective_at?: string;
+          id?: string;
+          player_id?: string;
+          reason?: string;
+          set_by?: string;
+          status?: Database["public"]["Enums"]["player_status"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "player_status_events_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "player_status_events_set_by_fkey";
+            columns: ["set_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      player_trainer_refs: {
+        Row: {
+          created_at: string;
+          free_first_name: string | null;
+          free_last_name: string | null;
+          kind: string;
+          player_id: string;
+          trainer_id: string | null;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          free_first_name?: string | null;
+          free_last_name?: string | null;
+          kind: string;
+          player_id: string;
+          trainer_id?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          free_first_name?: string | null;
+          free_last_name?: string | null;
+          kind?: string;
+          player_id?: string;
+          trainer_id?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "player_trainer_refs_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "player_trainer_refs_trainer_id_fkey";
+            columns: ["trainer_id"];
+            isOneToOne: false;
+            referencedRelation: "trainer_profiles";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
+      players: {
+        Row: {
+          created_at: string;
+          current_rating: number;
+          date_of_birth: string;
+          external_rating_id: string | null;
+          first_name: string;
+          gender: Database["public"]["Enums"]["player_gender"];
+          id: string;
+          last_name: string;
+          playing_hand: string;
+          playing_style: string;
+          sports_level: string;
+          status: Database["public"]["Enums"]["player_status"];
+          team_id: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          current_rating?: number;
+          date_of_birth: string;
+          external_rating_id?: string | null;
+          first_name: string;
+          gender: Database["public"]["Enums"]["player_gender"];
+          id: string;
+          last_name: string;
+          playing_hand: string;
+          playing_style: string;
+          sports_level: string;
+          status?: Database["public"]["Enums"]["player_status"];
+          team_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          current_rating?: number;
+          date_of_birth?: string;
+          external_rating_id?: string | null;
+          first_name?: string;
+          gender?: Database["public"]["Enums"]["player_gender"];
+          id?: string;
+          last_name?: string;
+          playing_hand?: string;
+          playing_style?: string;
+          sports_level?: string;
+          status?: Database["public"]["Enums"]["player_status"];
+          team_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "players_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           created_at: string;
@@ -177,6 +329,178 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      rating_history: {
+        Row: {
+          created_at: string;
+          external_rating_id: string | null;
+          id: string;
+          import_id: string | null;
+          player_id: string;
+          rating_after: number;
+          rating_before: number | null;
+          source: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          external_rating_id?: string | null;
+          id?: string;
+          import_id?: string | null;
+          player_id: string;
+          rating_after: number;
+          rating_before?: number | null;
+          source: string;
+        };
+        Update: {
+          created_at?: string;
+          external_rating_id?: string | null;
+          id?: string;
+          import_id?: string | null;
+          player_id?: string;
+          rating_after?: number;
+          rating_before?: number | null;
+          source?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rating_history_import_id_fkey";
+            columns: ["import_id"];
+            isOneToOne: false;
+            referencedRelation: "rating_imports";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_history_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rating_imports: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          external_revision: string;
+          id: string;
+          source: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          external_revision: string;
+          id?: string;
+          source: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          external_revision?: string;
+          id?: string;
+          source?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rating_imports_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      roster_memberships: {
+        Row: {
+          created_at: string;
+          ended_at: string | null;
+          ended_reason: string | null;
+          id: string;
+          joined_at: string;
+          player_id: string;
+          season_id: string;
+          subteam_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          ended_at?: string | null;
+          ended_reason?: string | null;
+          id?: string;
+          joined_at?: string;
+          player_id: string;
+          season_id: string;
+          subteam_id: string;
+        };
+        Update: {
+          created_at?: string;
+          ended_at?: string | null;
+          ended_reason?: string | null;
+          id?: string;
+          joined_at?: string;
+          player_id?: string;
+          season_id?: string;
+          subteam_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "roster_memberships_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "roster_memberships_season_id_fkey";
+            columns: ["season_id"];
+            isOneToOne: false;
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "roster_memberships_subteam_id_fkey";
+            columns: ["subteam_id"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      season_team_entries: {
+        Row: {
+          created_at: string;
+          season_id: string;
+          team_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          season_id: string;
+          team_id: string;
+        };
+        Update: {
+          created_at?: string;
+          season_id?: string;
+          team_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "season_team_entries_season_id_fkey";
+            columns: ["season_id"];
+            isOneToOne: false;
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "season_team_entries_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       seasons: {
         Row: {
@@ -323,6 +647,98 @@ export type Database = {
           },
         ];
       };
+      subteam_trainers: {
+        Row: {
+          created_at: string;
+          subteam_id: string;
+          trainer_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          subteam_id: string;
+          trainer_id: string;
+        };
+        Update: {
+          created_at?: string;
+          subteam_id?: string;
+          trainer_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "subteam_trainers_subteam_id_fkey";
+            columns: ["subteam_id"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "subteam_trainers_trainer_id_fkey";
+            columns: ["trainer_id"];
+            isOneToOne: false;
+            referencedRelation: "trainer_profiles";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
+      subteams: {
+        Row: {
+          age_group: Database["public"]["Enums"]["age_group"];
+          created_at: string;
+          id: string;
+          team_id: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          age_group: Database["public"]["Enums"]["age_group"];
+          created_at?: string;
+          id?: string;
+          team_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          age_group?: Database["public"]["Enums"]["age_group"];
+          created_at?: string;
+          id?: string;
+          team_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "subteams_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      teams: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          region: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          id: string;
+          name: string;
+          region: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          region?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       tours: {
         Row: {
           created_at: string;
@@ -365,14 +781,67 @@ export type Database = {
           },
         ];
       };
+      trainer_profiles: {
+        Row: {
+          created_at: string;
+          team_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          team_id: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          team_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trainer_profiles_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "trainer_profiles_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: true;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
+      add_roster_player: {
+        Args: { parent_season: string; player: string; target_subteam: string };
+        Returns: string;
+      };
       age_group_for_birth_year: {
         Args: { birth_year: number; season_year: number };
         Returns: string;
+      };
+      assign_team_trainer: {
+        Args: { club: string; coached_subteams: string[]; trainer: string };
+        Returns: undefined;
+      };
+      available_team_trainers: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          display_name: string;
+          id: string;
+          team_id: string;
+        }[];
       };
       begin_staff_job: {
         Args: {
@@ -415,8 +884,35 @@ export type Database = {
         Args: { organization_name: string; organization_slug: string };
         Returns: string;
       };
+      drop_player: {
+        Args: { effective_date: string; player: string; reason: string };
+        Returns: undefined;
+      };
+      end_roster_membership: {
+        Args: { membership: string; reason: string };
+        Returns: undefined;
+      };
       finish_staff_job: {
         Args: { job_id: string; succeeded: boolean };
+        Returns: string;
+      };
+      register_season_team: {
+        Args: { club: string; parent_season: string };
+        Returns: undefined;
+      };
+      save_player: {
+        Args: {
+          club: string;
+          dob: string;
+          external_id?: string;
+          first_name: string;
+          gender: Database["public"]["Enums"]["player_gender"];
+          hand: string;
+          last_name: string;
+          player_id: string;
+          sports_level: string;
+          style: string;
+        };
         Returns: string;
       };
       save_season: {
@@ -427,6 +923,10 @@ export type Database = {
           season_name: string;
           season_year: number;
         };
+        Returns: string;
+      };
+      save_team: {
+        Args: { team_id: string; team_name: string; team_region: string };
         Returns: string;
       };
       save_tour: {
@@ -440,12 +940,33 @@ export type Database = {
         };
         Returns: string;
       };
+      set_player_trainer: {
+        Args: {
+          first_name: string;
+          last_name: string;
+          player: string;
+          ref_kind: string;
+          trainer: string;
+        };
+        Returns: undefined;
+      };
+      set_player_trainer_reference: {
+        Args: { player: string; ref_kind: string; reference: Json };
+        Returns: undefined;
+      };
       start_season: { Args: { season_id: string }; Returns: undefined };
+      transfer_player: {
+        Args: { new_club: string; player: string; reason: string };
+        Returns: undefined;
+      };
       update_staff_name: { Args: { new_name: string }; Returns: undefined };
     };
     Enums: {
+      age_group: "U13" | "U15" | "U17";
       organization_role:
         "owner" | "tournament_director" | "scorekeeper" | "player";
+      player_gender: "boy" | "girl";
+      player_status: "active" | "dropped_out";
       season_status: "draft" | "started";
       staff_role: "organizer" | "main_judge" | "trainer" | "line_judge";
     };
@@ -578,12 +1099,15 @@ export const Constants = {
   },
   public: {
     Enums: {
+      age_group: ["U13", "U15", "U17"],
       organization_role: [
         "owner",
         "tournament_director",
         "scorekeeper",
         "player",
       ],
+      player_gender: ["boy", "girl"],
+      player_status: ["active", "dropped_out"],
       season_status: ["draft", "started"],
       staff_role: ["organizer", "main_judge", "trainer", "line_judge"],
     },

@@ -40,6 +40,8 @@ export const config = {
     "/dashboard/:path*",
     "/(ru|kk|en)/workspace/:path*",
     "/(ru|kk|en)/organizer/:path*",
+    "/(ru|kk|en)/team/:path*",
+    "/(ru|kk|en)/subteam/:path*",
     "/(ru|kk|en)/settings/:path*",
     "/(ru|kk|en)/login",
     "/(ru|kk|en)/forgot-password",

@@ -28,6 +28,9 @@ export default async function StaffLayout({
           {roles.includes("organizer") && (
             <Link href={`/${locale}/organizer/seasons`}>{t.seasons}</Link>
           )}
+          {roles.some((r) =>
+            ["organizer", "main_judge", "trainer"].includes(r),
+          ) && <Link href={`/${locale}/team`}>{t.teams}</Link>}
           <Link href={`/${locale}/settings/profile`}>{t.profile}</Link>
           <Link href="/">{t.publicHome}</Link>
         </nav>

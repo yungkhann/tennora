@@ -2,7 +2,7 @@
 
 ## Implemented baseline
 
-202610170001_foundation.sql establishes profiles -> auth.users, organizations, organization_members and audit_logs. These are the original Phase 1 tables with tenant RLS. Their data/history remains preserved. Task B adds 202610170002_league_staff.sql and 202610170003_staff_profile.sql: staff_accounts, normalized staff_roles, provisioning/reset staff_jobs, additive league audit fields and audited RPCs. See MILESTONE_B_VERIFICATION.md. Teams and players are not implemented yet. Historical design is archived in archive/PHASE_1_DATABASE.md.
+202610170001_foundation.sql establishes profiles -> auth.users, organizations, organization_members and audit_logs. These are the original Phase 1 tables with tenant RLS. Their data/history remains preserved. Task B adds 202610170002_league_staff.sql and 202610170003_staff_profile.sql: staff_accounts, normalized staff_roles, provisioning/reset staff_jobs, additive league audit fields and audited RPCs. See MILESTONE_B_VERIFICATION.md. C1 adds seasons/tours (004); C2 adds clubs, subteams, trainer scope, private players, roster/status history and rating provenance (005–008). See MILESTONE_C1_VERIFICATION.md and MILESTONE_C2_VERIFICATION.md. Photos/settings/stages remain C3. Historical design is archived in archive/PHASE_1_DATABASE.md.
 
 ## Target league relationships
 

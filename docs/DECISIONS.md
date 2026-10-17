@@ -17,6 +17,9 @@ Recorded 17 October 2026. Confirmed means explicitly chosen by the user or unamb
 
 | C08 | Organizer-approved mid-season transfers are allowed and preserve earlier results. Tournaments use the active season roster directly; no separate tour-roster submission. | User answers in this conversation; resolves transfer/tour-roster part of D02. |
 
+| C09 | Trainers upload player photos and written guardian-consent evidence; Organizer approves publication. | User photo-workflow answer in this conversation. |
+| C10 | Standard 400-point Elo; round each result to a whole rating; minimum zero. | User rating-policy answer in this conversation. |
+
 ## Pending rules and dependencies
 
 | ID  | Decision needed                                                                                                                    | Dependency / next action                                                                        |
@@ -25,7 +28,7 @@ Recorded 17 October 2026. Confirmed means explicitly chosen by the user or unamb
 | D03 | Minimum lineup versus empty-slot loss; both sides empty; no-show details.                                                          | D/E submissions and automatic results.                                                          |
 | D04 | Actual group sizes, qualifying/bracket maps, third place, seed ties and group/multi-way/head-to-head tie-breaks.                   | D draws/standings.                                                                              |
 | D05 | Seeding input/freeze: top five eligible players, 3 boys and 2 girls, as proposed?                                                  | D seed snapshots.                                                                               |
-| D06 | Standard 400-scale Elo, numeric precision/rounding, K scope/effective time, weighted placements/missing-tour policy.               | E rating and G season standing calculations. Initial 1000/no auto-loss Elo remain source rules. |
+| D06 | K scope/effective time, weighted placements/missing-tour policy. Formula/whole-rating rounding/minimum zero resolved by C10.       | E rating and G season standing calculations. Initial 1000/no auto-loss Elo remain source rules. |
 | D07 | Who may reopen completed games/matches, cascading corrections to Elo, subsequent games and advanced draws; history revision model. | E correction migrations and tests. Do not silently restrict required undo.                      |
 | D08 | Mid-game replacement score/Elo attribution; timeout limits; first server across sets; judge fallback.                              | D replacements and E/F judge controls.                                                          |
 | D09 | Rest minutes/finals priority/override policy, venue timezone, devices/network and simulated table count.                           | F scheduling and I acceptance. No player/table simultaneous conflicts.                          |

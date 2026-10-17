@@ -4,6 +4,76 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  teams: "Clubs",
+  region: "Region",
+  newTeam: "Create club",
+  noTeams: "No assigned clubs yet.",
+  teamsIntro:
+    "Manage clubs, their age-group subteams and players within your assigned scope.",
+  choose: "Select",
+  registerTeam: "Register club in season",
+  assignTrainer: "Assign trainer",
+  subteams: "Age-group subteams",
+  trainerScopeHelp:
+    "The Trainer will coach these subteams within this club. Assigning another club replaces their previous club assignment.",
+  players: "Players",
+  newPlayer: "Create player",
+  firstName: "First name",
+  lastName: "Last name",
+  gender: "Gender",
+  boy: "Boy",
+  girl: "Girl",
+  dob: "Date of birth (private)",
+  hand: "Playing hand",
+  right: "Right",
+  left: "Left",
+  style: "Playing style",
+  sportsLevel: "Sports level",
+  externalId: "External rating ID (optional)",
+  playerPrivacy:
+    "Player records do not create login accounts. Date of birth stays private; new ratings start at 1000. Photos and consent are a later part of this task.",
+  playerInvalid:
+    "Check player details. Date of birth must preserve all active roster age groups.",
+  addRoster: "Add to roster",
+  rosterHelp:
+    "Only active players in this age group may join. Maximum 10 per season roster. Tournaments use this active roster directly.",
+  rosterInvalid:
+    "Could not add player. Check registration, age, current club, active status and roster capacity.",
+  removeRoster: "End roster membership",
+  reason: "Reason",
+  dropPlayer: "Mark dropped out",
+  effectiveDate: "Effective date",
+  transferPlayer: "Approve transfer",
+  receivingClub: "Receiving club",
+  transferHelp:
+    "This ends active roster memberships and moves the player to the receiving club. History is retained. The receiving club then selects an eligible season roster.",
+  saveTrainerRef: "Save trainer reference",
+  refKind: "Trainer reference type",
+  firstTrainer: "First trainer",
+  personalTrainer: "Personal trainer",
+  linkedTrainer: "Linked trainer",
+  freeTrainer: "Enter a trainer name below",
+  trainerRefHelp:
+    "Choose an existing trainer and leave the name fields empty, or enter both names without selecting a trainer.",
+  trainerRefInvalid:
+    "Choose a linked trainer or enter both first and last names, never both.",
+  rating: "Rating",
+  droppedOut: "Dropped out",
+  editPlayer: "Edit player",
+  trainerRefs: "Trainer references",
+  noPlayers: "No players yet.",
+  editTeam: "Edit club",
+  registeredSeasons: "Registered seasons",
+  trainers: "Trainers",
+  roster: "Roster",
+  registerFirst: "Register the club in a season before selecting its roster.",
+  notAssigned: "You are not assigned to edit this subteam.",
+  formerPlayer: "Former club player",
+  ended: "Membership ended",
+  rosterFull: "Roster capacity reached (10 active players).",
+  noEligiblePlayers:
+    "No eligible unselected players. Create a player in the club first.",
+
   refreshForms: "Refresh forms",
   seasons: "Seasons",
   tours: "Tournaments",
@@ -79,7 +149,7 @@ const en = {
   noStaff: "No staff accounts.",
   noJobs: "No account operations yet.",
   coming:
-    "Season, team and hall tools will appear here as their implementation tasks are completed.",
+    "Match, draw and hall tools will appear here as their implementation tasks are completed.",
   access: "Your access",
   selfProtection:
     "You cannot deactivate yourself or remove your own Organizer role.",
@@ -108,6 +178,77 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  teams: "Клубы",
+  region: "Регион",
+  newTeam: "Создать клуб",
+  noTeams: "Назначенных клубов пока нет.",
+  teamsIntro:
+    "Управляйте клубами, возрастными составами и игроками в пределах своих прав.",
+  choose: "Выбрать",
+  registerTeam: "Зарегистрировать клуб в сезоне",
+  assignTrainer: "Назначить тренера",
+  subteams: "Возрастные составы",
+  trainerScopeHelp:
+    "Тренер получит выбранные составы этого клуба. Назначение другого клуба заменяет прежнее назначение.",
+  players: "Игроки",
+  newPlayer: "Создать игрока",
+  firstName: "Имя",
+  lastName: "Фамилия",
+  gender: "Пол",
+  boy: "Мальчик",
+  girl: "Девочка",
+  dob: "Дата рождения (закрытые данные)",
+  hand: "Игровая рука",
+  right: "Правая",
+  left: "Левая",
+  style: "Стиль игры",
+  sportsLevel: "Спортивный разряд",
+  externalId: "ID внешнего рейтинга (необязательно)",
+  playerPrivacy:
+    "Запись игрока не создаёт аккаунт для входа. Дата рождения закрыта; начальный рейтинг — 1000. Фото и согласие появятся на следующем этапе этой задачи.",
+  playerInvalid:
+    "Проверьте данные игрока. Дата рождения должна соответствовать всем активным составам.",
+  addRoster: "Добавить в состав",
+  rosterHelp:
+    "В состав входят только активные игроки этой возрастной группы. Максимум 10 на сезон. Турниры используют этот активный состав.",
+  rosterInvalid:
+    "Не удалось добавить игрока. Проверьте регистрацию, возраст, текущий клуб, статус и лимит состава.",
+  removeRoster: "Завершить участие в составе",
+  reason: "Причина",
+  dropPlayer: "Отметить выбытие",
+  effectiveDate: "Дата события",
+  transferPlayer: "Одобрить переход",
+  receivingClub: "Принимающий клуб",
+  transferHelp:
+    "Переход завершает активное участие в составах и перемещает игрока в принимающий клуб. История сохраняется. Новый клуб затем добавляет игрока в подходящий сезонный состав.",
+  saveTrainerRef: "Сохранить сведения о тренере",
+  refKind: "Тип тренера",
+  firstTrainer: "Первый тренер",
+  personalTrainer: "Личный тренер",
+  linkedTrainer: "Связанный тренер",
+  freeTrainer: "Указать имя тренера ниже",
+  trainerRefHelp:
+    "Выберите существующего тренера и оставьте поля имени пустыми, либо укажите имя и фамилию без выбора тренера.",
+  trainerRefInvalid:
+    "Выберите тренера или введите имя и фамилию. Совмещать оба варианта нельзя.",
+  rating: "Рейтинг",
+  droppedOut: "Выбыл",
+  editPlayer: "Редактировать игрока",
+  trainerRefs: "Сведения о тренерах",
+  noPlayers: "Игроков пока нет.",
+  editTeam: "Редактировать клуб",
+  registeredSeasons: "Сезоны участия",
+  trainers: "Тренеры",
+  roster: "Состав",
+  registerFirst:
+    "Сначала зарегистрируйте клуб в сезоне, затем выберите состав.",
+  notAssigned: "Вам не назначено редактирование этого состава.",
+  formerPlayer: "Бывший игрок клуба",
+  ended: "Участие завершено",
+  rosterFull: "Достигнут лимит состава: 10 активных игроков.",
+  noEligiblePlayers:
+    "Нет подходящих невыбранных игроков. Сначала создайте игрока в клубе.",
+
   refreshForms: "Обновить формы",
   seasons: "Сезоны",
   tours: "Турниры",
@@ -182,7 +323,7 @@ const ru: Messages = {
   noStaff: "Нет аккаунтов сотрудников.",
   noJobs: "Операций пока нет.",
   coming:
-    "Инструменты сезонов, команд и зала появятся после завершения соответствующих этапов реализации.",
+    "Инструменты матчей, жеребьёвки и зала появятся после завершения соответствующих этапов реализации.",
   access: "Ваши права",
   selfProtection:
     "Нельзя отключить свой аккаунт или снять с себя роль организатора.",
@@ -210,6 +351,76 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  teams: "Клубтар",
+  region: "Аймақ",
+  newTeam: "Клуб құру",
+  noTeams: "Тағайындалған клубтар әлі жоқ.",
+  teamsIntro:
+    "Өз өкілеттігіңіз шегінде клубтарды, жас топтарын және ойыншыларды басқарыңыз.",
+  choose: "Таңдау",
+  registerTeam: "Клубты маусымға тіркеу",
+  assignTrainer: "Жаттықтырушыны тағайындау",
+  subteams: "Жас топтарының құрамдары",
+  trainerScopeHelp:
+    "Жаттықтырушы осы клубтың таңдалған құрамдарына тағайындалады. Басқа клубқа тағайындау бұрынғысын ауыстырады.",
+  players: "Ойыншылар",
+  newPlayer: "Ойыншы құру",
+  firstName: "Аты",
+  lastName: "Тегі",
+  gender: "Жынысы",
+  boy: "Ұл",
+  girl: "Қыз",
+  dob: "Туған күні (жеке дерек)",
+  hand: "Ойын қолы",
+  right: "Оң",
+  left: "Сол",
+  style: "Ойын стилі",
+  sportsLevel: "Спорттық дәреже",
+  externalId: "Сыртқы рейтинг ID (міндетті емес)",
+  playerPrivacy:
+    "Ойыншы жазбасы кіру аккаунтын құрмайды. Туған күні жабық; бастапқы рейтинг — 1000. Фото мен келісім осы тапсырманың келесі кезеңінде қосылады.",
+  playerInvalid:
+    "Ойыншы деректерін тексеріңіз. Туған күні барлық белсенді құрамдардың жас тобына сәйкес болуы керек.",
+  addRoster: "Құрамға қосу",
+  rosterHelp:
+    "Тек осы жас тобындағы белсенді ойыншылар қосылады. Маусымдық құрамда ең көбі 10 ойыншы. Турнирлер осы белсенді құрамды пайдаланады.",
+  rosterInvalid:
+    "Ойыншы қосылмады. Тіркелуін, жасын, қазіргі клубын, күйін және құрам шегін тексеріңіз.",
+  removeRoster: "Құрамға қатысуды аяқтау",
+  reason: "Себеп",
+  dropPlayer: "Шыққанын белгілеу",
+  effectiveDate: "Оқиға күні",
+  transferPlayer: "Ауысуды мақұлдау",
+  receivingClub: "Қабылдаушы клуб",
+  transferHelp:
+    "Ауысу белсенді құрамдарға қатысуды аяқтап, ойыншыны қабылдаушы клубқа өткізеді. Тарих сақталады. Жаңа клуб кейін оны тиісті маусымдық құрамға қосады.",
+  saveTrainerRef: "Жаттықтырушы дерегін сақтау",
+  refKind: "Жаттықтырушы түрі",
+  firstTrainer: "Алғашқы жаттықтырушы",
+  personalTrainer: "Жеке жаттықтырушы",
+  linkedTrainer: "Байланыстырылған жаттықтырушы",
+  freeTrainer: "Жаттықтырушы атын төменде енгізу",
+  trainerRefHelp:
+    "Бар жаттықтырушыны таңдап, аты-жөнін бос қалдырыңыз немесе жаттықтырушыны таңдамай, аты мен тегін енгізіңіз.",
+  trainerRefInvalid:
+    "Жаттықтырушыны таңдаңыз немесе аты мен тегін енгізіңіз. Екеуін қатар қолдануға болмайды.",
+  rating: "Рейтинг",
+  droppedOut: "Шықты",
+  editPlayer: "Ойыншыны өңдеу",
+  trainerRefs: "Жаттықтырушылар деректері",
+  noPlayers: "Ойыншылар әлі жоқ.",
+  editTeam: "Клубты өңдеу",
+  registeredSeasons: "Қатысатын маусымдар",
+  trainers: "Жаттықтырушылар",
+  roster: "Құрам",
+  registerFirst: "Алдымен клубты маусымға тіркеп, кейін құрамды таңдаңыз.",
+  notAssigned: "Бұл құрамды өңдеу сізге тағайындалмаған.",
+  formerPlayer: "Клубтың бұрынғы ойыншысы",
+  ended: "Қатысу аяқталды",
+  rosterFull: "Құрам шегіне жетті: 10 белсенді ойыншы.",
+  noEligiblePlayers:
+    "Таңдалмаған жарамды ойыншылар жоқ. Алдымен клубта ойыншы құрыңыз.",
+
   refreshForms: "Пішіндерді жаңарту",
   seasons: "Маусымдар",
   tours: "Турнирлер",
@@ -284,7 +495,7 @@ const kk: Messages = {
   noStaff: "Қызметкер аккаунттары жоқ.",
   noJobs: "Операциялар әлі жоқ.",
   coming:
-    "Маусым, команда және зал құралдары тиісті іске асыру кезеңдері аяқталғаннан кейін пайда болады.",
+    "Матч, жеребе және зал құралдары тиісті іске асыру кезеңдері аяқталғаннан кейін пайда болады.",
   access: "Сіздің құқықтарыңыз",
   selfProtection:
     "Өз аккаунтыңызды өшіруге немесе өзіңізден ұйымдастырушы рөлін алып тастауға болмайды.",
