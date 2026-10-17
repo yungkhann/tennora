@@ -1,6 +1,6 @@
 # Table tennis league implementation plan
 
-Prepared 17 October 2026. Status: plan only; no league implementation or PDF rewrite has been performed.
+Prepared 17 October 2026. Execution is authorized one task at a time. Current status and evidence are tracked in IMPLEMENTATION_PLAN.md.
 
 ## Confirmed direction
 
@@ -17,7 +17,7 @@ Architecture and single-league scope are settled. Record the following remaining
 | Decision                        | Proposed starting point / required clarification                                                                                                                                                                                                          | Needed before                           |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
 | Languages                       | Include Russian, Kazakh and English because FR-17 requires all three; `/ru` is default and fallback. Confirm translations and reviewers.                                                                                                                  | Route/localization setup                |
-| Staff roles                     | Organizer, Main Judge, Trainer and Line Judge; decide whether one person may hold several staff roles. Explicitly provision the first Organizer; never infer it from legacy organization ownership or user metadata.                                      | Staff schema                            |
+| Staff roles                     | Organizer, Main Judge, Trainer and Line Judge; coexisting staff roles are confirmed by the user. Explicitly provision the first Organizer; never infer it from legacy organization ownership or user metadata.                                            | Staff schema                            |
 | Age and rosters                 | Confirm exact eligible birth-year ranges and reference season year, playing up, minimum roster size, transfers, tour roster versus per-match lineup, and seeding ties. Maximum 10 active players per subteam remains required.                            | Player/roster rules                     |
 | Incomplete lineups              | Reconcile minimum 3 boys + 2 girls with empty-slot losses; define both sides missing the same slot and no-show handling.                                                                                                                                  | Lineup submission and team-result logic |
 | Competition formats             | Confirm group sizes, qualifiers, bracket maps, third-place matches, in-group and multi-way/head-to-head tie-breaks. Support this season's formats as data-driven templates.                                                                               | Draw generation                         |
@@ -168,7 +168,7 @@ Provider plan limits, Realtime fan-out and recovery features are early feasibili
 4. Switch navigation and public homepage after the first complete league workflow is demonstrated. Preserve safe redirects; remove or archive old organization UI only after parity/acceptance review.
 5. Rehearse cutover with account/row counts, score/rating consistency checks and route checks. Freeze conflicting writes for the actual cutover. Before reopening writes, rollback can restore the prior app/schema snapshot; after new scoring writes begin, use a reconciled recovery/forward-fix procedure rather than discarding new results.
 
-The current task delivers this plan and a pointer from the old implementation plan. It does not change application behavior, migrate accounts, enable a service, revise the source PDF or start a later implementation phase.
+The user authorized sequential execution after approving this plan. Follow IMPLEMENTATION_PLAN.md for the current batch, verified status and decisions that gate dependent work.
 
 ## References
 

@@ -1,43 +1,37 @@
 # Tennora product specification
 
-## Product and audience
+Status: Task A rebaseline, 17 October 2026. Product direction is approved; implementation status is tracked in IMPLEMENTATION_PLAN.md. The previous tennis SaaS specification is preserved in archive/PHASE_1_PRODUCT_SPEC.md.
 
-A multi-tenant tournament workspace for independent tennis organizations, with public published tournament information and authoritative live scores. One account may belong to many organizations and hold multiple roles in each.
+## Product
 
-## Phase 1 contract
+One youth table tennis league, not an organization marketplace. A club is a team with U13, U15 and U17 subteams. Target season scale is 24 clubs, 72 subteams and 360+ players. Seasons contain tours; tours contain stages; stages use round-robin, knockout or data-defined composite templates. A tournament in the interface means a tour.
 
-Deliver reproducible Next.js/TypeScript tooling; accessible light/dark design tokens and shadcn-style primitives; public welcome and match-center foundation; email/password registration, confirmation, login, logout and password recovery; a protected workspace; editable profile; organization creation and membership-based organization switching. No simulated production tournament counts, matches, players or scores. Missing backend configuration produces a useful setup state, never a fake authenticated session.
+Use Next.js App Router, TypeScript, Tailwind/shadcn, Supabase PostgreSQL/Auth/Storage/Realtime, Zod, Vitest and Playwright. Deployment remains Netlify-compatible. The complete revised requirements, FR-1 through FR-18, performance targets and source change log are in [REQUIREMENTS_REVISED.md](REQUIREMENTS_REVISED.md).
 
-Organization onboarding is included only to establish the tenant boundary. Invitations, staff management and tournament CRUD are Phase 2. Public match center clearly communicates that live tournament publishing arrives in a later milestone.
+## Accounts and roles
 
-## Roles
+Only staff authenticate. Organizers provision Organizer, Main Judge, Trainer and Line Judge accounts. Players are league records with no Auth account; spectators read public information without login. Legacy organization ownership never grants league authority. Public signup and organization creation are retired in Task B, not merely hidden in navigation.
 
-Platform admin is a separately provisioned platform capability, never user-editable metadata. Organization membership roles are owner, tournament_director, scorekeeper and player; a membership has one or more roles. Spectator is public read capability, not a privileged membership. Phase 1 permits organization self-creation with owner membership and reads the caller's memberships. Later phases add staff mutation policies and platform administration.
+An active Organizer manages seasons/settings/accounts and all operations. Main Judges run matches, allocate tables and replace locked players, but cannot create accounts/seasons or change settings. Trainers manage their assigned club/subteams only. Line Judges score only their table for the assigned venue-calendar day. The user confirmed coexisting staff roles (D01/C06 in DECISIONS.md). Effective permissions combine explicitly granted roles and retain resource restrictions.
 
-## Later product requirements
+## Core rules
 
-- Staff configure tournaments, IANA timezone, dates, deadlines, divisions, courts, limits, registrations and assignments.
-- Singles knockout draws of 8/16/32 support seeded/random placement and byes. Publication locks regeneration; privileged explicit replacement requires audit history.
-- A pure scoring state machine supports deuce/advantage, games, sets, tie-breaks and best-of-three format definitions.
-- Assigned scorekeepers submit validated, idempotent commands against a version. PostgreSQL locks the score row, rejects stale versions and commits snapshot/action/advancement atomically.
-- Undo and administrative correction are new immutable actions referencing prior actions, with actor, reason and before/after state.
-- Public Realtime events trigger authoritative snapshot reads. Reconnect always resyncs. Events cannot independently set official state.
-- Organizer and mobile scorekeeper interfaces have clear pending, offline, stale/conflict, success and correction states.
+- Birth-year eligibility, maximum 10 active players per subteam, persistent dropout history and linked-or-free-text first/personal trainers.
+- Lineup slots: boy, girl, boy, girl, boy. Submit locks the lineup; opponent/public cannot read it before both sides submit. Reveal is one committed revision, not a promise of identical network arrival time.
+- Only Organizer/Main Judge can replace a locked player; every replacement has a reason and audit entry. Incomplete-lineup and mid-game replacement details remain explicit decisions.
+- Each team match is up to five singles games, first to three wins. Remaining games cancel once decided. Singles are best of five sets; sets reach 11 with a two-point margin and unbounded deuce. Serving changes every two points, every point after 10:10; derive the indicator from history. Do not implement the archived tennis advantage/tie-break rules.
+- Every point/undo is a versioned, idempotent command. PostgreSQL commits score, result, synchronous Elo, completion/advancement and audit atomically. Undo appends history. Completed-result correction policy is pending.
+- Initial Elo defaults to 1000; automatic-loss games do not change ratings. Preserve the K used per result. Exact numerical/season aggregation proposals need the decisions listed in DECISIONS.md.
+- Scheduling honors table/player exclusivity, rest and finals priority, including actual-start rechecks. Manual overrides are authorized and audited. Venue timezone governs display and judge-day assignments.
 
-## Acceptance matrix
+## Public experience and privacy
 
-| Scenario                                            | Milestone and proof                                  |
-| --------------------------------------------------- | ---------------------------------------------------- |
-| Tenant A cannot read tenant B private data          | Phase 1 database permission tests; expand each phase |
-| One user has distinct/coexisting organization roles | Phase 1 schema and database tests                    |
-| Scorekeeper cannot score unassigned match           | Phase 4 RPC and database tests                       |
-| Duplicate scoring request awards one point          | Phase 4 idempotency transaction tests                |
-| Concurrent requests preserve state                  | Phase 4 competing real database transactions         |
-| Spectator recovers after disconnect                 | Phase 5 browser/network recovery tests               |
-| Winner advances exactly once                        | Phase 3/4 unique bracket-slot and transaction tests  |
-| Correction is audited                               | Phase 4 action/audit tests                           |
-| Tournament timezone is honored                      | Phase 2 timezone tests and browser checks            |
+Russian is default/fallback; Russian, Kazakh and English are included because FR-17 requires all three. Externalize every UI string. Public pages provide live matches, timetable, draws, clubs/rosters, individual ratings/history and season standings; include a hall scoreboard and landscape judge interface.
 
-## Visual direction
+Publish only name, team, age group, rating and consented photo. DOB, trainer contacts, draft/hidden lineups and consent evidence stay private. Keep historical results on deactivation. Public projections and Storage policies must enforce privacy independently of the UI.
 
-Court green #164D39, chalk #F7F9F6, ink #172C23, muted sage #617568, ball yellow #D5EF72 and line #DCE5DD. A quiet application shell with a court-line illustration as its signature. Display: Georgia italic, used sparingly; body: system sans; score/data: monospace. This deliberately avoids invented tournament statistics and dashboard charts before data exists. Layout: narrow persistent sidebar, wide workspace, mobile navigation in normal flow. Keyboard focus, native labels, 44px targets, reduced-motion support and persistent theme choice are required.
+## Release scope
+
+Include staff accounts, competition configuration, roster/lineup management, match day, scoring, Elo, standings, public localization, installable web shell, auditing and operational acceptance. CSV import schema is included; importer UI/execution, payments, native apps and player accounts are excluded. Offline scoring is excluded; disconnected/stale judge controls disable writes.
+
+Dates and capacity are acceptance targets, not current capabilities: feature freeze 23 November and release target 30 November 2026 assuming the PDF's three-person team. See TABLE_TENNIS_IMPLEMENTATION_PLAN.md for gates. Original Phase 1 auth/profile/organizations remain working legacy behavior until Task B transitions them.

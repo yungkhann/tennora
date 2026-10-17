@@ -1,46 +1,48 @@
 # Architecture
 
-## Runtime
+Task A target architecture, 17 October 2026. This describes the authorized direction, not completed league features. Historical architecture: archive/PHASE_1_ARCHITECTURE.md. Implementation evidence: VERIFICATION.md and milestone reports.
 
-Next.js App Router with TypeScript, React Server Components by default, Server Actions for first-party mutations and Route Handlers for auth callbacks. Tailwind v4 semantic tokens and locally owned shadcn/ui primitives. Supabase hosts PostgreSQL/Auth; Storage and Realtime are integrated when assets/live scoring are implemented. Netlify OpenNext handles SSR and actions; no static export.
+## Runtime and boundary
 
-## Trust boundaries
+Next.js App Router/TypeScript supplies server-rendered pages, Server Actions and Route Handlers. Supabase supplies Auth, PostgreSQL, Storage and Realtime. Use current pinned packages and the installed Next.js docs before code changes. Reuse Tailwind/shadcn tokens, components and tests. No Django, Redis, Celery or custom hosted WebSocket server is required.
 
-Browser -> Server Action (Zod + independently verified user) -> request-scoped Supabase client (user JWT) -> PostgreSQL RLS and constrained functions. No service-role key in the app. A valid session proves identity, not organization authority. Organization URLs are opaque UUIDs, validated before queries; unauthorized and nonexistent organizations share a not-found response.
+Browser -> verified Next.js action/handler -> request-scoped Supabase client carrying user JWT -> RLS and constrained PostgreSQL RPC. Business actors come from auth.uid(), not request metadata. One league replaces tenant navigation; trainer club boundaries and judge table/day boundaries still apply at the database.
 
-Supabase SSR uses per-request cookie clients, async Next cookies and a Next 16 proxy to refresh sessions. Layouts and mutations call getUser for a fresh identity. Proxy is only session refresh, never the sole authorization gate. Private/auth routes are dynamic and private/no-store. Callback destinations use a small local-path allowlist to prevent open redirects. Relative Location responses preserve the browser origin behind development/hosting proxies. Password recovery exchanges the email token on the server before rendering an authenticated password form.
+## Staff sessions and provisioning (Task B)
 
-## Modules
+Keep staff JWT/refresh tokens in secure HTTP-only cookies, refreshed on the server/proxy. The browser uses no authenticated Supabase client. Anonymous public Realtime is isolated from staff Auth storage. Prove refresh, recovery, rotation, logout and deactivation with real local Auth before declaring this integration complete; this is a server-mediated design rather than Supabase's default browser-auth pattern.
 
-- src/app: route composition, metadata, loading/error/not-found boundaries.
-- src/components/ui: reusable shadcn-compatible primitives; shared brand, shell and theme controls outside ui.
-- src/features/auth: validated forms and Server Actions.
-- src/features/organizations: tenant onboarding and membership-backed workspace.
-- src/lib/supabase: browser/server clients and database types.
-- src/lib: pure validation, redirect and date utilities.
-- supabase/migrations and supabase/tests: schema evolution and real database RLS tests.
-- tests: Vitest contracts, Playwright public/missing-config tests and opt-in real-backend authentication tests.
+Every private page/action/REST endpoint independently verifies user identity and active staff state. Include localized routes in proxy refresh matching. Private/auth responses are no-store; no authenticated ISR or service-worker caching. Origin protections apply to actions and explicit Route Handler mutations. Callback paths use a strict local allowlist and relative Location responses. Never derive email origins from untrusted headers.
 
-## Future scoring transaction
+A server-only admin client is the narrow exception for Organizer-authorized Auth create/reset/deactivate operations. Its secret is never NEXT_PUBLIC, serialized or used as the normal data client. Business records continue to use the caller's identity. Track provisioning pending/active/failed because Auth administration and SQL are not one transaction. Bootstrap the initial Organizer through trusted operator tooling, never organization ownership, email heuristics or user metadata.
 
-RPC receives match ID, command UUID, expected version, validated command and correction reason where required. It verifies active membership plus assignment, locks match_scores FOR UPDATE, checks existing command UUID before version, invokes/rechecks deterministic transition, appends immutable score_actions and updates snapshot/version. Completion fills the uniquely constrained downstream slot in the same transaction. Transport retries reuse command UUID. Full transaction/concurrency proof is Phase 4, not part of this foundation.
+## Domain and database
 
-## Live/Storage plan
+Players have independent IDs, not Auth profile identities. Separate private player data/consent evidence from public approved projections. Staff role changes, account deactivation and history need live database checks even when a previously issued JWT remains valid. See DATABASE.md for model boundaries and DECISIONS.md for unsettled rules.
 
-Subscribe only to authorized/published records; RLS applies to snapshot fetches and Realtime authorization. On subscription ready/reconnect/refocus fetch authoritative versioned snapshot and discard stale in-flight responses. Store organization logos in tenant-prefixed paths with matching membership policies; public assets need explicit publication. No bucket or permissive Realtime policy is provisioned before its product flow exists.
+Keep pure TypeScript scoring/draw/rating modules separately testable. PostgreSQL is authoritative: directly callable score RPCs must validate/recompute transitions, not accept a caller-supplied official score. Shared vectors and generated command sequences prove TypeScript/SQL parity. UUID command receipts, payload consistency, expected versions and row locks protect against duplicates and races. Use deterministic lock ordering for match/game and player ratings.
 
-## Configuration and deployment
+One transaction appends event/receipt, updates set/game/team status, synchronous Elo/history, necessary advancement/public projection and before/after audit. Three singles wins cancel remaining games exactly once. Failures roll back everything. Corrections append events and preserve original K/history; post-completion behavior is blocked on D07. Queued work cannot determine official score or advance from stale standings.
 
-Use NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY and trusted NEXT_PUBLIC_SITE_URL. Validate configuration at the boundary. Unconfigured local app remains inspectable but mutations explicitly fail closed. Netlify production requires all values, migrated database, allowed redirect URLs, correct email templates and SMTP/auth rate limits. Never derive email destination origins from caller-controlled headers.
+## Live transport
 
-## Official references
+Judge commands use authenticated HTTPS -> Next.js -> PostgreSQL RPC. Realtime distributes committed public-safe notifications; clients fetch authoritative snapshots after subscription, reconnect, refocus or version gaps, ignoring stale fetch responses. Retry an unacknowledged command with its existing ID and reconcile its receipt first. There is no optimistic point award.
 
-- https://nextjs.org/docs/app/guides/authentication
-- https://nextjs.org/docs/app/api-reference/file-conventions/proxy
-- https://supabase.com/docs/guides/auth/server-side/creating-a-client?framework=nextjs
-- https://supabase.com/docs/guides/auth/auth-email-templates
+Only safe published projections enter anonymous Realtime. Never subscribe public browsers to private lineup/player tables. Staff-private status uses bounded authorized polling with no cross-session cache; committed mutation responses return private state. Judge connection status reflects command/snapshot reachability and freshness. Public fallback polls cached safe snapshots every five seconds. Benchmark provider limits/fan-out before UI expansion; switch notification strategy if needed without changing authority.
+
+## Files, jobs and deployment
+
+Private Storage holds player originals and consent evidence; approved photo delivery must support revocation/cache invalidation. Database backups do not restore Storage bytes; recovery must cover both. Durable SQL jobs/outbox with idempotent retries handle delayed rankings/photo work; scores and Elo remain synchronous.
+
+Use separate staging/production projects, Netlify-compatible Next.js hosting and reviewed deployment migrations. Preserve RPO 5 minutes, RTO 30 minutes, encrypted off-site copies and retention targets until explicitly revised. Verify paid/available PITR and restore performance early; do not assume service-tier capability. External alerts, region and consent-process decisions precede real minors' data.
+
+## References
+
+- https://supabase.com/docs/guides/database/functions
 - https://supabase.com/docs/guides/database/postgres/row-level-security
-- https://ui.shadcn.com/docs/tailwind-v4
-- https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/
+- https://supabase.com/docs/guides/auth/server-side/advanced-guide
+- https://supabase.com/docs/guides/realtime/postgres-changes
+- https://supabase.com/docs/guides/platform/backups
+- https://nextjs.org/docs/app/guides/authentication
 
-Stable registry versions are pinned in package.json and package-lock.json; official documentation was consulted before implementation.
+These are design references, not evidence of implemented product behavior.

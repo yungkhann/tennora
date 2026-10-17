@@ -1,25 +1,21 @@
-# Implementation plan
+# Implementation status
 
-The user has now selected Next.js/Supabase for a **single table tennis league**. The [table tennis implementation plan](TABLE_TENNIS_IMPLEMENTATION_PLAN.md) is the proposed replacement roadmap. The application still implements the original Phase 1 below; the new plan does not authorize migrations or represent later features as completed. Keep this original roadmap as historical context until milestone A reconciles the product documents.
+The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md](TABLE_TENNIS_IMPLEMENTATION_PLAN.md). Confirmed: Next.js/Supabase, one league, coexisting staff roles. This file records actual status; proposed dates are in the detailed plan and are not completion claims. Original tennis Phase 1 roadmap is archived in archive/PHASE_1_IMPLEMENTATION_PLAN.md; its historical verification remains in VERIFICATION.md.
 
-Only Phase 1 is authorized. Show verified outcomes and these milestones before beginning a later phase.
+| Task                      | Status        | Next gate                                                                         |
+| ------------------------- | ------------- | --------------------------------------------------------------------------------- |
+| A - Rebaseline            | Complete      | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md     |
+| B - Staff foundation      | Ready after A | Exact implementation batch inventory; staff schema and real Auth/RLS/cookie tests |
+| C - Seasons/teams/players | Not started   | D02 birth-year/roster rules before affected eligibility implementation            |
+| D - Draws/lineups         | Not started   | D03-D05 and replacement semantics                                                 |
+| E - Scoring/Elo           | Not started   | D06-D08; transactional, duplicate/concurrent and parity proofs                    |
+| F - Hall operations       | Not started   | D09 venue/rest/finals/device policy                                               |
+| G - Public/locales/live   | Not started   | Committed public-safe projections and recovery tests                              |
+| H - Readiness             | Not started   | Provider/recovery feasibility and complete integration evidence                   |
+| I - Rehearsal/release     | Not started   | All measured go-live gates pass; no silent integrity/privacy waivers              |
 
-| Phase                                  | Coherent deliverable                                                                                                           | Files/migrations                                                                                                                                                                     | Gate                                                                                                                     |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| 1 — foundation                         | Tooling, tokens/primitives, email auth/recovery, profiles, organization onboarding and protected/public layouts                | package/config files, src/app, src/components, src/features/auth, src/features/organizations, src/lib, tests, supabase/config.toml, 202610170001_foundation.sql, foundation.test.sql | Typecheck, lint, Vitest, production build, Playwright; actual auth and database tests where local services are available |
-| 2 — organization/tournament operations | Expiring invites, staff roles, tournaments/divisions/courts, registration lifecycle, timezone-aware scheduling                 | organization/tournament features, 002 operations + policy tests                                                                                                                      | Role matrix, invite replay/expiry, tenant constraints, timezone, browser flows                                           |
-| 3 — draws                              | Pure seeded/random knockout algorithm, byes, draft publication lock, advancement structure                                     | domain/draw, draw UI, 003 draws                                                                                                                                                      | 8/16/32 invariants, seeds/byes, publication and cross-tenant checks                                                      |
-| 4 — scoring                            | Pure scoring engine, assigned command RPC, idempotency/version/locking, immutable actions, undo/corrections and scorekeeper UI | domain/scoring, score features, 004 scoring                                                                                                                                          | State transitions, assignment denial, retry/concurrent transaction tests, exactly-once advancement, audited corrections  |
-| 5 — live viewing                       | Public published views, Realtime invalidation, reconnect/resync, accessible match center                                       | live features, 005 public policies                                                                                                                                                   | Unpublished denial, disconnect/reconnect race tests, browser live flow                                                   |
-| 6 — production readiness               | Storage policies, operational observability, deployment and full regression/security review                                    | storage migrations, CI/deployment docs                                                                                                                                               | End-to-end acceptance matrix, production smoke, backups and migration rehearsal                                          |
+## A: exact files and changes
 
-## Phase 1 batches
+No application or database migration changes in this batch. Rebaseline PRODUCT_SPEC.md, ARCHITECTURE.md, DATABASE.md, ROUTES.md and this ledger; update AGENTS.md and the detailed plan's approved role/status entries; add DECISIONS.md and REQUIREMENTS_REVISED.md. Preserve the five previous planning documents under docs/archive/PHASE_1_*.md. Add scripts/build-requirements-pdf.py, scripts/pdf-requirements.txt and output/pdf/Tennora_Table_Tennis_Requirements_Revised.pdf. Record verification in docs/MILESTONE_A_VERIFICATION.md. The user's original PDF remains untouched and untracked.
 
-1. Before application code: record product, architecture, database, routes and this plan; establish AGENTS.md.
-2. Implement one coherent foundation batch (exact file inventory above). Keep future tables in database design until their behavior/policies can be tested.
-3. Run checks, fix findings, visually inspect responsive light/dark pages, record actual results and external prerequisites in docs/VERIFICATION.md.
-4. Commit the completed Phase 1 batch as one focused Git commit. Stop before Phase 2.
-
-## Constraints
-
-Repository inspection found an empty directory and no Git repository. Initialize Git as part of Phase 1. No remote, Supabase credentials or production deployment target were supplied. An unconfigured app must remain readable and fail mutations closed. Prefer local Supabase for real auth/RLS verification; record any unavailable service explicitly. Development seed data, if added later, must be opt-in and excluded from production.
+Pending domain decisions gate their dependent tasks, not already-settled architecture or independent implementation. D01 is resolved: coexisting roles. Consult DECISIONS.md before encoding D02-D10. Each implementation batch lists exact files/migrations, runs relevant checks, records evidence and gets one focused commit before proceeding.
