@@ -156,6 +156,95 @@ export type Database = {
         };
         Relationships: [];
       };
+      player_photo_assets: {
+        Row: {
+          consent_version: string;
+          created_at: string;
+          declared_at: string;
+          evidence_mime: string;
+          evidence_path: string;
+          evidence_sha256: string;
+          evidence_size: number;
+          id: string;
+          photo_mime: string;
+          photo_path: string;
+          photo_sha256: string;
+          photo_size: number;
+          player_id: string;
+          review_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          state: Database["public"]["Enums"]["photo_state"];
+          updated_at: string;
+          uploader_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          consent_version?: string;
+          created_at?: string;
+          declared_at?: string;
+          evidence_mime: string;
+          evidence_path: string;
+          evidence_sha256: string;
+          evidence_size: number;
+          id: string;
+          photo_mime: string;
+          photo_path: string;
+          photo_sha256: string;
+          photo_size: number;
+          player_id: string;
+          review_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          state?: Database["public"]["Enums"]["photo_state"];
+          updated_at?: string;
+          uploader_id: string;
+        };
+        Update: {
+          consent_version?: string;
+          created_at?: string;
+          declared_at?: string;
+          evidence_mime?: string;
+          evidence_path?: string;
+          evidence_sha256?: string;
+          evidence_size?: number;
+          id?: string;
+          photo_mime?: string;
+          photo_path?: string;
+          photo_sha256?: string;
+          photo_size?: number;
+          player_id?: string;
+          review_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          state?: Database["public"]["Enums"]["photo_state"];
+          updated_at?: string;
+          uploader_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "player_photo_assets_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "player_photo_assets_reviewed_by_fkey";
+            columns: ["reviewed_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "player_photo_assets_uploader_id_fkey";
+            columns: ["uploader_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       player_status_events: {
         Row: {
           created_at: string;
@@ -329,6 +418,49 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      public_player_photos: {
+        Row: {
+          asset_id: string;
+          content_base64: string;
+          content_sha256: string;
+          mime_type: string;
+          player_id: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          asset_id: string;
+          content_base64: string;
+          content_sha256: string;
+          mime_type?: string;
+          player_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          asset_id?: string;
+          content_base64?: string;
+          content_sha256?: string;
+          mime_type?: string;
+          player_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_player_photos_asset_id_fkey";
+            columns: ["asset_id"];
+            isOneToOne: true;
+            referencedRelation: "player_photo_assets";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_player_photos_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: true;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       rating_history: {
         Row: {
@@ -843,6 +975,46 @@ export type Database = {
           team_id: string;
         }[];
       };
+      begin_player_photo: {
+        Args: {
+          asset: string;
+          evidence_hash: string;
+          evidence_mime: string;
+          evidence_size: number;
+          permission_confirmed: boolean;
+          photo_hash: string;
+          photo_mime: string;
+          photo_size: number;
+          player: string;
+        };
+        Returns: {
+          consent_version: string;
+          created_at: string;
+          declared_at: string;
+          evidence_mime: string;
+          evidence_path: string;
+          evidence_sha256: string;
+          evidence_size: number;
+          id: string;
+          photo_mime: string;
+          photo_path: string;
+          photo_sha256: string;
+          photo_size: number;
+          player_id: string;
+          review_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          state: Database["public"]["Enums"]["photo_state"];
+          updated_at: string;
+          uploader_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "player_photo_assets";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       begin_staff_job: {
         Args: {
           desired_roles: Database["public"]["Enums"]["staff_role"][];
@@ -892,12 +1064,23 @@ export type Database = {
         Args: { membership: string; reason: string };
         Returns: undefined;
       };
+      finish_player_photo: { Args: { asset: string }; Returns: undefined };
       finish_staff_job: {
         Args: { job_id: string; succeeded: boolean };
         Returns: string;
       };
+      is_player_photo_approved: { Args: { asset: string }; Returns: boolean };
       register_season_team: {
         Args: { club: string; parent_season: string };
+        Returns: undefined;
+      };
+      review_player_photo: {
+        Args: {
+          asset: string;
+          decision: string;
+          publication?: Json;
+          reason: string;
+        };
         Returns: undefined;
       };
       save_player: {
@@ -965,6 +1148,12 @@ export type Database = {
       age_group: "U13" | "U15" | "U17";
       organization_role:
         "owner" | "tournament_director" | "scorekeeper" | "player";
+      photo_state:
+        | "pending_upload"
+        | "pending_review"
+        | "approved"
+        | "rejected"
+        | "revoked";
       player_gender: "boy" | "girl";
       player_status: "active" | "dropped_out";
       season_status: "draft" | "started";
@@ -1105,6 +1294,13 @@ export const Constants = {
         "tournament_director",
         "scorekeeper",
         "player",
+      ],
+      photo_state: [
+        "pending_upload",
+        "pending_review",
+        "approved",
+        "rejected",
+        "revoked",
       ],
       player_gender: ["boy", "girl"],
       player_status: ["active", "dropped_out"],

@@ -48,6 +48,7 @@ export const config = {
     "/(ru|kk|en)/reset-password",
     "/settings/:path*",
     "/auth/:path*",
+    "/api/staff/:path*",
     "/login",
     "/register",
     "/forgot-password",

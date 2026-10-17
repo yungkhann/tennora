@@ -38,7 +38,7 @@ Public responses contain no draft/hidden lineups, private DOB, trainer contacts 
 | /team                                   | Assigned teams for Trainer; all teams for Organizer/Main Judge            |
 | /team/[teamId]                          | Authorized club management                                                |
 | /subteam/[subteamId]                    | Authorized roster management                                              |
-| /subteam/[subteamId]/tour/[tourId]      | Tour roster selection                                                     |
+| /subteam/[subteamId]/tour/[tourId]      | Active season roster (no separate submission)                             |
 | /matches/[matchId]/lineup               | Own-team Trainer lineup submission                                        |
 | /matches/[matchId]/manage               | Organizer/Main Judge oversight                                            |
 | /linear-judge                           | Active Line Judge with venue-date/table assignment                        |
@@ -51,3 +51,7 @@ Auth callbacks stay unlocalized `/auth/confirm` and `/auth/callback`. They accep
 Scoring uses POST `/api/scoring` with origin check, schema validation, verified identity and database command authorization. Private snapshot/status endpoints are no-store and reauthorize each call. Public snapshot endpoints return published safe projections and support five-second fallback polling. Exact endpoint files/contracts are finalized before their milestone.
 
 Changing locales must not bypass proxy refresh, staff authorization or resource checks. UUID validation and indistinguishable not-found responses protect private resource existence. Canonical new routes do not require deleting legacy data. Retire `/register` and organization creation at B's onboarding switch; remove old organization navigation after the new staff landing is verified.
+
+## Photo endpoints (C3a)
+
+`GET /api/public/player-photo/[playerId]` reads only an approved sanitized JPEG projection using an anonymous client. Pending/revoked/unknown images return 404; responses are no-store. `GET /api/staff/photos/[assetId]` reauthorizes the private original on every request; `?kind=evidence` additionally requires the uploader or Organizer and downloads as an attachment. Private responses are no-store and never expose a Storage URL. Publication/revocation uses Organizer-only Server Actions plus independently authorized RPCs.

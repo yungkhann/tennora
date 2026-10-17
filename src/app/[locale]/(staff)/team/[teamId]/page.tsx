@@ -1,3 +1,4 @@
+import { PhotoUploadForm, PhotoReviewForm } from "@/features/photos/forms";
 import Link from "next/link";
 import { randomUUID } from "node:crypto";
 import { notFound } from "next/navigation";
@@ -25,7 +26,7 @@ export default async function Page({
     locale = localeOf(raw.locale),
     t = messages(locale);
   if (!uuidSchema.safeParse(raw.teamId).success) notFound();
-  const { supabase, roles } = await requireStaff(locale),
+  const { supabase, roles, user } = await requireStaff(locale),
     club = raw.teamId;
   const { data: team, error } = await supabase
     .from("teams")
@@ -35,30 +36,43 @@ export default async function Page({
   if (error) throw new Error(t.failed);
   if (!team) notFound();
   const manageAll = roles.includes("organizer") || roles.includes("main_judge");
-  const [players, trainers, seasons, entries, clubs, refs] = await Promise.all([
-    supabase.from("players").select("*").eq("team_id", club).order("last_name"),
-    supabase.rpc("available_team_trainers"),
-    supabase
-      .from("seasons")
-      .select("id,name,status")
-      .eq("status", "draft")
-      .order("year", { ascending: false }),
-    supabase
-      .from("season_team_entries")
-      .select("season_id,seasons(name)")
-      .eq("team_id", club),
-    supabase.from("teams").select("id,name").neq("id", club).order("name"),
-    supabase
-      .from("player_trainer_refs")
-      .select("player_id,kind,trainer_id,free_first_name,free_last_name"),
-  ]);
+  const [players, trainers, seasons, entries, clubs, refs, photos] =
+    await Promise.all([
+      supabase
+        .from("players")
+        .select("*")
+        .eq("team_id", club)
+        .order("last_name"),
+      supabase.rpc("available_team_trainers"),
+      supabase
+        .from("seasons")
+        .select("id,name,status")
+        .eq("status", "draft")
+        .order("year", { ascending: false }),
+      supabase
+        .from("season_team_entries")
+        .select("season_id,seasons(name)")
+        .eq("team_id", club),
+      supabase.from("teams").select("id,name").neq("id", club).order("name"),
+      supabase
+        .from("player_trainer_refs")
+        .select("player_id,kind,trainer_id,free_first_name,free_last_name"),
+      supabase
+        .from("player_photo_assets")
+        .select(
+          "id,player_id,uploader_id,state,review_reason,players!inner(team_id)",
+        )
+        .eq("players.team_id", club)
+        .order("created_at", { ascending: false }),
+    ]);
   if (
     players.error ||
     trainers.error ||
     seasons.error ||
     entries.error ||
     clubs.error ||
-    refs.error
+    refs.error ||
+    photos.error
   )
     throw new Error(t.failed);
   const choices = trainers.data.map((r) => ({
@@ -135,6 +149,92 @@ export default async function Page({
                       player={p.id}
                       trainers={choices}
                     />
+                  </div>
+                </details>
+                <details className="mt-5">
+                  <summary className="cursor-pointer text-sm font-semibold">
+                    {t.photos}
+                  </summary>
+                  <div className="mt-5 grid gap-5">
+                    {photos.data
+                      .filter((a) => a.player_id === p.id)
+                      .map((a) => (
+                        <section className="rounded-lg border p-4" key={a.id}>
+                          <p className="text-sm font-semibold">
+                            {
+                              {
+                                pending_upload: t.photoPendingUpload,
+                                pending_review: t.photoPendingReview,
+                                approved: t.photoApproved,
+                                rejected: t.photoRejected,
+                                revoked: t.photoRevoked,
+                              }[a.state]
+                            }
+                          </p>
+                          <div className="mt-3 flex flex-wrap gap-4 text-sm underline">
+                            {a.state !== "pending_upload" && (
+                              <a
+                                href={`/api/staff/photos/${a.id}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {t.viewPrivatePhoto}
+                              </a>
+                            )}
+                            {(roles.includes("organizer") ||
+                              a.uploader_id === user.id) &&
+                              a.state !== "pending_upload" && (
+                                <a
+                                  href={`/api/staff/photos/${a.id}?kind=evidence`}
+                                >
+                                  {t.downloadConsent}
+                                </a>
+                              )}
+                            {a.state === "approved" && (
+                              <a
+                                href={`/api/public/player-photo/${p.id}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {t.viewPublicPhoto}
+                              </a>
+                            )}
+                          </div>
+                          {a.review_reason && (
+                            <p className="mt-3 break-words text-sm">
+                              {a.review_reason}
+                            </p>
+                          )}
+                          {roles.includes("organizer") &&
+                            [
+                              "pending_upload",
+                              "pending_review",
+                              "approved",
+                            ].includes(a.state) && (
+                              <div className="mt-5">
+                                <PhotoReviewForm
+                                  locale={locale}
+                                  asset={a.id}
+                                  state={a.state}
+                                />
+                              </div>
+                            )}
+                        </section>
+                      ))}
+                    {!photos.data.some((a) => a.player_id === p.id) && (
+                      <p className="text-sm text-muted-foreground">
+                        {t.noPhotos}
+                      </p>
+                    )}
+                    {roles.some(
+                      (r) => r === "trainer" || r === "organizer",
+                    ) && (
+                      <PhotoUploadForm
+                        locale={locale}
+                        id={randomUUID()}
+                        player={p.id}
+                      />
+                    )}
                   </div>
                 </details>
                 {p.status === "active" && (

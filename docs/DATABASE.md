@@ -2,7 +2,7 @@
 
 ## Implemented baseline
 
-202610170001_foundation.sql establishes profiles -> auth.users, organizations, organization_members and audit_logs. These are the original Phase 1 tables with tenant RLS. Their data/history remains preserved. Task B adds 202610170002_league_staff.sql and 202610170003_staff_profile.sql: staff_accounts, normalized staff_roles, provisioning/reset staff_jobs, additive league audit fields and audited RPCs. See MILESTONE_B_VERIFICATION.md. C1 adds seasons/tours (004); C2 adds clubs, subteams, trainer scope, private players, roster/status history and rating provenance (005–008). See MILESTONE_C1_VERIFICATION.md and MILESTONE_C2_VERIFICATION.md. Photos/settings/stages remain C3. Historical design is archived in archive/PHASE_1_DATABASE.md.
+202610170001_foundation.sql establishes profiles -> auth.users, organizations, organization_members and audit_logs. These are the original Phase 1 tables with tenant RLS. Their data/history remains preserved. Task B adds 202610170002_league_staff.sql and 202610170003_staff_profile.sql: staff_accounts, normalized staff_roles, provisioning/reset staff_jobs, additive league audit fields and audited RPCs. See MILESTONE_B_VERIFICATION.md. C1 adds seasons/tours (004); C2 adds clubs, subteams, trainer scope, private players, roster/status history and rating provenance (005–008). See MILESTONE_C1_VERIFICATION.md and MILESTONE_C2_VERIFICATION.md. C3a adds private photo/consent receipts and a sanitized public JPEG projection (009–011); see MILESTONE_C3A_VERIFICATION.md. Settings/stages/start readiness remain C3b. Historical design is archived in archive/PHASE_1_DATABASE.md.
 
 ## Target league relationships
 
@@ -41,3 +41,9 @@ Account/player deactivation preserves results and references. Physical Auth dele
 ## Verification and order
 
 Migrations are introduced per milestone B-I in TABLE_TENNIS_IMPLEMENTATION_PLAN.md, never as one unverified schema dump. Add pgTAP tests for each policy/constraint plus competing real transactions for resource capacity, lineup reveal, scoring receipts and completion. Verify migrations from both empty local Supabase and the existing Phase 1 schema. Regenerate types only after successful migration. See the FR evidence matrix and go-live gates in the plan.
+
+## Photo publication (C3a)
+
+`player_photo_assets` reserves immutable private Storage paths, MIME/size/hash receipts, consent version/declaration and review state. The caller’s JWT authorizes uploads and private downloads; a Trainer may upload only within their club, and only the uploader or an Organizer may download evidence. Main Judge authority alone does not grant upload/review. The `player-private` bucket has no anonymous read policy. Files are limited to 2 MiB each.
+
+Organizer review verifies stored hashes and prepares a metadata-free JPEG, at most 512 pixels per edge and 256 KiB. The review RPC atomically records approval/audit and replaces `public_player_photos`; revocation removes that projection in the same transaction. Public RLS permits only currently approved projections. Anonymous delivery reads this bounded projection with no Auth/admin client. Originals/evidence remain private and retained; database recovery must reconcile separate Storage backups. Two object uploads and their receipt are a retryable cross-service workflow, not a single database transaction.

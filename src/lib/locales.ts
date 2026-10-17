@@ -4,6 +4,36 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  photos: "Photos and consent",
+  uploadPhoto: "Upload photo for review",
+  photoFile: "Player photo (JPEG, PNG or WebP; max 2 MiB)",
+  consentEvidence: "Written guardian consent (PDF or image; max 2 MiB)",
+  guardianPermission:
+    "I confirm written guardian permission to publish this player’s photo.",
+  photoHelp:
+    "Originals and consent evidence stay private. Only an Organizer can approve publication. To retry an interrupted upload, select the same files.",
+  photoInvalid:
+    "Check the files and written-permission confirmation. Use supported formats within the size and pixel limits.",
+  photoUploadFailed:
+    "Upload is incomplete. Retry with the same files; contact the operator if private Storage is unavailable.",
+  photoUploaded: "Uploaded privately. Awaiting Organizer review.",
+  savePhotoReview: "Save publication decision",
+  reviewDecision: "Publication decision",
+  approvePhoto: "Approve publication",
+  rejectPhoto: "Reject upload",
+  revokePhoto: "Revoke publication",
+  reviewPhotoHelp:
+    "Review the photo and written consent before approving. Revocation immediately removes the public projection; originals and audit history are retained.",
+  photoPendingUpload: "Upload incomplete",
+  photoPendingReview: "Awaiting review",
+  photoApproved: "Publication approved",
+  photoRejected: "Upload rejected",
+  photoRevoked: "Publication revoked",
+  viewPrivatePhoto: "View private original",
+  downloadConsent: "Download consent evidence",
+  viewPublicPhoto: "View approved public photo",
+  noPhotos: "No photos uploaded.",
+
   teams: "Clubs",
   region: "Region",
   newTeam: "Create club",
@@ -31,7 +61,7 @@ const en = {
   sportsLevel: "Sports level",
   externalId: "External rating ID (optional)",
   playerPrivacy:
-    "Player records do not create login accounts. Date of birth stays private; new ratings start at 1000. Photos and consent are a later part of this task.",
+    "Player records do not create login accounts. Date of birth stays private; new ratings start at 1000. Photos require written guardian consent and Organizer approval.",
   playerInvalid:
     "Check player details. Date of birth must preserve all active roster age groups.",
   addRoster: "Add to roster",
@@ -178,6 +208,38 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  photos: "Фото и согласие",
+  uploadPhoto: "Загрузить фото на проверку",
+  photoFile: "Фото игрока (JPEG, PNG или WebP; до 2 МиБ)",
+  consentEvidence:
+    "Письменное согласие представителя (PDF или изображение; до 2 МиБ)",
+  guardianPermission:
+    "Подтверждаю наличие письменного разрешения представителя на публикацию фото игрока.",
+  photoHelp:
+    "Оригиналы и подтверждение согласия закрыты. Публикацию одобряет только организатор. Для повтора прерванной загрузки выберите те же файлы.",
+  photoInvalid:
+    "Проверьте файлы и подтверждение разрешения. Используйте допустимые форматы в пределах размера и разрешения.",
+  photoUploadFailed:
+    "Загрузка не завершена. Повторите с теми же файлами; если закрытое хранилище недоступно, обратитесь к оператору.",
+  photoUploaded:
+    "Файлы загружены в закрытое хранилище. Ожидается проверка организатора.",
+  savePhotoReview: "Сохранить решение о публикации",
+  reviewDecision: "Решение о публикации",
+  approvePhoto: "Одобрить публикацию",
+  rejectPhoto: "Отклонить загрузку",
+  revokePhoto: "Отозвать публикацию",
+  reviewPhotoHelp:
+    "Перед одобрением проверьте фото и письменное согласие. Отзыв сразу закрывает публичное фото; оригиналы и журнал сохраняются.",
+  photoPendingUpload: "Загрузка не завершена",
+  photoPendingReview: "Ожидает проверки",
+  photoApproved: "Публикация одобрена",
+  photoRejected: "Загрузка отклонена",
+  photoRevoked: "Публикация отозвана",
+  viewPrivatePhoto: "Посмотреть закрытый оригинал",
+  downloadConsent: "Скачать подтверждение согласия",
+  viewPublicPhoto: "Посмотреть одобренное публичное фото",
+  noPhotos: "Фото пока не загружены.",
+
   teams: "Клубы",
   region: "Регион",
   newTeam: "Создать клуб",
@@ -205,7 +267,7 @@ const ru: Messages = {
   sportsLevel: "Спортивный разряд",
   externalId: "ID внешнего рейтинга (необязательно)",
   playerPrivacy:
-    "Запись игрока не создаёт аккаунт для входа. Дата рождения закрыта; начальный рейтинг — 1000. Фото и согласие появятся на следующем этапе этой задачи.",
+    "Запись игрока не создаёт аккаунт для входа. Дата рождения закрыта; начальный рейтинг — 1000. Для фото нужны письменное согласие представителя и одобрение организатора.",
   playerInvalid:
     "Проверьте данные игрока. Дата рождения должна соответствовать всем активным составам.",
   addRoster: "Добавить в состав",
@@ -351,6 +413,37 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  photos: "Фото және келісім",
+  uploadPhoto: "Фотоны тексеруге жүктеу",
+  photoFile: "Ойыншы фотосы (JPEG, PNG немесе WebP; 2 МиБ дейін)",
+  consentEvidence: "Заңды өкілдің жазбаша келісімі (PDF не сурет; 2 МиБ дейін)",
+  guardianPermission:
+    "Ойыншы фотосын жариялауға заңды өкілінің жазбаша рұқсаты бар екенін растаймын.",
+  photoHelp:
+    "Түпнұсқа мен келісім дәлелі жабық. Жариялауды тек ұйымдастырушы мақұлдайды. Үзілген жүктеуді қайталау үшін сол файлдарды таңдаңыз.",
+  photoInvalid:
+    "Файлдар мен рұқсат растауын тексеріңіз. Рұқсат етілген пішімдерді көлем және ажыратымдылық шегінде пайдаланыңыз.",
+  photoUploadFailed:
+    "Жүктеу аяқталмады. Сол файлдармен қайталаңыз; жабық сақтау қолжетімсіз болса, операторға хабарласыңыз.",
+  photoUploaded:
+    "Файлдар жабық сақтауға жүктелді. Ұйымдастырушының тексеруі күтілуде.",
+  savePhotoReview: "Жариялау шешімін сақтау",
+  reviewDecision: "Жариялау шешімі",
+  approvePhoto: "Жариялауды мақұлдау",
+  rejectPhoto: "Жүктеуді қабылдамау",
+  revokePhoto: "Жариялауды қайтарып алу",
+  reviewPhotoHelp:
+    "Мақұлдар алдында фото мен жазбаша келісімді тексеріңіз. Қайтарып алу жария фотоны бірден жабады; түпнұсқа мен журнал сақталады.",
+  photoPendingUpload: "Жүктеу аяқталмаған",
+  photoPendingReview: "Тексеру күтілуде",
+  photoApproved: "Жариялау мақұлданды",
+  photoRejected: "Жүктеу қабылданбады",
+  photoRevoked: "Жариялау қайтарылды",
+  viewPrivatePhoto: "Жабық түпнұсқаны көру",
+  downloadConsent: "Келісім дәлелін жүктеп алу",
+  viewPublicPhoto: "Мақұлданған жария фотоны көру",
+  noPhotos: "Фото әлі жүктелмеген.",
+
   teams: "Клубтар",
   region: "Аймақ",
   newTeam: "Клуб құру",
@@ -378,7 +471,7 @@ const kk: Messages = {
   sportsLevel: "Спорттық дәреже",
   externalId: "Сыртқы рейтинг ID (міндетті емес)",
   playerPrivacy:
-    "Ойыншы жазбасы кіру аккаунтын құрмайды. Туған күні жабық; бастапқы рейтинг — 1000. Фото мен келісім осы тапсырманың келесі кезеңінде қосылады.",
+    "Ойыншы жазбасы кіру аккаунтын құрмайды. Туған күні жабық; бастапқы рейтинг — 1000. Фотоға заңды өкілдің жазбаша келісімі және ұйымдастырушының мақұлдауы қажет.",
   playerInvalid:
     "Ойыншы деректерін тексеріңіз. Туған күні барлық белсенді құрамдардың жас тобына сәйкес болуы керек.",
   addRoster: "Құрамға қосу",

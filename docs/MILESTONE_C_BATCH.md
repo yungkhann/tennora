@@ -18,7 +18,7 @@ Planned files: `202610170005_teams_players.sql`, `src/features/{teams,players}/`
 
 Expand inventory before editing. Private object storage/consent, controlled approved photo delivery/revocation, versioned settings and pre-season stage configuration; 24 clubs/72 subteams/360+ synthetic players. No real minors' data or consent evidence is introduced by fixture testing. D06/D09/D10 gate affected defaults/operational policy; do not invent them.
 
-C1 is implemented and verified in MILESTONE_C1_VERIFICATION.md. C2 clubs/players/rosters is now verified in MILESTONE_C2_VERIFICATION.md. C3 remains pending.
+C1 is implemented and verified in MILESTONE_C1_VERIFICATION.md. C2 clubs/players/rosters is now verified in MILESTONE_C2_VERIFICATION.md. C3a photos/consent is verified in MILESTONE_C3A_VERIFICATION.md; C3b settings/stages/start readiness remains pending.
 
 ### C2 exact first batch
 
@@ -27,3 +27,13 @@ C1 is implemented and verified in MILESTONE_C1_VERIFICATION.md. C2 clubs/players
 Trainer profiles link an existing active Trainer account to one parent club; selected subteam links must remain within it. Global team managers are Organizer/Main Judge. Players belong to one current club; Organizer transfers end existing active roster memberships and move the current club in one audited transaction. The receiving club then selects the player into its eligible season roster, subject to capacity. Prior memberships/results remain. Tournaments consume that active season membership directly. DOB edits must preserve all active roster eligibility. Per-season roster uniqueness and per-subteam/season capacity serialize under deterministic row locks. Private player rows remain unavailable anonymously; public projections arrive in G. Dropping out ends active memberships and appends actor/date/reason; reactivation is not introduced without a policy.
 
 C2 also includes migrations 202610170006_trainer_scope_hardening.sql, 202610170007_trainer_reference_payload.sql and 202610170008_dropout_date.sql; src/components/mutation-form.tsx; scripts/test-roster-concurrency.mjs and scripts/test-league-scale.mjs; tests/unit/players.test.ts and tests/e2e/teams.spec.ts. Scale fixture proof moved forward from C3; no real data was seeded.
+
+### C3a — photo and consent workflow inventory
+
+Files: `202610170009_player_photos.sql`, `202610170010_photo_projection_encoding.sql`, `202610170011_photo_upload_limits.sql`, `supabase/tests/005_photos.sql`, `src/features/photos/{actions,forms,image,validation}.ts*`, staff/public photo Route Handlers, anonymous server client, team detail integration, locale strings, proxy refresh matcher, `next.config.ts`, pinned Sharp dependency and lockfile, regenerated types, `tests/unit/photos.test.ts`, `tests/e2e/photos.spec.ts` and milestone/architecture/route/status docs.
+
+Trainer uploads original photo and written guardian-consent evidence to private Storage; Organizer reviews and approves publication. Public delivery uses a small, sanitized JPEG projection in PostgreSQL, served through an anonymous no-store Route Handler. Originals and evidence never enter anonymous Storage policies. This avoids introducing an admin-data client for media delivery and makes withdrawal immediately remove public reads without relying on public-bucket/CDN deletion. Each approved projection is bounded to 256 KiB; original/evidence retain separate Storage-backup requirements. Uploaded evidence has no inline public endpoint. Record pending upload/review/approved/rejected/revoked states and immutable actor/time/status audit; only Organizer changes publication state.
+
+Original uploads use the caller's JWT and path-bound RLS; an upload receipt reserves hashes/paths for retry consistency. The public JPEG is prepared from the privately stored original during Organizer review, with metadata removed, decoded format/pixel/size limits and no raw SVG/HTML delivery. Public route reads only the safe JPEG projection, never Auth/admin credentials or evidence. Storage objects remain private and immutable through ordinary staff APIs. No real player photos/evidence are seeded by tests.
+
+Each original/evidence file is limited to 2 MiB, the combined Server Action to 5 MB. Migration 010 removes PostgreSQL base64 line wrapping at the maximum projection size; 011 aligns database receipts and the private bucket with the upload limit. Browser tests exercise two full-size files through the actual action and Storage. Hosted adapter/native Sharp behavior remains a deployment gate.
