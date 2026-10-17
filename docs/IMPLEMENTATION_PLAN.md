@@ -8,7 +8,7 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
 | C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                   |
 | D - Draws/lineups         | Complete    | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
-| E - Scoring/Elo           | In progress | E1 rule/parity foundation; E2 transactions/UI and E3 correction remain                          |
+| E - Scoring/Elo           | In progress | E1/E2 scoring, Elo and judge controls verified; E3 corrections remain                          |
 | F - Hall operations       | Not started | D09 venue/rest/finals/device policy                                                             |
 | G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                            |
 | H - Readiness             | Not started | Provider/recovery feasibility and complete integration evidence                                 |
@@ -43,3 +43,5 @@ E2a match-day authority and numeric storage prerequisites are verified in MILEST
 E2b1 live lifecycle/resource leases and transfer-safe lineups are verified in MILESTONE_E2B1_VERIFICATION.md. E2b2 point/result/Elo transactions and E2c judge transport/UI remain; E3 corrections/replay and the full F allocator still follow.
 
 E2b2 atomic score/event/result/Elo transactions are implemented; verification is recorded in MILESTONE_E2B2_VERIFICATION.md. E2c judge HTTP/UI and E3 completed-result correction/replay remain before Task E is complete. Hall allocation and public projections remain F/G.
+
+E2c private judge discovery, validated HTTPS command/snapshot transport and RU/KK/EN tablet controls are implemented; see MILESTONE_E2C_VERIFICATION.md for verification. E3 official corrections/dependency resolution/saved-K replay remain before Task E is complete. Full hall operations, public live/rankings and operational release gates still follow in order.

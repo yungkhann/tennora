@@ -3,6 +3,7 @@ import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { requireStaff } from "@/lib/auth";
 import { localeOf, messages, locales } from "@/lib/locales";
+import { scoringMessages } from "@/features/scoring/messages";
 import { signOut } from "@/features/auth/actions";
 export const dynamic = "force-dynamic";
 export default async function StaffLayout({
@@ -37,6 +38,13 @@ export default async function StaffLayout({
           {roles.some((r) =>
             ["organizer", "main_judge", "trainer"].includes(r),
           ) && <Link href={`/${locale}/matches`}>{t.matches}</Link>}
+          {roles.some((r) =>
+            ["organizer", "main_judge", "line_judge"].includes(r),
+          ) && (
+            <Link href={`/${locale}/linear-judge`}>
+              {scoringMessages(locale).desk}
+            </Link>
+          )}
           <Link href={`/${locale}/settings/profile`}>{t.profile}</Link>
           <Link href="/">{t.publicHome}</Link>
         </nav>

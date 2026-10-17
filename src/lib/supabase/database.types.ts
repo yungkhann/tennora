@@ -3073,6 +3073,10 @@ export type Database = {
         };
         Returns: string;
       };
+      claim_score_http_request: {
+        Args: { operation: string };
+        Returns: boolean;
+      };
       configure_tour_stages: {
         Args: {
           age_groups: Database["public"]["Enums"]["age_group"][];
@@ -3116,6 +3120,7 @@ export type Database = {
         Returns: string;
       };
       get_game_score: { Args: { game: string }; Returns: Json };
+      get_judge_desk: { Args: Record<PropertyKey, never>; Returns: Json };
       get_lineup_status: { Args: { match: string }; Returns: Json };
       get_match_operation: { Args: { match: string }; Returns: Json };
       is_player_photo_approved: { Args: { asset: string }; Returns: boolean };

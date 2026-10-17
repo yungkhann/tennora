@@ -2,7 +2,13 @@ import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { buildStageTemplate } from "../../../src/domain/stage-templates";
 import type { Database } from "../../../src/lib/supabase/database.types";
-export async function drawFixture(options: { knockoutSize?: number } = {}) {
+export async function drawFixture(
+  options: {
+    knockoutSize?: number;
+    currentDay?: boolean;
+    tables?: number;
+  } = {},
+) {
   const backend = process.env.NEXT_PUBLIC_SUPABASE_URL!,
     secret = process.env.E2E_SUPABASE_SERVICE_ROLE_KEY!;
   if (new URL(backend).hostname !== "127.0.0.1" || !secret)
@@ -392,8 +398,22 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
         parent_season: season,
         tour_name: `Draw Tournament ${token}`,
         tour_ordinal: 1,
-        first_day: "2026-03-01",
-        last_day: "2026-03-03",
+        first_day: options.currentDay
+          ? new Intl.DateTimeFormat("en-CA", {
+              timeZone: "Asia/Almaty",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }).format(new Date())
+          : "2026-03-01",
+        last_day: options.currentDay
+          ? new Intl.DateTimeFormat("en-CA", {
+              timeZone: "Asia/Almaty",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }).format(new Date())
+          : "2026-03-03",
       }),
     );
     check(
@@ -422,7 +442,7 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
         tournament: tour,
         expected_revision: 0,
         k: 32,
-        tables: 12,
+        tables: options.tables ?? 12,
         rest: 60,
         prioritize_finals: true,
         timezone_name: "Asia/Almaty",
