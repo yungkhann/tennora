@@ -4,6 +4,45 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  lineupIntro:
+    "Submit five eligible players for your team. Both lineups remain hidden until both sides submit.",
+  manageLineup: "Match lineups",
+  noMatches: "No published matches in your scope yet.",
+  pagination: "Pages",
+  previousPage: "Previous page",
+  nextPage: "Next page",
+  submitLineup: "Submit and lock lineup",
+  lineupConfirm:
+    "I confirm five distinct players in the required gender order. Submission locks this lineup. Only an official may replace a player before their singles starts.",
+  slot: "Slot",
+  lineupInvalid:
+    "Check all five distinct players, their gender order and current season-roster eligibility. A submitted lineup is locked.",
+  replacePlayer: "Replace locked player",
+  replacementPlayer: "Replacement player",
+  replacementInvalid:
+    "Replacement failed. Refresh the lineup and check the player, slot, reason and that this singles has not started.",
+  replacementHelp:
+    "Only a distinct eligible roster player of the same gender may replace a pending singles player. Original submission and replacement history are retained.",
+  noReplacement:
+    "No unused eligible reserve or pending singles slot is available.",
+  lineupsRevealed: "Both lineups are revealed.",
+  lineupsHidden:
+    "Player selections stay hidden until both teams submit. Officials see submission status only.",
+  lineupSubmitted: "Lineup submitted and locked",
+  lineupNotSubmitted: "Lineup not submitted",
+  hiddenPlayers: "Players hidden until joint reveal.",
+  waitingForReveal:
+    "Waiting for the other lineup. The submitted lineup is locked.",
+  replacementHistory: "Replacement history",
+  lineupUpdates: "Lineup updates connected.",
+  lineupUpdatesStale:
+    "Updates unavailable. Reconnecting; refresh before submitting changes.",
+  lineupUpdatesChecking: "Checking lineup updates…",
+  scheduled: "Scheduled",
+  called: "Called to table",
+  in_progress: "In progress",
+  finished: "Finished",
+  cancelled: "Cancelled",
   draws: "Draws",
   drawIntro:
     "Freeze seed ratings, review groups and match dependencies, then publish. A published draw cannot be regenerated.",
@@ -301,6 +340,44 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  lineupIntro:
+    "Заявите пять допустимых игроков своей команды. Составы скрыты до подачи обеими сторонами.",
+  manageLineup: "Составы на матч",
+  noMatches: "Опубликованных матчей в вашей области доступа пока нет.",
+  pagination: "Страницы",
+  previousPage: "Предыдущая страница",
+  nextPage: "Следующая страница",
+  submitLineup: "Подать и заблокировать состав",
+  lineupConfirm:
+    "Подтверждаю пять разных игроков в установленном порядке полов. Подача блокирует состав. Замена судьёй возможна только до начала одиночной игры.",
+  slot: "Позиция",
+  lineupInvalid:
+    "Проверьте пять разных игроков, порядок полов и допуск в текущем составе сезона. Поданный состав заблокирован.",
+  replacePlayer: "Заменить игрока в составе",
+  replacementPlayer: "Игрок на замену",
+  replacementInvalid:
+    "Замена не выполнена. Обновите состав и проверьте игрока, позицию, причину и что одиночная игра ещё не началась.",
+  replacementHelp:
+    "Для ещё не начавшейся игры можно выбрать другого допущенного игрока состава того же пола. Исходная заявка и история замен сохраняются.",
+  noReplacement:
+    "Нет свободного допущенного запасного игрока или позиции до начала игры.",
+  lineupsRevealed: "Оба состава раскрыты.",
+  lineupsHidden:
+    "Выбранные игроки скрыты до подачи обоих составов. Судьи видят только статус подачи.",
+  lineupSubmitted: "Состав подан и заблокирован",
+  lineupNotSubmitted: "Состав не подан",
+  hiddenPlayers: "Игроки скрыты до общего раскрытия.",
+  waitingForReveal: "Ожидание второго состава. Поданный состав заблокирован.",
+  replacementHistory: "История замен",
+  lineupUpdates: "Обновления составов подключены.",
+  lineupUpdatesStale:
+    "Обновления недоступны. Переподключение; перед изменениями обновите страницу.",
+  lineupUpdatesChecking: "Проверка обновлений составов…",
+  scheduled: "Запланирован",
+  called: "Вызван на стол",
+  in_progress: "Идёт",
+  finished: "Завершён",
+  cancelled: "Отменён",
   draws: "Жеребьёвки",
   drawIntro:
     "Зафиксируйте рейтинги посева, проверьте группы и связи матчей, затем опубликуйте. Опубликованная жеребьёвка не пересоздаётся.",
@@ -598,6 +675,43 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  lineupIntro:
+    "Командаңыздың бес жарамды ойыншысын енгізіңіз. Екі жақ та жібергенге дейін құрамдар жасырын болады.",
+  manageLineup: "Матч құрамдары",
+  noMatches: "Қолжетімді аймақта жарияланған матчтар әлі жоқ.",
+  pagination: "Беттер",
+  previousPage: "Алдыңғы бет",
+  nextPage: "Келесі бет",
+  submitLineup: "Құрамды жіберіп бекіту",
+  lineupConfirm:
+    "Белгіленген жыныс ретімен бес бөлек ойыншыны растаймын. Жіберу құрамды бекітеді. Төреші тек жеке ойын басталғанға дейін ауыстыра алады.",
+  slot: "Орын",
+  lineupInvalid:
+    "Бес бөлек ойыншыны, жыныс ретін және ағымдағы маусым құрамына жарамдылықты тексеріңіз. Жіберілген құрам бекітіледі.",
+  replacePlayer: "Бекітілген ойыншыны ауыстыру",
+  replacementPlayer: "Алмастыратын ойыншы",
+  replacementInvalid:
+    "Ауыстыру орындалмады. Құрамды жаңартып, ойыншыны, орынды, себепті және жеке ойынның басталмағанын тексеріңіз.",
+  replacementHelp:
+    "Басталмаған ойынға құрамдағы сол жыныстағы басқа жарамды ойыншы таңдалады. Бастапқы өтінім мен ауыстыру тарихы сақталады.",
+  noReplacement: "Бос жарамды қосалқы ойыншы немесе басталмаған ойын орны жоқ.",
+  lineupsRevealed: "Екі құрам да ашылды.",
+  lineupsHidden:
+    "Екі команда да жібергенше таңдалған ойыншылар жасырын. Төрешілер тек жіберу күйін көреді.",
+  lineupSubmitted: "Құрам жіберіліп бекітілді",
+  lineupNotSubmitted: "Құрам жіберілмеген",
+  hiddenPlayers: "Ойыншылар бірге ашылғанға дейін жасырын.",
+  waitingForReveal: "Екінші құрам күтілуде. Жіберілген құрам бекітілген.",
+  replacementHistory: "Ауыстыру тарихы",
+  lineupUpdates: "Құрам жаңартулары қосылған.",
+  lineupUpdatesStale:
+    "Жаңартулар қолжетімсіз. Қайта қосылуда; өзгерістер алдында бетті жаңартыңыз.",
+  lineupUpdatesChecking: "Құрам жаңартулары тексерілуде…",
+  scheduled: "Жоспарланған",
+  called: "Үстелге шақырылған",
+  in_progress: "Жүріп жатыр",
+  finished: "Аяқталған",
+  cancelled: "Бас тартылған",
   draws: "Жеребелер",
   drawIntro:
     "Себу рейтингтерін бекітіңіз, топтар мен матч байланыстарын тексеріп, жариялаңыз. Жарияланған жеребе қайта жасалмайды.",

@@ -26,7 +26,7 @@ do $$declare club uuid; sub uuid; person uuid; i integer; j integer; begin
 end;$$;
 select public.start_season('bbbb7000-0000-4000-8000-000000000001');
 select throws_ok($$select public.generate_tour_draw(gen_random_uuid(),'cccc7000-0000-4000-8000-000000000001','U15',0)$$,'22023','Every club needs three eligible boys and two eligible girls','missing age-specific seed roster rejects entire generation');
-select is((select count(*)::int from public.draw_revisions),0,'failed generation rolls back partial draw');
+select is((select count(*)::int from public.draw_revisions where plan_id in(select id from public.tour_stage_plans where tour_id='cccc7000-0000-4000-8000-000000000001')),0,'failed generation rolls back partial draw');
 select lives_ok($$select public.generate_tour_draw('eeee7000-0000-4000-8000-000000000001','cccc7000-0000-4000-8000-000000000001','U13',0)$$,'generate confirmed 24-entry draw');
 select lives_ok($$select public.generate_tour_draw('eeee7000-0000-4000-8000-000000000001','cccc7000-0000-4000-8000-000000000001','U13',0)$$,'same draw ID retry returns frozen result');
 select is((select count(*)::int from public.draw_entries where draw_id='eeee7000-0000-4000-8000-000000000001'),24,'24 frozen subteam entries');
@@ -60,8 +60,8 @@ select is((select rating_total::int from public.draw_entries where draw_id='eeee
 select is((select count(*)::int from public.draw_seed_players p join public.draw_entries e on e.id=p.entry_id where e.draw_id='eeee7000-0000-4000-8000-000000000002' and e.seed=1 and p.rating=2000),5,'lower-rated extra boy and girl are excluded from the top-five snapshot');
 select throws_ok($$select public.publish_tour_draw('eeee7000-0000-4000-8000-000000000001',1)$$,'22023','Draw revision conflict','superseded draft cannot publish');
 select set_config('request.jwt.claims','{"sub":"aaaa7000-0000-4000-8000-000000000003","role":"authenticated"}',true);
-select is((select count(*)::int from public.draw_revisions),0,'trainer cannot read private draft revisions');
-select is((select count(*)::int from public.team_matches),0,'trainer cannot read draft match graph');
+select is((select count(*)::int from public.draw_revisions where plan_id in(select id from public.tour_stage_plans where tour_id='cccc7000-0000-4000-8000-000000000001')),0,'trainer cannot read private draft revisions');
+select is((select count(*)::int from public.team_matches where draw_id in('eeee7000-0000-4000-8000-000000000001','eeee7000-0000-4000-8000-000000000002')),0,'trainer cannot read draft match graph');
 select throws_ok($$select public.publish_tour_draw('eeee7000-0000-4000-8000-000000000002',2)$$,'42501','Draw permission required','trainer cannot publish');
 select throws_ok($$select public.generate_tour_draw(gen_random_uuid(),'cccc7000-0000-4000-8000-000000000001','U13',2)$$,'42501','Draw permission required','trainer cannot generate');
 select set_config('request.jwt.claims','{"sub":"aaaa7000-0000-4000-8000-000000000002","role":"authenticated"}',true);
@@ -71,8 +71,8 @@ select throws_ok($$select public.generate_tour_draw(gen_random_uuid(),'cccc7000-
 select set_config('request.jwt.claims','{"sub":"aaaa7000-0000-4000-8000-000000000001","role":"authenticated"}',true);
 select is((select count(*)::int from public.audit_logs where action='draw.published' and entity_id='eeee7000-0000-4000-8000-000000000002'),1,'publication audited once');
 select set_config('request.jwt.claims','{"sub":"aaaa7000-0000-4000-8000-000000000003","role":"authenticated"}',true);
-select is((select count(*)::int from public.draw_revisions),1,'trainer can read published revision only');
-select is((select count(*)::int from public.team_matches),96,'trainer can read published matches only');
+select is((select count(*)::int from public.draw_revisions where plan_id in(select id from public.tour_stage_plans where tour_id='cccc7000-0000-4000-8000-000000000001')),1,'trainer can read published revision only');
+select is((select count(*)::int from public.team_matches where draw_id in('eeee7000-0000-4000-8000-000000000001','eeee7000-0000-4000-8000-000000000002')),96,'trainer can read published matches only');
 select throws_ok($$update public.draw_entries set seed=999$$,'42501',null,'direct seed edits denied');
 select throws_ok($$update public.team_matches set subteam_a=subteam_b$$,'42501',null,'direct participant edits denied');
 select throws_ok($$delete from public.match_sources$$,'42501',null,'direct graph deletion denied');

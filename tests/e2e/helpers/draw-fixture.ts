@@ -59,11 +59,39 @@ export async function drawFixture() {
             .select("id")
             .in("draw_id", drawIds),
           matchIds = (matches.data ?? []).map((v) => v.id);
-        if (matchIds.length)
+        if (matchIds.length) {
+          await remove(
+            "replacements",
+            admin.from("lineup_replacements").delete().in("match_id", matchIds),
+          );
+          await remove(
+            "singles",
+            admin.from("singles_games").delete().in("match_id", matchIds),
+          );
+          const lineups = await admin
+            .from("lineups")
+            .select("id")
+            .in("match_id", matchIds);
+          if (lineups.data?.length)
+            await remove(
+              "lineup slots",
+              admin
+                .from("lineup_slots")
+                .delete()
+                .in(
+                  "lineup_id",
+                  lineups.data.map((v) => v.id),
+                ),
+            );
+          await remove(
+            "lineups",
+            admin.from("lineups").delete().in("match_id", matchIds),
+          );
           await remove(
             "sources",
             admin.from("match_sources").delete().in("match_id", matchIds),
           );
+        }
         await remove(
           "matches",
           admin.from("team_matches").delete().in("draw_id", drawIds),
@@ -136,6 +164,16 @@ export async function drawFixture() {
       "registration",
       admin.from("season_team_entries").delete().eq("season_id", season),
     );
+    if (users.length) {
+      await remove(
+        "coach assignments",
+        admin.from("subteam_trainers").delete().in("trainer_id", users),
+      );
+      await remove(
+        "coach profiles",
+        admin.from("trainer_profiles").delete().in("user_id", users),
+      );
+    }
     if (clubs.length) {
       await remove(
         "subteams",

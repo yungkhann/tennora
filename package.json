@@ -26,7 +26,8 @@
     "test:staff-concurrency": "node scripts/test-staff-concurrency.mjs",
     "test:roster-concurrency": "node scripts/test-roster-concurrency.mjs",
     "test:league-scale": "node scripts/test-league-scale.mjs",
-    "test:draw-concurrency": "node scripts/test-draw-concurrency.mjs"
+    "test:draw-concurrency": "node scripts/test-draw-concurrency.mjs",
+    "test:lineup-concurrency": "node scripts/test-lineup-concurrency.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.5.0",

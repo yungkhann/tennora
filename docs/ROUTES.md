@@ -59,3 +59,9 @@ Changing locales must not bypass proxy refresh, staff authorization or resource 
 ## Draw operations (D1)
 
 Localized `/draws` and `/draws/[tourId]/[ageGroup]` require Organizer or Main Judge. A group query parameter switches between seed/group previews and classification dependencies; one group/bracket is displayed at a time. UUID/age validation and per-request staff checks apply before data reads. Proxy refresh/no-store covers the entire route family. Configuration pages link to each age; Main Judges enter through their own Draws navigation without access to Organizer settings. Public draw pages/projections remain G.
+
+## Match lineups (D2)
+
+Localized `/matches` lists published matches with pagination: assigned Trainer scope, or Organizer/Main Judge oversight. `/matches/[matchId]/lineup` reauthorizes match scope and displays only the caller’s permitted lineup rows. Officials see flags until joint reveal; afterward they can replace pending singles players. The page does not start/score a match. Private player DOB/contact is never included in its client form candidates.
+
+`GET /api/staff/matches/[matchId]/lineup-status` verifies Auth and database permission on every read, returns only flags/version and sets private no-store. Anonymous requests return 401; inaccessible match IDs return indistinguishable 404 responses. The browser stops hidden-tab polling and backs off on failures. Private snapshots and route families are included in proxy refresh matching. Public lineup projections remain G.

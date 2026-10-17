@@ -234,6 +234,14 @@ export default async function Page({
                           )
                         : t.toBeDetermined}
                   </p>
+                  {draw.published_at && match.subteam_a && match.subteam_b && (
+                    <Link
+                      className="mt-3 inline-block underline"
+                      href={`/${locale}/matches/${match.id}/lineup`}
+                    >
+                      {t.manageLineup}
+                    </Link>
+                  )}
                   {match.placement_from && (
                     <p className="mt-2 text-muted-foreground">
                       {t.bracketPlaces} {match.placement_from}–

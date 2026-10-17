@@ -256,6 +256,175 @@ export type Database = {
           },
         ];
       };
+      lineup_replacements: {
+        Row: {
+          changed_at: string;
+          changed_by: string;
+          id: string;
+          lineup_id: string;
+          match_id: string;
+          new_player_id: string;
+          new_player_name: string;
+          old_player_id: string;
+          old_player_name: string;
+          reason: string;
+          slot: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          changed_at?: string;
+          changed_by: string;
+          id: string;
+          lineup_id: string;
+          match_id: string;
+          new_player_id: string;
+          new_player_name: string;
+          old_player_id: string;
+          old_player_name: string;
+          reason: string;
+          slot: number;
+        };
+        Update: {
+          changed_at?: string;
+          changed_by?: string;
+          id?: string;
+          lineup_id?: string;
+          match_id?: string;
+          new_player_id?: string;
+          new_player_name?: string;
+          old_player_id?: string;
+          old_player_name?: string;
+          reason?: string;
+          slot?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lineup_replacements_changed_by_fkey";
+            columns: ["changed_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lineup_replacements_lineup_id_fkey";
+            columns: ["lineup_id"];
+            isOneToOne: false;
+            referencedRelation: "lineups";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lineup_replacements_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lineup_replacements_new_player_id_fkey";
+            columns: ["new_player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lineup_replacements_old_player_id_fkey";
+            columns: ["old_player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      lineup_slots: {
+        Row: {
+          gender: Database["public"]["Enums"]["player_gender"];
+          lineup_id: string;
+          player_id: string;
+          player_name: string;
+          slot: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          gender: Database["public"]["Enums"]["player_gender"];
+          lineup_id: string;
+          player_id: string;
+          player_name: string;
+          slot: number;
+        };
+        Update: {
+          gender?: Database["public"]["Enums"]["player_gender"];
+          lineup_id?: string;
+          player_id?: string;
+          player_name?: string;
+          slot?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lineup_slots_lineup_id_fkey";
+            columns: ["lineup_id"];
+            isOneToOne: false;
+            referencedRelation: "lineups";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lineup_slots_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      lineups: {
+        Row: {
+          id: string;
+          match_id: string;
+          original_players: string[];
+          submitted_at: string;
+          submitted_by: string;
+          subteam_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          id: string;
+          match_id: string;
+          original_players: string[];
+          submitted_at?: string;
+          submitted_by: string;
+          subteam_id: string;
+        };
+        Update: {
+          id?: string;
+          match_id?: string;
+          original_players?: string[];
+          submitted_at?: string;
+          submitted_by?: string;
+          subteam_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lineups_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lineups_submitted_by_fkey";
+            columns: ["submitted_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lineups_subteam_id_fkey";
+            columns: ["subteam_id"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       match_sources: {
         Row: {
           match_id: string;
@@ -929,6 +1098,56 @@ export type Database = {
         };
         Relationships: [];
       };
+      singles_games: {
+        Row: {
+          id: string;
+          match_id: string;
+          player_a: string;
+          player_b: string;
+          slot: number;
+          status: Database["public"]["Enums"]["singles_game_status"];
+        };
+        ComputedFields: never;
+        Insert: {
+          id?: string;
+          match_id: string;
+          player_a: string;
+          player_b: string;
+          slot: number;
+          status?: Database["public"]["Enums"]["singles_game_status"];
+        };
+        Update: {
+          id?: string;
+          match_id?: string;
+          player_a?: string;
+          player_b?: string;
+          slot?: number;
+          status?: Database["public"]["Enums"]["singles_game_status"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "singles_games_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_games_player_a_fkey";
+            columns: ["player_a"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_games_player_b_fkey";
+            columns: ["player_b"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       staff_accounts: {
         Row: {
           active: boolean;
@@ -1218,6 +1437,9 @@ export type Database = {
           draw_id: string;
           group_id: string;
           id: string;
+          lineup_version: number;
+          lineups_reveal_version: number | null;
+          lineups_revealed_at: string | null;
           match_no: number;
           placement_from: number | null;
           placement_to: number | null;
@@ -1233,6 +1455,9 @@ export type Database = {
           draw_id: string;
           group_id: string;
           id?: string;
+          lineup_version?: number;
+          lineups_reveal_version?: number | null;
+          lineups_revealed_at?: string | null;
           match_no: number;
           placement_from?: number | null;
           placement_to?: number | null;
@@ -1247,6 +1472,9 @@ export type Database = {
           draw_id?: string;
           group_id?: string;
           id?: string;
+          lineup_version?: number;
+          lineups_reveal_version?: number | null;
+          lineups_revealed_at?: string | null;
           match_no?: number;
           placement_from?: number | null;
           placement_to?: number | null;
@@ -1647,7 +1875,18 @@ export type Database = {
         };
         Returns: string;
       };
+      get_lineup_status: { Args: { match: string }; Returns: Json };
       is_player_photo_approved: { Args: { asset: string }; Returns: boolean };
+      lineup_match_names: {
+        Args: { matches: string[] };
+        Returns: {
+          club_id: string;
+          match_id: string;
+          name: string;
+          side: string;
+          subteam_id: string;
+        }[];
+      };
       publish_tour_draw: {
         Args: { draw: string; expected_revision: number };
         Returns: undefined;
@@ -1655,6 +1894,18 @@ export type Database = {
       register_season_team: {
         Args: { club: string; parent_season: string };
         Returns: undefined;
+      };
+      replace_lineup_player: {
+        Args: {
+          expected_lineup_version: number;
+          match: string;
+          player: string;
+          reason: string;
+          replacement_id: string;
+          slot: number;
+          subteam: string;
+        };
+        Returns: Json;
       };
       review_player_photo: {
         Args: {
@@ -1737,6 +1988,15 @@ export type Database = {
         Returns: undefined;
       };
       start_season: { Args: { season_id: string }; Returns: undefined };
+      submit_lineup: {
+        Args: {
+          lineup_id: string;
+          match: string;
+          players: string[];
+          subteam: string;
+        };
+        Returns: Json;
+      };
       transfer_player: {
         Args: { new_club: string; player: string; reason: string };
         Returns: undefined;
@@ -1756,6 +2016,7 @@ export type Database = {
       player_gender: "boy" | "girl";
       player_status: "active" | "dropped_out";
       season_status: "draft" | "started";
+      singles_game_status: "pending" | "in_progress" | "finished" | "cancelled";
       staff_role: "organizer" | "main_judge" | "trainer" | "line_judge";
       team_match_status:
         "scheduled" | "called" | "in_progress" | "finished" | "cancelled";
@@ -1906,6 +2167,7 @@ export const Constants = {
       player_gender: ["boy", "girl"],
       player_status: ["active", "dropped_out"],
       season_status: ["draft", "started"],
+      singles_game_status: ["pending", "in_progress", "finished", "cancelled"],
       staff_role: ["organizer", "main_judge", "trainer", "line_judge"],
       team_match_status: [
         "scheduled",
