@@ -1,6 +1,9 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select no_plan();
+-- Isolate the first-Organizer proof inside this rolled-back transaction.
+-- Other connections retain their real account state through MVCC.
+update public.staff_accounts set active=false;
 insert into auth.users(id,email,raw_user_meta_data) values
  ('aaaa0000-0000-4000-8000-000000000001','organizer@staff.invalid','{"display_name":"Organizer"}'),
  ('aaaa0000-0000-4000-8000-000000000002','judge@staff.invalid','{"display_name":"Main Judge","roles":["organizer"]}'),
@@ -30,7 +33,7 @@ select throws_ok($$update public.staff_accounts set active=false$$,'42501',null,
 select throws_ok($$delete from public.staff_roles$$,'42501',null,'direct role deletion denied');
 select throws_ok($$select public.finish_staff_job(gen_random_uuid(),true)$$,'42501','Organizer required','judge cannot finish provisioning');
 select set_config('request.jwt.claims','{"sub":"aaaa0000-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select is((select count(*)::int from public.staff_accounts),2,'organizer sees staff directory');
+select is((select count(*)::int from public.staff_accounts where id in('aaaa0000-0000-4000-8000-000000000001','aaaa0000-0000-4000-8000-000000000002')),2,'organizer sees staff directory');
 select throws_ok($$select public.change_staff(auth.uid(),array['trainer']::public.staff_role[],true)$$,'22023','Self lockout forbidden','organizer cannot remove own authority');
 select throws_ok($$select public.change_staff(auth.uid(),array['organizer']::public.staff_role[],false)$$,'22023','Self lockout forbidden','organizer cannot deactivate self');
 select throws_ok($$select public.change_staff('aaaa0000-0000-4000-8000-000000000002',array['trainer','trainer']::public.staff_role[],true)$$,'22023','Invalid staff details','duplicate roles rejected');
@@ -51,7 +54,7 @@ set local role authenticated;
 select lives_ok($$select public.finish_staff_job('bbbb0000-0000-4000-8000-000000000001',true)$$,'failed job can complete after Auth succeeds');
 select lives_ok($$select public.finish_staff_job('bbbb0000-0000-4000-8000-000000000001',true)$$,'completion retry is idempotent');
 select is((select count(*)::int from public.staff_accounts where email='new@staff.invalid'),1,'exactly one staff account');
-select is((select count(*)::int from public.audit_logs where action='staff.job_completed'),1,'exactly one completion audit');
+select is((select count(*)::int from public.audit_logs where action='staff.job_completed' and entity_id=(select target_id from public.staff_jobs where id='bbbb0000-0000-4000-8000-000000000001')),1,'exactly one completion audit');
 select lives_ok($$select public.begin_staff_job('bbbb0000-0000-4000-8000-000000000002','reset','aaaa0000-0000-4000-8000-000000000002','','',array[]::public.staff_role[])$$,'password reset job begins');
 select lives_ok($$select public.finish_staff_job('bbbb0000-0000-4000-8000-000000000002',true)$$,'password reset receipt completes');
 select lives_ok($$select public.change_staff('aaaa0000-0000-4000-8000-000000000002',array['trainer','line_judge']::public.staff_role[],false)$$,'deactivation accepted');

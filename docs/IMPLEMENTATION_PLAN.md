@@ -27,3 +27,5 @@ See MILESTONE_B_BATCH.md for scope and MILESTONE_B_VERIFICATION.md for measured 
 ## C: partial delivery
 
 C1 seasons/tours and confirmed age eligibility are verified; see MILESTONE_C1_VERIFICATION.md. C2 clubs/players/rosters and scale fixture proof are verified in MILESTONE_C2_VERIFICATION.md. C3 photos/settings/stages and season-start readiness remain. C08 confirms Organizer-approved mid-season transfers and direct use of the active season roster. Season start remains explicitly blocked until full configuration readiness.
+
+The explicitly requested first Organizer was provisioned via a normal email-verification/password-setup invitation; see MILESTONE_B_INVITATION_VERIFICATION.md. Local delivery uses Mailpit. No preset password or automatic legacy-owner promotion is used.

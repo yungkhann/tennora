@@ -45,7 +45,7 @@ test("invalid callbacks fail closed without an external redirect", async ({
   await expect(
     page.getByRole("alert").filter({ hasText: "Ссылка" }),
   ).toContainText("недействительна или устарела");
-  await page.goto("/auth/confirm?token_hash=invalid&type=invite");
+  await page.goto("/auth/confirm?token_hash=invalid&type=signup");
   await expect(page).toHaveURL(/\/login\?error=callback$/);
 });
 test("protected workspace requires authentication or explicit setup", async ({

@@ -14,7 +14,11 @@ test.skip(
   !local || !adminKey,
   "Requires explicitly configured local Supabase test backend.",
 );
-async function emailLink(request: APIRequestContext, email: string) {
+async function emailLink(
+  request: APIRequestContext,
+  email: string,
+  subject = "Reset",
+) {
   let messageId = "";
   await expect
     .poll(
@@ -25,7 +29,7 @@ async function emailLink(request: APIRequestContext, email: string) {
         messageId =
           data.messages.find(
             (m: { ID: string; Subject: string; To: { Address: string }[] }) =>
-              m.Subject.includes("Reset") &&
+              m.Subject.includes(subject) &&
               m.To.some((to) => to.Address === email),
           )?.ID ?? "";
         return !!messageId;
@@ -50,7 +54,7 @@ async function login(page: Page, email: string, password: string) {
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page).toHaveURL(/\/en\/workspace$/);
 }
-test("staff provisioning, roles, HTTP-only refresh, recovery, denial and deactivation", async ({
+test("staff invitation, provisioning, roles, HTTP-only refresh, recovery, denial and deactivation", async ({
   page,
   browser,
   request,
@@ -70,17 +74,42 @@ test("staff provisioning, roles, HTTP-only refresh, recovery, denial and deactiv
     baseURL: "http://127.0.0.1:3000",
   });
   try {
-    const created = await admin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: { display_name: "Staff Organizer" },
+    const created = await admin.auth.admin.inviteUserByEmail(email, {
+      data: { display_name: "Staff Organizer" },
     });
     expect(created.error).toBeNull();
+    expect(created.data.user!.email_confirmed_at).toBeFalsy();
     userIds.push(created.data.user!.id);
+    // Fixtures explicitly seed staff authority; service-only bootstrap is proved transactionally in pgTAP.
+    // This keeps the suite usable after a real Organizer exists in the local database.
     expect(
-      (await admin.rpc("bootstrap_organizer", { target: userIds[0] })).error,
+      (
+        await admin
+          .from("staff_accounts")
+          .insert({ id: userIds[0], email, display_name: "Staff Organizer" })
+      ).error,
     ).toBeNull();
+    expect(
+      (
+        await admin
+          .from("staff_roles")
+          .insert({ user_id: userIds[0], role: "organizer" })
+      ).error,
+    ).toBeNull();
+    await page.goto(await emailLink(request, email, "Set up your Tennora"));
+    await expect(page).toHaveURL(/\/ru\/reset-password$/);
+    await page.locator('input[name="password"]').fill(password);
+    await page.locator('input[name="confirmPassword"]').fill(password);
+    await page
+      .getByRole("button", { name: "Задать пароль", exact: true })
+      .click();
+    await expect(
+      page.getByText("Пароль обновлён.", { exact: true }),
+    ).toBeVisible();
+    expect(
+      (await admin.auth.admin.getUserById(userIds[0])).data.user
+        ?.email_confirmed_at,
+    ).toBeTruthy();
     const outsider = await admin.auth.admin.createUser({
       email: outsiderEmail,
       password,
