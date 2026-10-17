@@ -39,3 +39,5 @@ See MILESTONE_D_BATCH.md for the exact D1 draw/seed/match-graph inventory. C15â€
 E1 private scoring/Elo rules and TypeScript/PostgreSQL parity are verified in MILESTONE_E1_VERIFICATION.md. E2 authoritative score/event/result/Elo transactions and judge controls, then E3 completed-result corrections/dependency resolution/replay remain. Task E is not complete until those integration gates pass. See MILESTONE_E_BATCH.md for exact inventory and preconditions.
 
 E2a match-day authority and numeric storage prerequisites are verified in MILESTONE_E2A_VERIFICATION.md. E2b live-match leases and atomic scoring/result/Elo writes, E2c judge transport/UI and E3 corrections remain before Task E is complete.
+
+E2b1 live lifecycle/resource leases and transfer-safe lineups are verified in MILESTONE_E2B1_VERIFICATION.md. E2b2 point/result/Elo transactions and E2c judge transport/UI remain; E3 corrections/replay and the full F allocator still follow.

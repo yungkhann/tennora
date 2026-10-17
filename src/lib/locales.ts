@@ -4,6 +4,9 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  lineupConflict:
+    "A transfer left the same player on both sides. An official can choose an eligible reserve before the match starts.",
+
   swapSeeds: "Swap seed positions",
   seedA: "First seed position",
   seedB: "Second seed position",
@@ -383,6 +386,9 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  lineupConflict:
+    "После перехода игрок указан с обеих сторон. Судья может выбрать допустимого запасного до начала матча.",
+
   swapSeeds: "Поменять позиции посева",
   seedA: "Первая позиция посева",
   seedB: "Вторая позиция посева",
@@ -762,6 +768,9 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  lineupConflict:
+    "Ауысудан кейін ойыншы екі жақта да көрсетілген. Төреші матч басталғанға дейін талапқа сай қосалқы ойыншыны таңдай алады.",
+
   swapSeeds: "Себу орындарын ауыстыру",
   seedA: "Бірінші себу орны",
   seedB: "Екінші себу орны",

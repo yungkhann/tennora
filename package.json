@@ -32,7 +32,8 @@
     "test:standings-concurrency": "node scripts/test-standings-concurrency.mjs",
     "test:draw-adjustment-concurrency": "node scripts/test-draw-adjustment-concurrency.mjs",
     "test:scoring-parity": "node scripts/test-scoring-parity.mjs",
-    "test:table-owner-concurrency": "node scripts/test-table-owner-concurrency.mjs"
+    "test:table-owner-concurrency": "node scripts/test-table-owner-concurrency.mjs",
+    "test:match-start-concurrency": "node scripts/test-match-start-concurrency.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.5.0",

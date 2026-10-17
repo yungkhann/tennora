@@ -28,7 +28,7 @@ export default async function Page({
     status.revealed
       ? supabase
           .from("singles_games")
-          .select("slot,status")
+          .select("slot,status,player_a,player_b")
           .eq("match_id", match.id)
       : null,
     status.revealed
@@ -87,6 +87,15 @@ export default async function Page({
       <p className="mt-4 rounded-lg border bg-card p-4 text-sm" role="status">
         {status.revealed ? t.lineupsRevealed : t.lineupsHidden}
       </p>
+      {status.revealed &&
+        ["scheduled", "called"].includes(match.status) &&
+        new Set(lineups.flatMap((l) => l.lineup_slots.map((s) => s.player_id)))
+          .size <
+          lineups.reduce((count, l) => count + l.lineup_slots.length, 0) && (
+          <p className="mt-4 rounded-lg border p-4 text-sm" role="status">
+            {t.lineupConflict}
+          </p>
+        )}
       {!status.sources_ready && (
         <p className="mt-4 text-sm" role="status">
           {t.sourcesPending}
@@ -102,7 +111,13 @@ export default async function Page({
           const lineup = lineups.find((v) => v.subteam_id === team.id),
             submitted = index === 0 ? status.a_submitted : status.b_submitted,
             pending = games
-              .filter((g) => g.status === "pending")
+              .filter(
+                (g) =>
+                  g.status === "pending" ||
+                  (g.status === "cancelled" &&
+                    g.player_a === g.player_b &&
+                    ["scheduled", "called"].includes(match.status)),
+              )
               .map((g) => g.slot);
           return (
             <Card key={team.id} className="min-w-0 p-6">
@@ -166,7 +181,9 @@ export default async function Page({
                         subteam={team.id}
                         revision={status.lineup_version}
                         candidates={candidates[index]}
-                        used={lineup.lineup_slots.map((s) => s.player_id)}
+                        used={lineups.flatMap((l) =>
+                          l.lineup_slots.map((s) => s.player_id),
+                        )}
                         pendingSlots={pending}
                       />
                     </div>

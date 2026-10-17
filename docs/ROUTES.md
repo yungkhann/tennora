@@ -75,3 +75,7 @@ Private lineup status now includes `sources_ready`, a boolean only. A stale qual
 ## Seed adjustment (D3c)
 
 The private draw page exposes two club-labelled seed selectors and a required reason/confirmation only to Organizers while the latest draw remains a draft. A successful swap shows the new revision and reason, resets the form, and rebuilds group/bracket previews from copied frozen inputs. Publication removes adjustment controls; an independent RPC guard rejects direct/stale changes. Main Judge review/publication routes remain available.
+
+## Lifecycle and transfer repair contracts (E2b1)
+
+Authorized database operations now expose `manage_match` and `get_match_operation`; their manager/assigned-judge checks do not depend on UI visibility. HTTP management/judge screens arrive in E2c/F. Existing lineup pages show duplicate-player guidance only after joint reveal and while the pairing can still be repaired. Replacements exclude every player already selected on either side; an unstarted cancelled transfer collision can be repaired, while completed-match cancellation remains locked. No DOB or early selected identities enter status polling or operation snapshots.

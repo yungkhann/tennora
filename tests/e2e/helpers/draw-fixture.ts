@@ -42,6 +42,31 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
       if (result.error) errors.push(label);
     }
     await operator.auth.signOut();
+    const assignments = await admin
+      .from("table_judge_assignments")
+      .select("id")
+      .eq("context_tour_id", tour);
+    if (assignments.error) errors.push("judge assignment lookup");
+    if (assignments.data?.length) {
+      const assignmentIds = assignments.data.map((v) => v.id);
+      await remove(
+        "day heads",
+        admin
+          .from("table_day_heads")
+          .delete()
+          .in("assignment_id", assignmentIds),
+      );
+      await remove(
+        "judge assignments",
+        admin.from("table_judge_assignments").delete().in("id", assignmentIds),
+      );
+    }
+    if (players.length)
+      await remove(
+        "player rest",
+        admin.from("player_rest_heads").delete().in("player_id", players),
+      );
+
     const plans = await admin
       .from("tour_stage_plans")
       .select("id")
@@ -73,6 +98,23 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
           admin.from("tour_placements").delete().in("draw_id", drawIds),
         );
         if (matchIds.length) {
+          await remove(
+            "live players",
+            admin.from("live_players").delete().in("match_id", matchIds),
+          );
+          await remove(
+            "live subteams",
+            admin.from("live_subteams").delete().in("match_id", matchIds),
+          );
+          await remove(
+            "table leases",
+            admin.from("match_table_leases").delete().in("match_id", matchIds),
+          );
+          await remove(
+            "match commands",
+            admin.from("match_commands").delete().in("match_id", matchIds),
+          );
+
           await remove(
             "source versions",
             admin

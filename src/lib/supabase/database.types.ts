@@ -630,6 +630,123 @@ export type Database = {
           },
         ];
       };
+      live_players: {
+        Row: {
+          leased_at: string;
+          match_id: string;
+          player_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          leased_at?: string;
+          match_id: string;
+          player_id: string;
+        };
+        Update: {
+          leased_at?: string;
+          match_id?: string;
+          player_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "live_players_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "live_players_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: true;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      live_subteams: {
+        Row: {
+          leased_at: string;
+          match_id: string;
+          subteam_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          leased_at?: string;
+          match_id: string;
+          subteam_id: string;
+        };
+        Update: {
+          leased_at?: string;
+          match_id?: string;
+          subteam_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "live_subteams_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "live_subteams_subteam_id_fkey";
+            columns: ["subteam_id"];
+            isOneToOne: true;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      match_commands: {
+        Row: {
+          actor_id: string;
+          after_state: NonNullable<Json>;
+          before_state: NonNullable<Json>;
+          created_at: string;
+          id: string;
+          kind: string;
+          match_id: string;
+          request: NonNullable<Json>;
+        };
+        ComputedFields: never;
+        Insert: {
+          actor_id: string;
+          after_state: NonNullable<Json>;
+          before_state: NonNullable<Json>;
+          created_at?: string;
+          id: string;
+          kind: string;
+          match_id: string;
+          request: NonNullable<Json>;
+        };
+        Update: {
+          actor_id?: string;
+          after_state?: NonNullable<Json>;
+          before_state?: NonNullable<Json>;
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          match_id?: string;
+          request?: NonNullable<Json>;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "match_commands_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_commands_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       match_sources: {
         Row: {
           match_id: string;
@@ -707,6 +824,53 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "group_standing_snapshots";
             referencedColumns: ["id"];
+          },
+        ];
+      };
+      match_table_leases: {
+        Row: {
+          assigned_at: string;
+          assigned_by: string;
+          match_id: string;
+          table_number: number;
+          venue_day: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          assigned_at?: string;
+          assigned_by: string;
+          match_id: string;
+          table_number: number;
+          venue_day: string;
+        };
+        Update: {
+          assigned_at?: string;
+          assigned_by?: string;
+          match_id?: string;
+          table_number?: number;
+          venue_day?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "match_table_leases_assigned_by_fkey";
+            columns: ["assigned_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_table_leases_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: true;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_table_leases_table_number_fkey";
+            columns: ["table_number"];
+            isOneToOne: true;
+            referencedRelation: "league_tables";
+            referencedColumns: ["number"];
           },
         ];
       };
@@ -866,6 +1030,30 @@ export type Database = {
             columns: ["uploader_id"];
             isOneToOne: false;
             referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      player_rest_heads: {
+        Row: {
+          last_ended_at: string;
+          player_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          last_ended_at: string;
+          player_id: string;
+        };
+        Update: {
+          last_ended_at?: string;
+          player_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "player_rest_heads_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: true;
+            referencedRelation: "players";
             referencedColumns: ["id"];
           },
         ];
@@ -1866,6 +2054,7 @@ export type Database = {
       };
       team_matches: {
         Row: {
+          completed_at: string | null;
           draw_id: string;
           group_id: string;
           id: string;
@@ -1879,6 +2068,8 @@ export type Database = {
           result_revision: number;
           round_no: number;
           stage_id: string;
+          start_blocked: string | null;
+          started_at: string | null;
           status: Database["public"]["Enums"]["team_match_status"];
           subteam_a: string | null;
           subteam_b: string | null;
@@ -1886,6 +2077,7 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          completed_at?: string | null;
           draw_id: string;
           group_id: string;
           id?: string;
@@ -1899,12 +2091,15 @@ export type Database = {
           result_revision?: number;
           round_no: number;
           stage_id: string;
+          start_blocked?: string | null;
+          started_at?: string | null;
           status?: Database["public"]["Enums"]["team_match_status"];
           subteam_a?: string | null;
           subteam_b?: string | null;
           version?: number;
         };
         Update: {
+          completed_at?: string | null;
           draw_id?: string;
           group_id?: string;
           id?: string;
@@ -1918,6 +2113,8 @@ export type Database = {
           result_revision?: number;
           round_no?: number;
           stage_id?: string;
+          start_blocked?: string | null;
+          started_at?: string | null;
           status?: Database["public"]["Enums"]["team_match_status"];
           subteam_a?: string | null;
           subteam_b?: string | null;
@@ -2381,6 +2578,7 @@ export type Database = {
         Returns: string;
       };
       get_lineup_status: { Args: { match: string }; Returns: Json };
+      get_match_operation: { Args: { match: string }; Returns: Json };
       is_player_photo_approved: { Args: { asset: string }; Returns: boolean };
       lineup_match_names: {
         Args: { matches: string[] };
@@ -2391,6 +2589,17 @@ export type Database = {
           side: string;
           subteam_id: string;
         }[];
+      };
+      manage_match: {
+        Args: {
+          command_id: string;
+          expected_version: number;
+          match: string;
+          operation: string;
+          reason: string;
+          table_no: number;
+        };
+        Returns: Json;
       };
       publish_tour_draw: {
         Args: { draw: string; expected_revision: number };
