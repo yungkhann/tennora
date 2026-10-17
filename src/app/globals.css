@@ -1,0 +1,112 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+:root {
+  --background: #f7f9f6;
+  --foreground: #172c23;
+  --card: #ffffff;
+  --card-foreground: #172c23;
+  --primary: #164d39;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf0e8;
+  --secondary-foreground: #164d39;
+  --muted: #eaf0e8;
+  --muted-foreground: #586d60;
+  --accent: #d5ef72;
+  --accent-foreground: #20320b;
+  --destructive: #b42d27;
+  --border: #dce5dd;
+  --input: #c0cec3;
+  --ring: #2c7656;
+  --brand-mark: #d5ef72;
+  --radius: 0.75rem;
+}
+.dark {
+  --background: #101e18;
+  --foreground: #e9f0e9;
+  --card: #17291f;
+  --card-foreground: #e9f0e9;
+  --primary: #a7d6b3;
+  --primary-foreground: #112d1d;
+  --secondary: #23392c;
+  --secondary-foreground: #d2e7d5;
+  --muted: #23392c;
+  --muted-foreground: #b0c4b4;
+  --accent: #d5ef72;
+  --accent-foreground: #20320b;
+  --destructive: #ffaaa3;
+  --border: #354e3c;
+  --input: #56735e;
+  --ring: #a7d6b3;
+  --brand-mark: #164d39;
+}
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  button,
+  a,
+  input {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:not(:disabled),
+  [role="button"] {
+    cursor: pointer;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 5px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: #d5ef72;
+    color: #172c23;
+  }
+}
+@layer components {
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[.16em] text-muted-foreground;
+  }
+  .field {
+    @apply grid gap-2;
+  }
+  .field label {
+    @apply text-sm font-medium;
+  }
+  .text-link {
+    @apply font-semibold text-primary underline-offset-4 hover:underline;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
