@@ -18,7 +18,7 @@ An active Organizer manages seasons/settings/accounts and all operations. Main J
 
 - Birth-year eligibility, maximum 10 active players per subteam, persistent dropout history and linked-or-free-text first/personal trainers.
 - Lineup slots: boy, girl, boy, girl, boy. Submit locks the lineup; opponent/public cannot read it before both sides submit. Reveal is one committed revision, not a promise of identical network arrival time.
-- Only Organizer/Main Judge can replace a locked player; every replacement has a reason and audit entry. Incomplete-lineup and mid-game replacement details remain explicit decisions.
+- Only Organizer/Main Judge can replace a locked player, and only before that singles starts (C19); every replacement has a reason and audit entry. A full three-boy/two-girl lineup is required to start; later withdrawals lose their singles without automatic-loss Elo. If both teams cannot start, the match stays unresolved for the Main Judge (C12/C20).
 - Each team match is up to five singles games, first to three wins. Remaining games cancel once decided. Singles are best of five sets; sets reach 11 with a two-point margin and unbounded deuce. Serving changes every two points, every point after 10:10; derive the indicator from history. Do not implement the archived tennis advantage/tie-break rules.
 - Every point/undo is a versioned, idempotent command. PostgreSQL commits score, result, synchronous Elo, completion/advancement and audit atomically. Undo appends history. Completed-result correction policy is pending.
 - Initial Elo defaults to 1000; automatic-loss games do not change ratings. Preserve the K used per result. Exact numerical/season aggregation proposals need the decisions listed in DECISIONS.md.

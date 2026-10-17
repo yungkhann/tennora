@@ -1,0 +1,15 @@
+# Task D batch inventory and gates
+
+Task C completed in `658fdb0`. C11/C15–C18 settle the actual format, seed freeze/random ties, full classification, group tie-breaks and snake/crossover map. C12 requires complete 3-boy/2-girl starting lineups. C19/C20 now resolve pre-start replacement and both-team behavior; timeout/serve/judge fallback decisions remain D08.
+
+## D1 — frozen draws and match graph
+
+Exact planned files: `supabase/migrations/202610170013_draws_matches.sql`, `202610170014_draw_audit_roles.sql`, `supabase/tests/007_draws.sql`, regenerated database types, `src/domain/draws.ts`, `src/features/draws/{access,validation,actions,forms}.ts*`, localized `/organizer/tournaments/[tourId]/draws/[ageGroup]` route, tournament links, locale dictionary, `tests/unit/draws.test.ts`, `tests/e2e/draws.spec.ts`, `tests/e2e/helpers/draw-fixture.ts`, `scripts/test-draw-concurrency.mjs` and its package script, and milestone/database/routes/status docs.
+
+Generate from the frozen stage plan and active eligible season roster. Every club needs three boys and two girls for the confirmed top-five seed calculation; do not manufacture zero ratings for missing players. Freeze the five identities/ratings, sum, random tie lot, final seed and group assignment. Ratings/rosters may subsequently change without reshuffling a generated draw. Draft regeneration appends a revision; publication selects the latest revision and blocks regeneration. Private draft access is Organizer/Main Judge only; anonymous base-table reads remain denied. Public projection/page delivery is G.
+
+Generate round-robin pairings with each pair exactly once and no same-round group conflict. Snake groups follow C18. Composite advancement uses explicit group-place-to-slot mapping data, not a season-name special branch. The confirmed crossover map is stored with the draw. Full classification knockout graphs cover all placements, with winner/loser dependencies and no fabricated participants before upstream results. SQL independently generates the authoritative graph; pure TypeScript supplies tested reference invariants. No score/winner or advance command is introduced before E.
+
+D1 must prove the 24-entry draw (60 group matches plus 36 classification matches per age), frozen ratings/rosters, draft history, publication lock, direct API denials, race behavior, fresh migrations and responsive staff UI. D remains in progress until lineups, reveal secrecy and replacement/advancement contracts are verified in subsequent batches.
+
+D1 routing refinement before implementation: use localized `/draws` and `/draws/[tourId]/[ageGroup]` so Main Judges can operate draws without Organizer-only configuration access. Add links to the staff navigation and tournament configuration page, and proxy matching for these private routes. One immutable seed-map record stores the confirmed four-group crossover; unsupported composite maps are rejected explicitly. General format configuration is not a promise that every possible custom draw map is implemented.

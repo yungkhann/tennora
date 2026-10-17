@@ -85,6 +85,227 @@ export type Database = {
           },
         ];
       };
+      draw_entries: {
+        Row: {
+          draw_id: string;
+          group_id: string | null;
+          group_slot: number | null;
+          id: string;
+          rating_total: number;
+          seed: number;
+          subteam_id: string;
+          tie_lot: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          draw_id: string;
+          group_id?: string | null;
+          group_slot?: number | null;
+          id?: string;
+          rating_total: number;
+          seed: number;
+          subteam_id: string;
+          tie_lot: string;
+        };
+        Update: {
+          draw_id?: string;
+          group_id?: string | null;
+          group_slot?: number | null;
+          id?: string;
+          rating_total?: number;
+          seed?: number;
+          subteam_id?: string;
+          tie_lot?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "draw_entries_draw_id_fkey";
+            columns: ["draw_id"];
+            isOneToOne: false;
+            referencedRelation: "draw_revisions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "draw_entries_group_id_fkey";
+            columns: ["group_id"];
+            isOneToOne: false;
+            referencedRelation: "stage_groups";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "draw_entries_subteam_id_fkey";
+            columns: ["subteam_id"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      draw_revisions: {
+        Row: {
+          generated_at: string;
+          generated_by: string;
+          id: string;
+          mapping_snapshot: NonNullable<Json>;
+          plan_id: string;
+          published_at: string | null;
+          published_by: string | null;
+          revision: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          generated_at?: string;
+          generated_by: string;
+          id: string;
+          mapping_snapshot: NonNullable<Json>;
+          plan_id: string;
+          published_at?: string | null;
+          published_by?: string | null;
+          revision: number;
+        };
+        Update: {
+          generated_at?: string;
+          generated_by?: string;
+          id?: string;
+          mapping_snapshot?: NonNullable<Json>;
+          plan_id?: string;
+          published_at?: string | null;
+          published_by?: string | null;
+          revision?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "draw_revisions_generated_by_fkey";
+            columns: ["generated_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "draw_revisions_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "tour_stage_plans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "draw_revisions_published_by_fkey";
+            columns: ["published_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      draw_seed_maps: {
+        Row: {
+          group_count: number;
+          id: string;
+          qualifiers_per_group: number;
+          slots: NonNullable<Json>;
+        };
+        ComputedFields: never;
+        Insert: {
+          group_count: number;
+          id: string;
+          qualifiers_per_group: number;
+          slots: NonNullable<Json>;
+        };
+        Update: {
+          group_count?: number;
+          id?: string;
+          qualifiers_per_group?: number;
+          slots?: NonNullable<Json>;
+        };
+        Relationships: [];
+      };
+      draw_seed_players: {
+        Row: {
+          entry_id: string;
+          gender: Database["public"]["Enums"]["player_gender"];
+          player_id: string;
+          rating: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          entry_id: string;
+          gender: Database["public"]["Enums"]["player_gender"];
+          player_id: string;
+          rating: number;
+        };
+        Update: {
+          entry_id?: string;
+          gender?: Database["public"]["Enums"]["player_gender"];
+          player_id?: string;
+          rating?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "draw_seed_players_entry_id_fkey";
+            columns: ["entry_id"];
+            isOneToOne: false;
+            referencedRelation: "draw_entries";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "draw_seed_players_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      match_sources: {
+        Row: {
+          match_id: string;
+          outcome: string | null;
+          side: string;
+          source_group_id: string | null;
+          source_match_id: string | null;
+          source_place: number | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          match_id: string;
+          outcome?: string | null;
+          side: string;
+          source_group_id?: string | null;
+          source_match_id?: string | null;
+          source_place?: number | null;
+        };
+        Update: {
+          match_id?: string;
+          outcome?: string | null;
+          side?: string;
+          source_group_id?: string | null;
+          source_match_id?: string | null;
+          source_place?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "match_sources_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_sources_source_group_id_fkey";
+            columns: ["source_group_id"];
+            isOneToOne: false;
+            referencedRelation: "stage_groups";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_sources_source_match_id_fkey";
+            columns: ["source_match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       organization_members: {
         Row: {
           created_at: string;
@@ -816,6 +1037,46 @@ export type Database = {
           },
         ];
       };
+      stage_groups: {
+        Row: {
+          draw_id: string;
+          id: string;
+          label: string;
+          ordinal: number;
+          stage_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          draw_id: string;
+          id?: string;
+          label: string;
+          ordinal: number;
+          stage_id: string;
+        };
+        Update: {
+          draw_id?: string;
+          id?: string;
+          label?: string;
+          ordinal?: number;
+          stage_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stage_groups_draw_id_fkey";
+            columns: ["draw_id"];
+            isOneToOne: false;
+            referencedRelation: "draw_revisions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "stage_groups_stage_id_fkey";
+            columns: ["stage_id"];
+            isOneToOne: false;
+            referencedRelation: "stages";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       stage_templates: {
         Row: {
           created_at: string;
@@ -948,6 +1209,88 @@ export type Database = {
             columns: ["team_id"];
             isOneToOne: false;
             referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_matches: {
+        Row: {
+          draw_id: string;
+          group_id: string;
+          id: string;
+          match_no: number;
+          placement_from: number | null;
+          placement_to: number | null;
+          round_no: number;
+          stage_id: string;
+          status: Database["public"]["Enums"]["team_match_status"];
+          subteam_a: string | null;
+          subteam_b: string | null;
+          version: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          draw_id: string;
+          group_id: string;
+          id?: string;
+          match_no: number;
+          placement_from?: number | null;
+          placement_to?: number | null;
+          round_no: number;
+          stage_id: string;
+          status?: Database["public"]["Enums"]["team_match_status"];
+          subteam_a?: string | null;
+          subteam_b?: string | null;
+          version?: number;
+        };
+        Update: {
+          draw_id?: string;
+          group_id?: string;
+          id?: string;
+          match_no?: number;
+          placement_from?: number | null;
+          placement_to?: number | null;
+          round_no?: number;
+          stage_id?: string;
+          status?: Database["public"]["Enums"]["team_match_status"];
+          subteam_a?: string | null;
+          subteam_b?: string | null;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_matches_draw_id_fkey";
+            columns: ["draw_id"];
+            isOneToOne: false;
+            referencedRelation: "draw_revisions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matches_group_id_fkey";
+            columns: ["group_id"];
+            isOneToOne: false;
+            referencedRelation: "stage_groups";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matches_stage_id_fkey";
+            columns: ["stage_id"];
+            isOneToOne: false;
+            referencedRelation: "stages";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matches_subteam_a_fkey";
+            columns: ["subteam_a"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matches_subteam_b_fkey";
+            columns: ["subteam_b"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
             referencedColumns: ["id"];
           },
         ];
@@ -1295,7 +1638,20 @@ export type Database = {
         Args: { job_id: string; succeeded: boolean };
         Returns: string;
       };
+      generate_tour_draw: {
+        Args: {
+          age: Database["public"]["Enums"]["age_group"];
+          draw_id: string;
+          expected_revision: number;
+          tournament: string;
+        };
+        Returns: string;
+      };
       is_player_photo_approved: { Args: { asset: string }; Returns: boolean };
+      publish_tour_draw: {
+        Args: { draw: string; expected_revision: number };
+        Returns: undefined;
+      };
       register_season_team: {
         Args: { club: string; parent_season: string };
         Returns: undefined;
@@ -1401,6 +1757,8 @@ export type Database = {
       player_status: "active" | "dropped_out";
       season_status: "draft" | "started";
       staff_role: "organizer" | "main_judge" | "trainer" | "line_judge";
+      team_match_status:
+        "scheduled" | "called" | "in_progress" | "finished" | "cancelled";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1549,6 +1907,13 @@ export const Constants = {
       player_status: ["active", "dropped_out"],
       season_status: ["draft", "started"],
       staff_role: ["organizer", "main_judge", "trainer", "line_judge"],
+      team_match_status: [
+        "scheduled",
+        "called",
+        "in_progress",
+        "finished",
+        "cancelled",
+      ],
     },
   },
 } as const;

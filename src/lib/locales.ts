@@ -4,6 +4,43 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  draws: "Draws",
+  drawIntro:
+    "Freeze seed ratings, review groups and match dependencies, then publish. A published draw cannot be regenerated.",
+  generateDraw: "Generate draw",
+  regenerateDraw: "Regenerate draft draw",
+  publishDraw: "Publish draw",
+  drawPublished: "Published",
+  publishedDrawLocked:
+    "The published draw is locked. Public pages follow in the public-site task.",
+  noDraw: "No draw generated yet.",
+  drawSeasonRequired:
+    "Start the fully configured season before generating its draws.",
+  seedFreezeConfirm:
+    "Freeze the top three eligible boys and top two eligible girls per club at their current ratings. Equal team totals use a recorded random draw. Regeneration preserves earlier draft history.",
+  publishDrawConfirm:
+    "I have reviewed the groups and match graph. Publish this revision and lock regeneration.",
+  drawInvalid:
+    "Could not change the draw. Check confirmation, season state and latest revision, then refresh.",
+  seedRosterRequired:
+    "Every club needs at least three active eligible boys and two active eligible girls on its season roster before this draw can be seeded.",
+  drawUnsupported:
+    "This stage format needs a supported draw map. The confirmed four-group, three-bracket map and standalone round-robin groups are available.",
+  drawGroups: "Draw groups and brackets",
+  frozenSeeds: "Frozen seeds",
+  frozenRating: "Frozen team rating",
+  seedingPlayers: "Seeding players and frozen ratings",
+  matchGraph: "Match graph",
+  matchGraphHelp:
+    "Group pairings are ready. Bracket participants await group places and earlier match results. Lineups and scoring follow in later tasks.",
+  group: "Group",
+  match: "Match",
+  matches: "Matches",
+  round: "Round",
+  winner: "Winner",
+  loser: "Loser",
+  bracketPlaces: "Bracket places",
+  toBeDetermined: "To be determined",
   configureTournament: "Configure tournament",
   configurationIntro:
     "Configure settings and stage plans before starting the season. Previous revisions are retained.",
@@ -46,7 +83,7 @@ const en = {
     "Select a template and at least one age group. The season must still be a draft.",
   planHistory: "Stage plan history",
   drawsPending:
-    "This configures stages and qualification bands. Draw generation, bracket seed order and standings follow in the draw task.",
+    "Stage plans define qualification bands. Open Draws to review frozen seeds and match paths. Standings and advancement follow in later tasks.",
   tournamentSettings: "Tournament settings",
   settingsHistory: "Settings history",
   startSeason: "Start season",
@@ -264,6 +301,42 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  draws: "Жеребьёвки",
+  drawIntro:
+    "Зафиксируйте рейтинги посева, проверьте группы и связи матчей, затем опубликуйте. Опубликованная жеребьёвка не пересоздаётся.",
+  generateDraw: "Создать жеребьёвку",
+  regenerateDraw: "Пересоздать черновик жеребьёвки",
+  publishDraw: "Опубликовать жеребьёвку",
+  drawPublished: "Опубликована",
+  publishedDrawLocked:
+    "Опубликованная жеребьёвка заблокирована. Публичные страницы появятся на этапе публичного сайта.",
+  noDraw: "Жеребьёвка ещё не создана.",
+  drawSeasonRequired: "Сначала запустите полностью настроенный сезон.",
+  seedFreezeConfirm:
+    "Зафиксировать трёх лучших мальчиков и двух лучших девочек клуба по текущим рейтингам. При равных суммах применяется зафиксированный жребий. Пересоздание сохраняет историю черновиков.",
+  publishDrawConfirm:
+    "Группы и связи матчей проверены. Опубликовать эту версию и запретить пересоздание.",
+  drawInvalid:
+    "Не удалось изменить жеребьёвку. Проверьте подтверждение, статус сезона и последнюю версию, затем обновите страницу.",
+  seedRosterRequired:
+    "Для посева в составе каждого клуба должны быть минимум три активных мальчика и две активные девочки этого возраста.",
+  drawUnsupported:
+    "Для этого формата нужна поддерживаемая схема жеребьёвки. Доступны утверждённые четыре группы с тремя сетками и отдельные круговые группы.",
+  drawGroups: "Группы и сетки жеребьёвки",
+  frozenSeeds: "Зафиксированный посев",
+  frozenRating: "Зафиксированный рейтинг команды",
+  seedingPlayers: "Игроки посева и зафиксированные рейтинги",
+  matchGraph: "Связи матчей",
+  matchGraphHelp:
+    "Групповые пары готовы. Участники сеток ожидают мест в группах и результатов предыдущих матчей. Составы и счёт появятся в следующих задачах.",
+  group: "Группа",
+  match: "Матч",
+  matches: "Матчи",
+  round: "Раунд",
+  winner: "Победитель",
+  loser: "Проигравший",
+  bracketPlaces: "Места в сетке",
+  toBeDetermined: "Определится позже",
   configureTournament: "Настроить турнир",
   configurationIntro:
     "Настройте параметры и этапы до начала сезона. Предыдущие версии сохраняются.",
@@ -306,7 +379,7 @@ const ru: Messages = {
     "Выберите шаблон и хотя бы одну возрастную группу. Сезон ещё не должен быть запущен.",
   planHistory: "История планов этапов",
   drawsPending:
-    "Здесь настраиваются этапы и переходы по местам. Генерация жеребьёвки, посев в сетки и таблицы результатов появятся на этапе жеребьёвок.",
+    "Планы определяют переходы по местам. Откройте жеребьёвки для проверки посева и связей матчей. Таблицы результатов и переходы появятся в следующих задачах.",
   tournamentSettings: "Параметры турнира",
   settingsHistory: "История параметров",
   startSeason: "Начать сезон",
@@ -525,6 +598,42 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  draws: "Жеребелер",
+  drawIntro:
+    "Себу рейтингтерін бекітіңіз, топтар мен матч байланыстарын тексеріп, жариялаңыз. Жарияланған жеребе қайта жасалмайды.",
+  generateDraw: "Жеребе жасау",
+  regenerateDraw: "Жеребе жобасын қайта жасау",
+  publishDraw: "Жеребені жариялау",
+  drawPublished: "Жарияланды",
+  publishedDrawLocked:
+    "Жарияланған жеребе бекітілген. Көпшілік беттер жария сайт тапсырмасында қосылады.",
+  noDraw: "Жеребе әлі жасалмаған.",
+  drawSeasonRequired: "Алдымен толық бапталған маусымды бастаңыз.",
+  seedFreezeConfirm:
+    "Әр клубтың үздік үш ұлы мен екі қызының ағымдағы рейтингтерін бекіту. Тең сомаларға тіркелетін жеребе қолданылады. Қайта жасау бұрынғы жоба тарихын сақтайды.",
+  publishDrawConfirm:
+    "Топтар мен матч байланыстары тексерілді. Осы нұсқаны жариялап, қайта жасауды бұғаттау.",
+  drawInvalid:
+    "Жеребе өзгертілмеді. Растауды, маусым күйін және соңғы нұсқаны тексеріп, бетті жаңартыңыз.",
+  seedRosterRequired:
+    "Себу үшін әр клубтың маусым құрамында осы жастағы кемінде үш белсенді ұл және екі белсенді қыз болуы керек.",
+  drawUnsupported:
+    "Бұл пішімге қолдау көрсетілетін жеребе сызбасы керек. Бекітілген төрт топ пен үш тор, сондай-ақ жеке айналмалы топтар қолжетімді.",
+  drawGroups: "Жеребе топтары мен торлары",
+  frozenSeeds: "Бекітілген себу",
+  frozenRating: "Бекітілген команда рейтингі",
+  seedingPlayers: "Себу ойыншылары мен бекітілген рейтингтер",
+  matchGraph: "Матч байланыстары",
+  matchGraphHelp:
+    "Топ жұптары дайын. Тор қатысушылары топ орындары мен алдыңғы матч нәтижелерін күтеді. Құрам мен есеп келесі тапсырмаларда қосылады.",
+  group: "Топ",
+  match: "Матч",
+  matches: "Матчтар",
+  round: "Раунд",
+  winner: "Жеңімпаз",
+  loser: "Жеңілген",
+  bracketPlaces: "Тордағы орындар",
+  toBeDetermined: "Кейін анықталады",
   configureTournament: "Турнирді баптау",
   configurationIntro:
     "Маусым басталғанша параметрлер мен кезеңдерді баптаңыз. Алдыңғы нұсқалар сақталады.",
@@ -567,7 +676,7 @@ const kk: Messages = {
     "Үлгіні және кемінде бір жас тобын таңдаңыз. Маусым әлі басталмаған болуы керек.",
   planHistory: "Кезең жоспарларының тарихы",
   drawsPending:
-    "Мұнда кезеңдер мен орын бойынша өту бапталады. Жеребе жасау, тордағы себу реті және нәтижелер жеребе тапсырмасында қосылады.",
+    "Жоспарлар орын бойынша өтуді анықтайды. Себу мен матч байланыстарын тексеру үшін жеребелерді ашыңыз. Нәтижелер мен өту келесі тапсырмаларда қосылады.",
   tournamentSettings: "Турнир параметрлері",
   settingsHistory: "Параметрлер тарихы",
   startSeason: "Маусымды бастау",

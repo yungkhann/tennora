@@ -55,3 +55,7 @@ Changing locales must not bypass proxy refresh, staff authorization or resource 
 ## Photo endpoints (C3a)
 
 `GET /api/public/player-photo/[playerId]` reads only an approved sanitized JPEG projection using an anonymous client. Pending/revoked/unknown images return 404; responses are no-store. `GET /api/staff/photos/[assetId]` reauthorizes the private original on every request; `?kind=evidence` additionally requires the uploader or Organizer and downloads as an attachment. Private responses are no-store and never expose a Storage URL. Publication/revocation uses Organizer-only Server Actions plus independently authorized RPCs.
+
+## Draw operations (D1)
+
+Localized `/draws` and `/draws/[tourId]/[ageGroup]` require Organizer or Main Judge. A group query parameter switches between seed/group previews and classification dependencies; one group/bracket is displayed at a time. UUID/age validation and per-request staff checks apply before data reads. Proxy refresh/no-store covers the entire route family. Configuration pages link to each age; Main Judges enter through their own Draws navigation without access to Organizer settings. Public draw pages/projections remain G.

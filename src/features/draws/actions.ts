@@ -1,0 +1,53 @@
+"use server";
+import { revalidatePath } from "next/cache";
+import { localeOf, messages } from "@/lib/locales";
+import type { FormState } from "@/lib/validation";
+import { requireDrawManager } from "./access";
+import { drawSchema, publishSchema } from "./validation";
+export async function generateDraw(
+  _old: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = messages(locale),
+    { supabase } = await requireDrawManager(locale);
+  const parsed = drawSchema.safeParse(Object.fromEntries(form));
+  if (!parsed.success) return { status: "error", message: t.drawInvalid };
+  const d = parsed.data;
+  const { error } = await supabase.rpc("generate_tour_draw", {
+    draw_id: d.id,
+    tournament: d.tourId,
+    age: d.age,
+    expected_revision: d.revision,
+  });
+  if (error)
+    return {
+      status: "error",
+      message:
+        error.message ===
+        "Every club needs three eligible boys and two eligible girls"
+          ? t.seedRosterRequired
+          : error.message === "Draw map not supported"
+            ? t.drawUnsupported
+            : t.drawInvalid,
+    };
+  revalidatePath(`/${locale}/draws`, "layout");
+  return { status: "success", message: t.saved };
+}
+export async function publishDraw(
+  _old: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = messages(locale),
+    { supabase } = await requireDrawManager(locale);
+  const parsed = publishSchema.safeParse(Object.fromEntries(form));
+  if (!parsed.success) return { status: "error", message: t.drawInvalid };
+  const { error } = await supabase.rpc("publish_tour_draw", {
+    draw: parsed.data.id,
+    expected_revision: parsed.data.revision,
+  });
+  if (error) return { status: "error", message: t.drawInvalid };
+  revalidatePath(`/${locale}/draws`, "layout");
+  return { status: "success", message: t.saved };
+}

@@ -31,17 +31,20 @@ Recorded 17 October 2026. Confirmed means explicitly chosen by the user or unamb
 | C17 | Group order: wins, then the tied-club mini-table using wins, singles-game ratio, set ratio and point ratio. Recalculate for remaining tied subsets; unresolved ties use an audited Organizer draw. | User tie-break answer. |
 | C18 | Snake seeds 1–24 across A–D. In each bracket quarterfinals are A higher/B lower, C higher/D lower, B higher/A lower, D higher/C lower; semifinals pair first two and last two winners. Bands are 1/2, 3/4 and 5/6. | User draw-map answer; resolves D04 together with C11/C15–C17. |
 
+| C19 | Organizer/Main Judge may replace a locked player only before that singles starts. A withdrawal during play loses the singles with no automatic-loss Elo change. | User replacement answer supersedes the PDF’s mid-game replacement permission. |
+| C20 | If both teams lack a full starting lineup or both fail to appear, keep the match unresolved for the Main Judge to reschedule or resolve; award no automatic winner. | User both-team answer; resolves D03. |
+
 ## Pending rules and dependencies
 
 | ID  | Decision needed                                                                                                                    | Dependency / next action                                                                        |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | D02 | Minimum competition roster only; age/capacity resolved by C07 and transfers/tour-roster behavior by C08.                           | C player eligibility. No DOB boundary is invented.                                              |
-| D03 | Both sides unable to start and no-show details. Starting lineup and withdrawals resolved by C12.                                   | D/E submissions and automatic results.                                                          |
+| D03 | Resolved by C12/C20.                                                                                                               | D/E submissions and automatic results.                                                          |
 | D04 | Resolved by C11 and C15–C18.                                                                                                       | D draws/standings.                                                                              |
 | D05 | Resolved by C15.                                                                                                                   | D seed snapshots.                                                                               |
 | D06 | Weighted placements/missing-tour policy. Formula/rounding/minimum zero resolved by C10; K scope/effect by C13.                     | E rating and G season standing calculations. Initial 1000/no auto-loss Elo remain source rules. |
 | D07 | Who may reopen completed games/matches, cascading corrections to Elo, subsequent games and advanced draws; history revision model. | E correction migrations and tests. Do not silently restrict required undo.                      |
-| D08 | Mid-game replacement score/Elo attribution; timeout limits; first server across sets; judge fallback.                              | D replacements and E/F judge controls.                                                          |
+| D08 | Timeout limits, first server across sets and judge fallback. Replacement scope resolved by C19.                                    | D replacements and E/F judge controls.                                                          |
 | D09 | Manual override policy, devices/network and simulated table count. Rest/timezone/finals resolved by C14.                           | F scheduling and I acceptance. No player/table simultaneous conflicts.                          |
 | D10 | Hosting region, photo consent/evidence process, service budget/recovery capabilities and alert recipients.                         | Real data and H/I deployment.                                                                   |
 

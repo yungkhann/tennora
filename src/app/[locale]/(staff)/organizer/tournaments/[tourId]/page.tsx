@@ -69,6 +69,17 @@ export default async function Page({
       <p className="mt-3 text-sm leading-6 text-muted-foreground">
         {t.configurationIntro}
       </p>
+      <div className="mt-4 flex flex-wrap gap-4">
+        {["U13", "U15", "U17"].map((age) => (
+          <Link
+            className="text-sm underline"
+            key={age}
+            href={`/${locale}/draws/${tour.id}/${age}`}
+          >
+            {t.draws} · {age}
+          </Link>
+        ))}
+      </div>
       {locked && (
         <p className="mt-4 rounded-lg border p-4 text-sm">
           {t.configLocked} {t.settingsHelp}

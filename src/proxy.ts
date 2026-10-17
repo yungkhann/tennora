@@ -41,6 +41,7 @@ export const config = {
     "/(ru|kk|en)/workspace/:path*",
     "/(ru|kk|en)/organizer/:path*",
     "/(ru|kk|en)/team/:path*",
+    "/(ru|kk|en)/draws/:path*",
     "/(ru|kk|en)/subteam/:path*",
     "/(ru|kk|en)/settings/:path*",
     "/(ru|kk|en)/login",
