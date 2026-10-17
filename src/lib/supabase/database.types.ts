@@ -1642,6 +1642,43 @@ export type Database = {
           },
         ];
       };
+      rating_replay_anchors: {
+        Row: {
+          created_at: string;
+          history_id: string;
+          player_id: string;
+          rating: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          history_id: string;
+          player_id: string;
+          rating: number;
+        };
+        Update: {
+          created_at?: string;
+          history_id?: string;
+          player_id?: string;
+          rating?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rating_replay_anchors_history_id_fkey";
+            columns: ["history_id"];
+            isOneToOne: false;
+            referencedRelation: "rating_history";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_replay_anchors_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: true;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       roster_memberships: {
         Row: {
           created_at: string;

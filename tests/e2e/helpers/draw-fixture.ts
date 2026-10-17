@@ -50,6 +50,11 @@ export async function drawFixture(
     await operator.auth.signOut();
     if (players.length)
       await remove(
+        "rating anchors",
+        admin.from("rating_replay_anchors").delete().in("player_id", players),
+      );
+    if (players.length)
+      await remove(
         "player rest",
         admin.from("player_rest_heads").delete().in("player_id", players),
       );

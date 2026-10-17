@@ -137,6 +137,30 @@ try {
     const adminLocks = sql(
       `select count(*) from pg_locks l join pg_stat_activity a on a.pid=l.pid where a.application_name='${application}' and l.locktype='advisory' and l.classid=0 and l.objid in(170002,170005)`,
     ).trim();
+    const replay =
+      suffix === "stale"
+        ? session(
+            `set application_name='${application}-replay';begin;select set_config('request.jwt.claims','{"sub":"${users[0]}","role":"authenticated"}',true);select private.replay_effective_ratings();commit;`,
+          )
+        : undefined;
+    if (replay) {
+      let waiting = false;
+      for (let attempt = 0; attempt < 50; attempt++) {
+        if (
+          sql(
+            `select count(*) from pg_locks l join pg_stat_activity a on a.pid=l.pid where a.application_name='${application}-replay' and l.locktype='advisory' and l.classid=0 and l.objid=170040 and not l.granted`,
+          ).trim() === "1"
+        ) {
+          waiting = true;
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      }
+      if (!waiting)
+        throw new Error(
+          "Exclusive replay did not wait for the live scoring barrier",
+        );
+    }
     const began = Date.now(),
       second = session(
         `begin;${claims(users[5])}${payload(duplicate ? command : randomUUID())}commit;`,
@@ -154,6 +178,11 @@ try {
       throw new Error(
         `Concurrent scoring invariant failed: ${JSON.stringify({ a, b, blocked, adminLocks })}`,
       );
+    if (replay) {
+      const result = await replay;
+      if (result.code !== 0)
+        throw new Error(`Exclusive rating replay failed: ${result.error}`);
+    }
     const state = sql(
       `select concat(g.status,':',g.score_version,':',(select count(*) from public.singles_results where game_id=g.id),':',(select count(*) from public.rating_calculations where game_id=g.id),':',(select count(*) from public.rating_history where game_result_id=g.result_id),':',(select count(*) from public.score_events where id='${command}')) from public.singles_games g where g.id='${target}'`,
     ).trim();
@@ -175,7 +204,7 @@ try {
       "Atomic team completion/resource/advancement invariant failed",
     );
   console.log(
-    `PASS: finishing point races overlap ${staleMs}/${duplicateMs} ms; stale command rejected, exact duplicate acknowledged once, one result/Elo pair per singles, atomic team completion/advancement/resource release; no global administration locks during points.`,
+    `PASS: finishing point races overlap ${staleMs}/${duplicateMs} ms; stale command rejected, exact duplicate acknowledged once, one result/Elo pair per singles, atomic team completion/advancement/resource release; no global administration locks during points; an exclusive saved-K replay safely waits for the shared finishing transaction.`,
   );
 } finally {
   // Only random fixture IDs are removed; existing league accounts/history stay untouched.
@@ -185,6 +214,7 @@ try {
     delete from public.score_events where game_id in(${gameScope});
     delete from public.game_sets where game_id in(${gameScope});
     delete from public.player_end_events where game_id in(${gameScope});
+    delete from public.rating_replay_anchors where player_id in(${playerScope});
     delete from public.rating_history where player_id in(${playerScope});
     delete from public.rating_calculation_heads where game_id in(${gameScope});
     delete from public.rating_calculations where game_id in(${gameScope});

@@ -8,7 +8,7 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
 | C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                   |
 | D - Draws/lineups         | Complete    | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
-| E - Scoring/Elo           | In progress | E1/E2 scoring, Elo and judge controls verified; E3 corrections remain                          |
+| E - Scoring/Elo           | In progress | E1/E2 scoring, Elo and judge controls verified; E3 corrections remain                           |
 | F - Hall operations       | Not started | D09 venue/rest/finals/device policy                                                             |
 | G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                            |
 | H - Readiness             | Not started | Provider/recovery feasibility and complete integration evidence                                 |
@@ -45,3 +45,5 @@ E2b1 live lifecycle/resource leases and transfer-safe lineups are verified in MI
 E2b2 atomic score/event/result/Elo transactions are implemented; verification is recorded in MILESTONE_E2B2_VERIFICATION.md. E2c judge HTTP/UI and E3 completed-result correction/replay remain before Task E is complete. Hall allocation and public projections remain F/G.
 
 E2c private judge discovery, validated HTTPS command/snapshot transport and RU/KK/EN tablet controls are implemented; see MILESTONE_E2C_VERIFICATION.md for verification. E3 official corrections/dependency resolution/saved-K replay remain before Task E is complete. Full hall operations, public live/rankings and operational release gates still follow in order.
+
+E3a rating anchors, linked-history integrity and private chronological saved-K replay are implemented; see MILESTONE_E3A_VERIFICATION.md. Official result amendment/reopen, dependent-match resolution and correction controls remain E3b before Task E is complete.
