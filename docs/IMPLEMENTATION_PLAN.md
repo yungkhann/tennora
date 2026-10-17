@@ -1,5 +1,7 @@
 # Implementation plan
 
+The user has now selected Next.js/Supabase for a **single table tennis league**. The [table tennis implementation plan](TABLE_TENNIS_IMPLEMENTATION_PLAN.md) is the proposed replacement roadmap. The application still implements the original Phase 1 below; the new plan does not authorize migrations or represent later features as completed. Keep this original roadmap as historical context until milestone A reconciles the product documents.
+
 Only Phase 1 is authorized. Show verified outcomes and these milestones before beginning a later phase.
 
 | Phase                                  | Coherent deliverable                                                                                                           | Files/migrations                                                                                                                                                                     | Gate                                                                                                                     |
