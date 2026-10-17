@@ -15,11 +15,13 @@ Recorded 17 October 2026. Confirmed means explicitly chosen by the user or unamb
 
 | C07 | Age is measured on December 31 of the season year: U13 under 13, U15 ages 13–14, U17 ages 15–16. No playing up. Maximum 10 active players per club/age-group roster. | User confirmed both age-group answers in this conversation. |
 
+| C08 | Organizer-approved mid-season transfers are allowed and preserve earlier results. Tournaments use the active season roster directly; no separate tour-roster submission. | User answers in this conversation; resolves transfer/tour-roster part of D02. |
+
 ## Pending rules and dependencies
 
 | ID  | Decision needed                                                                                                                    | Dependency / next action                                                                        |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| D02 | Minimum competition roster and transfer/tour roster rules; age boundaries/no playing up/max-10 resolved by C07.                    | C player eligibility. No DOB boundary is invented.                                              |
+| D02 | Minimum competition roster only; age/capacity resolved by C07 and transfers/tour-roster behavior by C08.                           | C player eligibility. No DOB boundary is invented.                                              |
 | D03 | Minimum lineup versus empty-slot loss; both sides empty; no-show details.                                                          | D/E submissions and automatic results.                                                          |
 | D04 | Actual group sizes, qualifying/bracket maps, third place, seed ties and group/multi-way/head-to-head tie-breaks.                   | D draws/standings.                                                                              |
 | D05 | Seeding input/freeze: top five eligible players, 3 boys and 2 girls, as proposed?                                                  | D seed snapshots.                                                                               |

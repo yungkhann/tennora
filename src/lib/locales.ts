@@ -4,6 +4,33 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  refreshForms: "Refresh forms",
+  seasons: "Seasons",
+  tours: "Tournaments",
+  seasonYear: "Season year for age eligibility",
+  firstDay: "Start date",
+  lastDay: "End date",
+  ordinal: "Order",
+  newSeason: "Create season",
+  editSeason: "Edit season",
+  newTour: "Add tournament",
+  editTour: "Edit tournament",
+  draft: "Draft",
+  started: "Started",
+  noTours: "No tournaments yet.",
+  noSeasons: "No seasons yet.",
+  configLocked: "Season configuration is locked.",
+  ageRule:
+    "Age on December 31: U13 under 13, U15 ages 13–14, U17 ages 15–16. No playing up.",
+  seasonInvalid:
+    "Check the season name, year and dates. Dates must contain all existing tournaments.",
+  tourInvalid:
+    "Check the tournament name, dates and order. Dates must fit the season and the order must be unique.",
+  seasonsIntro:
+    "Set the eligibility year and dates, then add the tournaments in order.",
+  seasonReadiness:
+    "Season start will become available after stage and settings setup is implemented.",
+
   league: "Table tennis league",
   workspace: "Workspace",
   staff: "Staff",
@@ -81,6 +108,33 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  refreshForms: "Обновить формы",
+  seasons: "Сезоны",
+  tours: "Турниры",
+  seasonYear: "Год сезона для определения возраста",
+  firstDay: "Дата начала",
+  lastDay: "Дата окончания",
+  ordinal: "Порядковый номер",
+  newSeason: "Создать сезон",
+  editSeason: "Редактировать сезон",
+  newTour: "Добавить турнир",
+  editTour: "Редактировать турнир",
+  draft: "Черновик",
+  started: "Начат",
+  noTours: "Турниров пока нет.",
+  noSeasons: "Сезонов пока нет.",
+  configLocked: "Настройки сезона заблокированы.",
+  ageRule:
+    "Возраст на 31 декабря: U13 — до 13 лет, U15 — 13–14 лет, U17 — 15–16 лет. Игра в старшей группе запрещена.",
+  seasonInvalid:
+    "Проверьте название, год и даты сезона. Даты должны включать все существующие турниры.",
+  tourInvalid:
+    "Проверьте название, даты и номер турнира. Даты должны входить в сезон, а номер — быть уникальным.",
+  seasonsIntro:
+    "Укажите год для определения возраста и даты сезона, затем добавьте турниры по порядку.",
+  seasonReadiness:
+    "Запуск сезона станет доступен после реализации настройки этапов и параметров турниров.",
+
   league: "Лига настольного тенниса",
   workspace: "Рабочее пространство",
   staff: "Сотрудники",
@@ -156,6 +210,33 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  refreshForms: "Пішіндерді жаңарту",
+  seasons: "Маусымдар",
+  tours: "Турнирлер",
+  seasonYear: "Жасты анықтау үшін маусым жылы",
+  firstDay: "Басталу күні",
+  lastDay: "Аяқталу күні",
+  ordinal: "Реттік нөмір",
+  newSeason: "Маусым құру",
+  editSeason: "Маусымды өңдеу",
+  newTour: "Турнир қосу",
+  editTour: "Турнирді өңдеу",
+  draft: "Жоба",
+  started: "Басталды",
+  noTours: "Турнирлер әлі жоқ.",
+  noSeasons: "Маусымдар әлі жоқ.",
+  configLocked: "Маусым баптаулары бұғатталған.",
+  ageRule:
+    "31 желтоқсандағы жас: U13 — 13 жасқа дейін, U15 — 13–14 жас, U17 — 15–16 жас. Үлкен жас тобына қатысуға болмайды.",
+  seasonInvalid:
+    "Маусымның атауын, жылын және күндерін тексеріңіз. Күндер барлық турнирлерді қамтуы керек.",
+  tourInvalid:
+    "Турнирдің атауын, күндерін және нөмірін тексеріңіз. Күндер маусымға сәйкес, нөмір бірегей болуы керек.",
+  seasonsIntro:
+    "Жасты анықтайтын жылды және маусым күндерін көрсетіп, турнирлерді ретімен қосыңыз.",
+  seasonReadiness:
+    "Кезеңдер мен турнир параметрлерін баптау іске асырылғаннан кейін маусымды бастау қолжетімді болады.",
+
   league: "Үстел теннисі лигасы",
   workspace: "Жұмыс кеңістігі",
   staff: "Қызметкерлер",

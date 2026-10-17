@@ -25,6 +25,9 @@ export default async function StaffLayout({
           {roles.includes("organizer") && (
             <Link href={`/${locale}/organizer/staff`}>{t.staff}</Link>
           )}
+          {roles.includes("organizer") && (
+            <Link href={`/${locale}/organizer/seasons`}>{t.seasons}</Link>
+          )}
           <Link href={`/${locale}/settings/profile`}>{t.profile}</Link>
           <Link href="/">{t.publicHome}</Link>
         </nav>

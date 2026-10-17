@@ -178,6 +178,43 @@ export type Database = {
         };
         Relationships: [];
       };
+      seasons: {
+        Row: {
+          created_at: string;
+          ends_on: string;
+          id: string;
+          name: string;
+          started_at: string | null;
+          starts_on: string;
+          status: Database["public"]["Enums"]["season_status"];
+          updated_at: string;
+          year: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          ends_on: string;
+          id: string;
+          name: string;
+          started_at?: string | null;
+          starts_on: string;
+          status?: Database["public"]["Enums"]["season_status"];
+          updated_at?: string;
+          year: number;
+        };
+        Update: {
+          created_at?: string;
+          ends_on?: string;
+          id?: string;
+          name?: string;
+          started_at?: string | null;
+          starts_on?: string;
+          status?: Database["public"]["Enums"]["season_status"];
+          updated_at?: string;
+          year?: number;
+        };
+        Relationships: [];
+      };
       staff_accounts: {
         Row: {
           active: boolean;
@@ -286,11 +323,57 @@ export type Database = {
           },
         ];
       };
+      tours: {
+        Row: {
+          created_at: string;
+          ends_on: string;
+          id: string;
+          name: string;
+          ordinal: number;
+          season_id: string;
+          starts_on: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          ends_on: string;
+          id: string;
+          name: string;
+          ordinal: number;
+          season_id: string;
+          starts_on: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          ends_on?: string;
+          id?: string;
+          name?: string;
+          ordinal?: number;
+          season_id?: string;
+          starts_on?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tours_season_id_fkey";
+            columns: ["season_id"];
+            isOneToOne: false;
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
+      age_group_for_birth_year: {
+        Args: { birth_year: number; season_year: number };
+        Returns: string;
+      };
       begin_staff_job: {
         Args: {
           desired_roles: Database["public"]["Enums"]["staff_role"][];
@@ -336,11 +419,34 @@ export type Database = {
         Args: { job_id: string; succeeded: boolean };
         Returns: string;
       };
+      save_season: {
+        Args: {
+          first_day: string;
+          last_day: string;
+          season_id: string;
+          season_name: string;
+          season_year: number;
+        };
+        Returns: string;
+      };
+      save_tour: {
+        Args: {
+          first_day: string;
+          last_day: string;
+          parent_season: string;
+          tour_id: string;
+          tour_name: string;
+          tour_ordinal: number;
+        };
+        Returns: string;
+      };
+      start_season: { Args: { season_id: string }; Returns: undefined };
       update_staff_name: { Args: { new_name: string }; Returns: undefined };
     };
     Enums: {
       organization_role:
         "owner" | "tournament_director" | "scorekeeper" | "player";
+      season_status: "draft" | "started";
       staff_role: "organizer" | "main_judge" | "trainer" | "line_judge";
     };
     CompositeTypes: {
@@ -478,6 +584,7 @@ export const Constants = {
         "scorekeeper",
         "player",
       ],
+      season_status: ["draft", "started"],
       staff_role: ["organizer", "main_judge", "trainer", "line_judge"],
     },
   },
