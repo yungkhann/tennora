@@ -7,7 +7,7 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | A - Rebaseline            | Complete    | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                   |
 | B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
 | C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                   |
-| D - Draws/lineups         | In progress | D1/D2 verified; D3 standings/advancement remain                                                 |
+| D - Draws/lineups         | In progress | D1/D2/D3a verified; D3b knockout and D3c seed adjustments remain                                |
 | E - Scoring/Elo           | Not started | D06-D08; transactional, duplicate/concurrent and parity proofs                                  |
 | F - Hall operations       | Not started | D09 venue/rest/finals/device policy                                                             |
 | G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                            |
@@ -32,4 +32,4 @@ The explicitly requested first Organizer was provisioned via a normal email-veri
 
 ## D: in progress
 
-See MILESTONE_D_BATCH.md for the exact D1 draw/seed/match-graph inventory. C15–C18 settle seeding, classification, group ties and the snake/crossover map. D1 is verified in MILESTONE_D1_VERIFICATION.md. C19/C20 resolve replacements before singles start and both-team unresolved matches. D2 lineup submission/reveal/replacements is verified in MILESTONE_D2_VERIFICATION.md. D3 standings and advancement remain. C25 delegates remaining choices from the PDF without further questions.
+See MILESTONE_D_BATCH.md for the exact D1 draw/seed/match-graph inventory. C15–C18 settle seeding, classification, group ties and the snake/crossover map. D1 is verified in MILESTONE_D1_VERIFICATION.md. C19/C20 resolve replacements before singles start and both-team unresolved matches. D2 lineup submission/reveal/replacements is verified in MILESTONE_D2_VERIFICATION.md. D3a standings/source advancement is verified in MILESTONE_D3A_VERIFICATION.md. D3b standalone knockout generation and D3c Organizer seed adjustments remain. C25 delegates remaining choices from the PDF without further questions.

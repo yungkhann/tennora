@@ -256,6 +256,129 @@ export type Database = {
           },
         ];
       };
+      group_standing_heads: {
+        Row: {
+          group_id: string;
+          snapshot_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          group_id: string;
+          snapshot_id: string;
+        };
+        Update: {
+          group_id?: string;
+          snapshot_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "group_standing_heads_group_id_fkey";
+            columns: ["group_id"];
+            isOneToOne: true;
+            referencedRelation: "stage_groups";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_standing_heads_snapshot_id_fkey";
+            columns: ["snapshot_id"];
+            isOneToOne: false;
+            referencedRelation: "group_standing_snapshots";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      group_standing_snapshots: {
+        Row: {
+          complete: boolean;
+          created_at: string;
+          created_by: string;
+          data: NonNullable<Json>;
+          group_id: string;
+          id: string;
+          revision: number;
+          source_digest: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          complete: boolean;
+          created_at?: string;
+          created_by: string;
+          data: NonNullable<Json>;
+          group_id: string;
+          id?: string;
+          revision: number;
+          source_digest: string;
+        };
+        Update: {
+          complete?: boolean;
+          created_at?: string;
+          created_by?: string;
+          data?: NonNullable<Json>;
+          group_id?: string;
+          id?: string;
+          revision?: number;
+          source_digest?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "group_standing_snapshots_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_standing_snapshots_group_id_fkey";
+            columns: ["group_id"];
+            isOneToOne: false;
+            referencedRelation: "stage_groups";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      group_tie_draws: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          group_id: string;
+          id: string;
+          lots: NonNullable<Json>;
+          members: NonNullable<Json>;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          group_id: string;
+          id?: string;
+          lots: NonNullable<Json>;
+          members: NonNullable<Json>;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          group_id?: string;
+          id?: string;
+          lots?: NonNullable<Json>;
+          members?: NonNullable<Json>;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "group_tie_draws_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_tie_draws_group_id_fkey";
+            columns: ["group_id"];
+            isOneToOne: false;
+            referencedRelation: "stage_groups";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       lineup_replacements: {
         Row: {
           changed_at: string;
@@ -433,6 +556,8 @@ export type Database = {
           source_group_id: string | null;
           source_match_id: string | null;
           source_place: number | null;
+          source_result_id: string | null;
+          source_snapshot_id: string | null;
         };
         ComputedFields: never;
         Insert: {
@@ -442,6 +567,8 @@ export type Database = {
           source_group_id?: string | null;
           source_match_id?: string | null;
           source_place?: number | null;
+          source_result_id?: string | null;
+          source_snapshot_id?: string | null;
         };
         Update: {
           match_id?: string;
@@ -450,6 +577,8 @@ export type Database = {
           source_group_id?: string | null;
           source_match_id?: string | null;
           source_place?: number | null;
+          source_result_id?: string | null;
+          source_snapshot_id?: string | null;
         };
         Relationships: [
           {
@@ -471,6 +600,20 @@ export type Database = {
             columns: ["source_match_id"];
             isOneToOne: false;
             referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_sources_source_result_id_fkey";
+            columns: ["source_result_id"];
+            isOneToOne: false;
+            referencedRelation: "team_match_results";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "match_sources_source_snapshot_id_fkey";
+            columns: ["source_snapshot_id"];
+            isOneToOne: false;
+            referencedRelation: "group_standing_snapshots";
             referencedColumns: ["id"];
           },
         ];
@@ -1432,6 +1575,87 @@ export type Database = {
           },
         ];
       };
+      team_match_results: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          games_a: number;
+          games_b: number;
+          id: string;
+          kind: string;
+          match_id: string;
+          points_a: number;
+          points_b: number;
+          previous_result_id: string | null;
+          revision: number;
+          sets_a: number;
+          sets_b: number;
+          winner: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          games_a: number;
+          games_b: number;
+          id?: string;
+          kind: string;
+          match_id: string;
+          points_a: number;
+          points_b: number;
+          previous_result_id?: string | null;
+          revision: number;
+          sets_a: number;
+          sets_b: number;
+          winner: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          games_a?: number;
+          games_b?: number;
+          id?: string;
+          kind?: string;
+          match_id?: string;
+          points_a?: number;
+          points_b?: number;
+          previous_result_id?: string | null;
+          revision?: number;
+          sets_a?: number;
+          sets_b?: number;
+          winner?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_match_results_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_match_results_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_match_results_previous_result_id_fkey";
+            columns: ["previous_result_id"];
+            isOneToOne: false;
+            referencedRelation: "team_match_results";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_match_results_winner_fkey";
+            columns: ["winner"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       team_matches: {
         Row: {
           draw_id: string;
@@ -1443,6 +1667,8 @@ export type Database = {
           match_no: number;
           placement_from: number | null;
           placement_to: number | null;
+          result_id: string | null;
+          result_revision: number;
           round_no: number;
           stage_id: string;
           status: Database["public"]["Enums"]["team_match_status"];
@@ -1461,6 +1687,8 @@ export type Database = {
           match_no: number;
           placement_from?: number | null;
           placement_to?: number | null;
+          result_id?: string | null;
+          result_revision?: number;
           round_no: number;
           stage_id: string;
           status?: Database["public"]["Enums"]["team_match_status"];
@@ -1478,6 +1706,8 @@ export type Database = {
           match_no?: number;
           placement_from?: number | null;
           placement_to?: number | null;
+          result_id?: string | null;
+          result_revision?: number;
           round_no?: number;
           stage_id?: string;
           status?: Database["public"]["Enums"]["team_match_status"];
@@ -1498,6 +1728,13 @@ export type Database = {
             columns: ["group_id"];
             isOneToOne: false;
             referencedRelation: "stage_groups";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matches_result_id_fkey";
+            columns: ["result_id"];
+            isOneToOne: false;
+            referencedRelation: "team_match_results";
             referencedColumns: ["id"];
           },
           {
@@ -1547,6 +1784,50 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      tour_placements: {
+        Row: {
+          draw_id: string;
+          place: number;
+          source_result_id: string;
+          subteam_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          draw_id: string;
+          place: number;
+          source_result_id: string;
+          subteam_id: string;
+        };
+        Update: {
+          draw_id?: string;
+          place?: number;
+          source_result_id?: string;
+          subteam_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tour_placements_draw_id_fkey";
+            columns: ["draw_id"];
+            isOneToOne: false;
+            referencedRelation: "draw_revisions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tour_placements_source_result_id_fkey";
+            columns: ["source_result_id"];
+            isOneToOne: false;
+            referencedRelation: "team_match_results";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tour_placements_subteam_id_fkey";
+            columns: ["subteam_id"];
+            isOneToOne: false;
+            referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       tour_stage_plans: {
         Row: {
@@ -1853,6 +2134,10 @@ export type Database = {
         Args: { definition: Json; template_id: string; template_name: string };
         Returns: string;
       };
+      draw_group_ties: {
+        Args: { expected_revision: number; group_id: string };
+        Returns: string;
+      };
       drop_player: {
         Args: { effective_date: string; player: string; reason: string };
         Returns: undefined;
@@ -1891,6 +2176,7 @@ export type Database = {
         Args: { draw: string; expected_revision: number };
         Returns: undefined;
       };
+      refresh_group_standings: { Args: { group_id: string }; Returns: string };
       register_season_team: {
         Args: { club: string; parent_season: string };
         Returns: undefined;

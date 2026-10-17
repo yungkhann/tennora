@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { requireStaff } from "@/lib/auth";
 export const lineupStatusSchema = z.object({
+  sources_ready: z.boolean(),
   match_id: z.uuid(),
   version: z.number().int(),
   lineup_version: z.number().int(),

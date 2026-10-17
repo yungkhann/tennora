@@ -1,0 +1,287 @@
+{
+  "cases": [
+    {
+      "name": "transitive wins",
+      "teams": ["a", "b", "c", "d"],
+      "results": [
+        {
+          "a": "a",
+          "b": "b",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "a",
+          "b": "c",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "a",
+          "b": "d",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "b",
+          "b": "c",
+          "winner": "b",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "b",
+          "b": "d",
+          "winner": "b",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "c",
+          "b": "d",
+          "winner": "c",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        }
+      ],
+      "order": ["a", "b", "c", "d"],
+      "unresolved": []
+    },
+    {
+      "name": "complete circular tie",
+      "teams": ["a", "b", "c"],
+      "results": [
+        {
+          "a": "a",
+          "b": "b",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "b",
+          "b": "c",
+          "winner": "b",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "c",
+          "b": "a",
+          "winner": "c",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        }
+      ],
+      "order": ["a", "b", "c"],
+      "unresolved": [["a", "b", "c"]]
+    },
+    {
+      "name": "audited lot resolves circular tie",
+      "teams": ["a", "b", "c"],
+      "results": [
+        {
+          "a": "a",
+          "b": "b",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "b",
+          "b": "c",
+          "winner": "b",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "c",
+          "b": "a",
+          "winner": "c",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        }
+      ],
+      "lots": {
+        "a": "00000000-0000-4000-8000-000000000002",
+        "b": "00000000-0000-4000-8000-000000000003",
+        "c": "00000000-0000-4000-8000-000000000001"
+      },
+      "order": ["c", "a", "b"],
+      "unresolved": []
+    },
+    {
+      "name": "point ratio",
+      "teams": ["a", "b", "c"],
+      "results": [
+        {
+          "a": "a",
+          "b": "b",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "b",
+          "b": "c",
+          "winner": "b",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "c",
+          "b": "a",
+          "winner": "c",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 90
+        }
+      ],
+      "order": ["a", "b", "c"],
+      "unresolved": []
+    },
+    {
+      "name": "partial tie restarts mini table",
+      "teams": ["a", "b", "c", "d"],
+      "results": [
+        {
+          "a": "b",
+          "b": "c",
+          "winner": "b",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 100
+        },
+        {
+          "a": "c",
+          "b": "a",
+          "winner": "c",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 60
+        },
+        {
+          "a": "a",
+          "b": "b",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 190,
+          "pointsB": 100
+        },
+        {
+          "a": "a",
+          "b": "d",
+          "winner": "a",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "b",
+          "b": "d",
+          "winner": "b",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        },
+        {
+          "a": "c",
+          "b": "d",
+          "winner": "c",
+          "gamesA": 3,
+          "gamesB": 1,
+          "setsA": 9,
+          "setsB": 4,
+          "pointsA": 100,
+          "pointsB": 80
+        }
+      ],
+      "order": ["c", "a", "b", "d"],
+      "unresolved": []
+    },
+    {
+      "name": "empty provisional group",
+      "teams": ["a", "b"],
+      "results": [],
+      "order": ["a", "b"],
+      "unresolved": [["a", "b"]]
+    }
+  ]
+}

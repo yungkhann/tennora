@@ -4,6 +4,38 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  groupStandings: "Group standings",
+  refreshStandings: "Refresh standings",
+  drawTies: "Draw unresolved ties",
+  tieDrawConfirm:
+    "I confirm the audited random draw for the remaining tied clubs. This draw cannot be repeated to choose a preferred outcome.",
+  standingsInvalid:
+    "Refresh the page and check that the group is complete and the standings version is current.",
+  dependencyBlocked:
+    "A dependent match is locked or has started. An Organizer must resolve the correction before qualifiers can change.",
+  standingsEmpty:
+    "Standings have not been calculated yet. Refresh to show the current results.",
+  standingsProvisional:
+    "Provisional: group matches are still incomplete. No qualifiers advance.",
+  standingsTied:
+    "Group complete. An Organizer draw is required to resolve the remaining tie.",
+  standingsFinal: "Group finalized. Qualifiers advance from this snapshot.",
+  standingPlayed: "Played",
+  standingWins: "Wins",
+  standingLosses: "Losses",
+  standingGames: "Singles",
+  standingSets: "Sets",
+  standingPoints: "Points",
+  tieEvidence: "Tie-break evidence",
+  tieWins: "Mini-table wins",
+  tieGames: "Singles ratio",
+  tieSets: "Set ratio",
+  tiePoints: "Point ratio",
+  tieLot: "Audited random draw",
+  tieUnresolved: "Unresolved",
+  sourcesPending:
+    "Upstream results are not finalized. Lineups are unavailable until qualifier sources are ready.",
+
   lineupIntro:
     "Submit five eligible players for your team. Both lineups remain hidden until both sides submit.",
   manageLineup: "Match lineups",
@@ -71,7 +103,7 @@ const en = {
   seedingPlayers: "Seeding players and frozen ratings",
   matchGraph: "Match graph",
   matchGraphHelp:
-    "Group pairings are ready. Bracket participants await group places and earlier match results. Lineups and scoring follow in later tasks.",
+    "Participants follow finalized source results. Open a ready match to manage lineups.",
   group: "Group",
   match: "Match",
   matches: "Matches",
@@ -340,6 +372,39 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  groupStandings: "Таблица группы",
+  refreshStandings: "Обновить таблицу",
+  drawTies: "Жеребьёвка равных команд",
+  tieDrawConfirm:
+    "Подтверждаю случайную жеребьёвку оставшихся равных команд с записью в журнал. Повтор для выбора другого исхода невозможен.",
+  standingsInvalid:
+    "Обновите страницу и проверьте завершение группы и актуальность версии таблицы.",
+  dependencyBlocked:
+    "Зависимый матч заблокирован или начался. Организатор должен разрешить исправление до смены участников.",
+  standingsEmpty:
+    "Таблица ещё не рассчитана. Обновите её для просмотра текущих результатов.",
+  standingsProvisional:
+    "Предварительно: матчи группы не завершены. Выход в следующий этап пока закрыт.",
+  standingsTied:
+    "Группа завершена. Для оставшихся равных команд нужна жеребьёвка Организатора.",
+  standingsFinal:
+    "Группа завершена. Участники следующего этапа определены по этой версии.",
+  standingPlayed: "Игр",
+  standingWins: "Побед",
+  standingLosses: "Поражений",
+  standingGames: "Одиночные игры",
+  standingSets: "Партии",
+  standingPoints: "Очки",
+  tieEvidence: "Основания порядка при равенстве",
+  tieWins: "Победы в мини-таблице",
+  tieGames: "Соотношение одиночных игр",
+  tieSets: "Соотношение партий",
+  tiePoints: "Соотношение очков",
+  tieLot: "Жеребьёвка с записью в журнал",
+  tieUnresolved: "Равенство не разрешено",
+  sourcesPending:
+    "Предыдущие результаты не утверждены. Составы доступны после определения участников.",
+
   lineupIntro:
     "Заявите пять допустимых игроков своей команды. Составы скрыты до подачи обеими сторонами.",
   manageLineup: "Составы на матч",
@@ -405,7 +470,7 @@ const ru: Messages = {
   seedingPlayers: "Игроки посева и зафиксированные рейтинги",
   matchGraph: "Связи матчей",
   matchGraphHelp:
-    "Групповые пары готовы. Участники сеток ожидают мест в группах и результатов предыдущих матчей. Составы и счёт появятся в следующих задачах.",
+    "Участники определяются по завершённым результатам. Откройте готовый матч для управления составами.",
   group: "Группа",
   match: "Матч",
   matches: "Матчи",
@@ -675,6 +740,38 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  groupStandings: "Топ кестесі",
+  refreshStandings: "Кестені жаңарту",
+  drawTies: "Тең командаларға жеребе тарту",
+  tieDrawConfirm:
+    "Қалған тең командаларға журналға жазылатын кездейсоқ жеребені растаймын. Қалаған нәтижені таңдау үшін қайталауға болмайды.",
+  standingsInvalid:
+    "Бетті жаңартып, топтың аяқталғанын және кесте нұсқасының өзектілігін тексеріңіз.",
+  dependencyBlocked:
+    "Тәуелді матч бұғатталған немесе басталған. Қатысушыларды өзгертпес бұрын Ұйымдастырушы түзетуді шешуі керек.",
+  standingsEmpty: "Кесте әлі есептелмеген. Ағымдағы нәтижелер үшін жаңартыңыз.",
+  standingsProvisional:
+    "Алдын ала: топ матчтары аяқталмаған. Келесі кезеңге өту әлі жабық.",
+  standingsTied:
+    "Топ аяқталды. Қалған тең командаларға Ұйымдастырушы жеребе тартуы қажет.",
+  standingsFinal:
+    "Топ аяқталды. Келесі кезең қатысушылары осы нұсқа бойынша анықталды.",
+  standingPlayed: "Ойын",
+  standingWins: "Жеңіс",
+  standingLosses: "Жеңіліс",
+  standingGames: "Жекелей ойындар",
+  standingSets: "Партиялар",
+  standingPoints: "Ұпайлар",
+  tieEvidence: "Теңдік кезіндегі рет негіздері",
+  tieWins: "Шағын кестедегі жеңістер",
+  tieGames: "Жекелей ойындар арақатынасы",
+  tieSets: "Партиялар арақатынасы",
+  tiePoints: "Ұпайлар арақатынасы",
+  tieLot: "Журналға жазылған жеребе",
+  tieUnresolved: "Теңдік шешілмеген",
+  sourcesPending:
+    "Алдыңғы нәтижелер бекітілмеген. Құрамдар қатысушылар анықталғаннан кейін қолжетімді.",
+
   lineupIntro:
     "Командаңыздың бес жарамды ойыншысын енгізіңіз. Екі жақ та жібергенге дейін құрамдар жасырын болады.",
   manageLineup: "Матч құрамдары",
@@ -739,7 +836,7 @@ const kk: Messages = {
   seedingPlayers: "Себу ойыншылары мен бекітілген рейтингтер",
   matchGraph: "Матч байланыстары",
   matchGraphHelp:
-    "Топ жұптары дайын. Тор қатысушылары топ орындары мен алдыңғы матч нәтижелерін күтеді. Құрам мен есеп келесі тапсырмаларда қосылады.",
+    "Қатысушылар аяқталған нәтижелер бойынша анықталады. Құрамдарды басқару үшін дайын матчты ашыңыз.",
   group: "Топ",
   match: "Матч",
   matches: "Матчтар",

@@ -87,6 +87,11 @@ export default async function Page({
       <p className="mt-4 rounded-lg border bg-card p-4 text-sm" role="status">
         {status.revealed ? t.lineupsRevealed : t.lineupsHidden}
       </p>
+      {!status.sources_ready && (
+        <p className="mt-4 text-sm" role="status">
+          {t.sourcesPending}
+        </p>
+      )}
       <LineupRefresh
         locale={locale}
         match={match.id}
@@ -124,7 +129,8 @@ export default async function Page({
                   {t.hiddenPlayers}
                 </p>
               ) : null}
-              {team.own &&
+              {status.sources_ready &&
+                team.own &&
                 !submitted &&
                 ["scheduled", "called"].includes(match.status) && (
                   <div className="mt-6">

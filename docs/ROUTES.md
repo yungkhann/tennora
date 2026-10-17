@@ -65,3 +65,9 @@ Localized `/draws` and `/draws/[tourId]/[ageGroup]` require Organizer or Main Ju
 Localized `/matches` lists published matches with pagination: assigned Trainer scope, or Organizer/Main Judge oversight. `/matches/[matchId]/lineup` reauthorizes match scope and displays only the caller’s permitted lineup rows. Officials see flags until joint reveal; afterward they can replace pending singles players. The page does not start/score a match. Private player DOB/contact is never included in its client form candidates.
 
 `GET /api/staff/matches/[matchId]/lineup-status` verifies Auth and database permission on every read, returns only flags/version and sets private no-store. Anonymous requests return 401; inaccessible match IDs return indistinguishable 404 responses. The browser stops hidden-tab polling and backs off on failures. Private snapshots and route families are included in proxy refresh matching. Public lineup projections remain G.
+
+## Group standings (D3a)
+
+The existing localized `/draws/[tourId]/[ageGroup]?group=...` page adds current group standings, complete/provisional/unresolved states and mini-table evidence. Organizer/Main Judge may refresh from current result revisions; only Organizer sees and may execute a final audited random draw, with a required confirmation and current revision. Actions reauthorize and use the verified user's client; direct RPC authorization independently enforces the same roles. Bracket participants show actual advanced club names. No native result-entry control is added before E.
+
+Private lineup status now includes `sources_ready`, a boolean only. A stale qualifier source disables submission in the page and is rejected independently by the database. No hidden identities are added to polling.

@@ -5,6 +5,8 @@ import { z } from "zod";
 import { localeOf, messages } from "@/lib/locales";
 import { requireDrawManager } from "@/features/draws/access";
 import { GenerateDrawForm, PublishDrawForm } from "@/features/draws/forms";
+import { StandingsForm } from "@/features/standings/forms";
+import { standingData } from "@/features/standings/validation";
 import { Card } from "@/components/ui/card";
 export default async function Page({
   params,
@@ -16,7 +18,7 @@ export default async function Page({
   const p = await params,
     locale = localeOf(p.locale),
     t = messages(locale),
-    { supabase } = await requireDrawManager(locale);
+    { supabase, roles } = await requireDrawManager(locale);
   const age = z.enum(["U13", "U15", "U17"]).safeParse(p.ageGroup);
   if (!z.uuid().safeParse(p.tourId).success || !age.success) notFound();
   const { data: tour, error } = await supabase
@@ -88,6 +90,32 @@ export default async function Page({
   ]);
   if (entriesResult?.error || matchesResult?.error || countResult?.error)
     throw new Error(t.failed);
+  const [headResult, namesResult] = await Promise.all([
+    selected?.stages.kind === "round_robin" && draw?.published_at
+      ? supabase
+          .from("group_standing_heads")
+          .select("group_standing_snapshots(id,revision,complete,data)")
+          .eq("group_id", selected.id)
+          .maybeSingle()
+      : null,
+    draw
+      ? supabase
+          .from("draw_entries")
+          .select("subteam_id,subteams(teams(name))")
+          .eq("draw_id", draw.id)
+      : null,
+  ]);
+  if (headResult?.error || namesResult?.error) throw new Error(t.failed);
+  const snapshot = headResult?.data?.group_standing_snapshots;
+  const standing = snapshot ? standingData.parse(snapshot.data) : null;
+  const criteria = {
+    wins: t.tieWins,
+    games_ratio: t.tieGames,
+    sets_ratio: t.tieSets,
+    points_ratio: t.tiePoints,
+    lot: t.tieLot,
+    unresolved: t.tieUnresolved,
+  };
   const entries = entriesResult?.data ?? [],
     matches = matchesResult?.data ?? [];
   const label = (group: (typeof groups)[number]) =>
@@ -95,7 +123,7 @@ export default async function Page({
       ? `${t.group} ${group.label}`
       : `${t.knockout} ${group.stages.ordinal - 1}`;
   const teamName = (id: string | null) =>
-    entries.find((e) => e.subteam_id === id)?.subteams.teams.name ??
+    namesResult?.data?.find((e) => e.subteam_id === id)?.subteams.teams.name ??
     t.toBeDetermined;
   const sourceName = (
     source: (typeof matches)[number]["match_sources"][number],
@@ -167,6 +195,92 @@ export default async function Page({
               </Link>
             ))}
           </nav>
+          {selected?.stages.kind === "round_robin" && draw.published_at && (
+            <section
+              className="mt-6 rounded-xl border bg-card p-4 sm:p-6"
+              aria-label={t.groupStandings}
+            >
+              <h2 className="text-xl font-semibold">
+                {t.groupStandings} · {label(selected)}
+              </h2>
+              <p className="mt-3 text-sm leading-6" role="status">
+                {!snapshot
+                  ? t.standingsEmpty
+                  : !snapshot.complete
+                    ? t.standingsProvisional
+                    : standing!.unresolved.length
+                      ? t.standingsTied
+                      : t.standingsFinal}
+              </p>
+              {snapshot && (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t.revision} {snapshot.revision}
+                </p>
+              )}
+              {standing && (
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {standing.rows.map((row) => (
+                    <article
+                      className="min-w-0 rounded-lg border p-4 text-sm"
+                      key={row.subteam_id}
+                    >
+                      <h3 className="break-words font-semibold">
+                        {row.place ?? `${row.rank}=`}.{" "}
+                        {teamName(row.subteam_id)}
+                      </h3>
+                      <p className="mt-2">
+                        {t.standingPlayed}: {row.played} · {t.standingWins}:{" "}
+                        {row.wins} · {t.standingLosses}: {row.losses}
+                      </p>
+                      <dl className="mt-2 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1">
+                        <dt>{t.standingGames}</dt>
+                        <dd>
+                          {row.games_for}:{row.games_against}
+                        </dd>
+                        <dt>{t.standingSets}</dt>
+                        <dd>
+                          {row.sets_for}:{row.sets_against}
+                        </dd>
+                        <dt>{t.standingPoints}</dt>
+                        <dd>
+                          {row.points_for}:{row.points_against}
+                        </dd>
+                      </dl>
+                    </article>
+                  ))}
+                </div>
+              )}
+              {standing && standing.evidence.length > 0 && (
+                <details className="mt-5 text-sm">
+                  <summary className="cursor-pointer">{t.tieEvidence}</summary>
+                  <ul className="mt-3 grid gap-3">
+                    {standing.evidence.map((e, i) => (
+                      <li key={i} className="break-words">
+                        {criteria[e.criterion]}:{" "}
+                        {(e.order ?? e.members).map(teamName).join(" / ")}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+              <div className="mt-5">
+                <StandingsForm locale={locale} group={selected.id} />
+              </div>
+              {snapshot?.complete &&
+                !!standing?.unresolved.length &&
+                roles.includes("organizer") && (
+                  <div className="mt-5 border-t pt-5">
+                    <StandingsForm
+                      key={snapshot.id}
+                      locale={locale}
+                      group={selected.id}
+                      revision={snapshot.revision}
+                      tie
+                    />
+                  </div>
+                )}
+            </section>
+          )}
           {entries.length > 0 && (
             <section className="mt-6">
               <h2 className="text-xl font-semibold">

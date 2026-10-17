@@ -59,6 +59,55 @@ export async function drawFixture() {
             .select("id")
             .in("draw_id", drawIds),
           matchIds = (matches.data ?? []).map((v) => v.id);
+        const groups = await admin
+          .from("stage_groups")
+          .select("id")
+          .in("draw_id", drawIds);
+        const groupIds = (groups.data ?? []).map((v) => v.id);
+        await remove(
+          "placements",
+          admin.from("tour_placements").delete().in("draw_id", drawIds),
+        );
+        if (matchIds.length) {
+          await remove(
+            "source versions",
+            admin
+              .from("match_sources")
+              .update({ source_snapshot_id: null, source_result_id: null })
+              .in("match_id", matchIds),
+          );
+          await remove(
+            "result pointers",
+            admin
+              .from("team_matches")
+              .update({ result_id: null, result_revision: 0 })
+              .in("id", matchIds),
+          );
+          await remove(
+            "results",
+            admin.from("team_match_results").delete().in("match_id", matchIds),
+          );
+        }
+        if (groupIds.length) {
+          await remove(
+            "standing heads",
+            admin
+              .from("group_standing_heads")
+              .delete()
+              .in("group_id", groupIds),
+          );
+          await remove(
+            "standings",
+            admin
+              .from("group_standing_snapshots")
+              .delete()
+              .in("group_id", groupIds),
+          );
+          await remove(
+            "tie draws",
+            admin.from("group_tie_draws").delete().in("group_id", groupIds),
+          );
+        }
         if (matchIds.length) {
           await remove(
             "replacements",
