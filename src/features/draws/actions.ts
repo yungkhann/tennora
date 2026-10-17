@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { localeOf, messages } from "@/lib/locales";
 import type { FormState } from "@/lib/validation";
 import { requireDrawManager } from "./access";
-import { drawSchema, publishSchema } from "./validation";
+import { drawSchema, publishSchema, swapSchema } from "./validation";
 export async function generateDraw(
   _old: FormState,
   form: FormData,
@@ -48,6 +48,30 @@ export async function publishDraw(
     expected_revision: parsed.data.revision,
   });
   if (error) return { status: "error", message: t.drawInvalid };
+  revalidatePath(`/${locale}/draws`, "layout");
+  return { status: "success", message: t.saved };
+}
+
+export async function swapSeeds(
+  _old: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = messages(locale),
+    staff = await requireDrawManager(locale);
+  const parsed = swapSchema.safeParse(Object.fromEntries(form));
+  if (!staff.roles.includes("organizer") || !parsed.success)
+    return { status: "error", message: t.swapInvalid };
+  const d = parsed.data;
+  const { error } = await staff.supabase.rpc("swap_draw_seeds", {
+    draw_id: d.id,
+    source_draw: d.source,
+    expected_revision: d.revision,
+    seed_a: d.seedA,
+    seed_b: d.seedB,
+    reason: d.reason,
+  });
+  if (error) return { status: "error", message: t.swapInvalid };
   revalidatePath(`/${locale}/draws`, "layout");
   return { status: "success", message: t.saved };
 }

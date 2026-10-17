@@ -4,6 +4,17 @@ export function localeOf(value: unknown): Locale {
   return value === "kk" || value === "en" ? value : "ru";
 }
 const en = {
+  swapSeeds: "Swap seed positions",
+  seedA: "First seed position",
+  seedB: "Second seed position",
+  swapHelp:
+    "Swap two positions using the frozen players and ratings. Earlier drafts remain in history. Record a reason before publishing.",
+  swapConfirm: "I reviewed both clubs and confirm this seed swap.",
+  swapInvalid:
+    "Seed swap failed. Refresh and check distinct seed positions, the reason, current draft version and publication status.",
+  seedAdjustment: "Manual seed adjustment",
+  chooseSeed: "Choose a seed",
+
   groupStandings: "Group standings",
   refreshStandings: "Refresh standings",
   drawTies: "Draw unresolved ties",
@@ -372,6 +383,17 @@ const en = {
 };
 type Messages = typeof en;
 const ru: Messages = {
+  swapSeeds: "Поменять позиции посева",
+  seedA: "Первая позиция посева",
+  seedB: "Вторая позиция посева",
+  swapHelp:
+    "Поменяйте две позиции с сохранением зафиксированных игроков и рейтингов. Предыдущие версии остаются в истории. Укажите причину до публикации.",
+  swapConfirm: "Я проверил оба клуба и подтверждаю обмен позициями.",
+  swapInvalid:
+    "Не удалось поменять посев. Обновите страницу и проверьте разные позиции, причину, версию и статус публикации.",
+  seedAdjustment: "Ручная корректировка посева",
+  chooseSeed: "Выберите позицию",
+
   groupStandings: "Таблица группы",
   refreshStandings: "Обновить таблицу",
   drawTies: "Жеребьёвка равных команд",
@@ -740,6 +762,17 @@ const ru: Messages = {
   displayName: "Отображаемое имя",
 };
 const kk: Messages = {
+  swapSeeds: "Себу орындарын ауыстыру",
+  seedA: "Бірінші себу орны",
+  seedB: "Екінші себу орны",
+  swapHelp:
+    "Бекітілген ойыншылар мен рейтингтерді сақтап, екі орынды ауыстырыңыз. Алдыңғы нұсқалар тарихта қалады. Жариялауға дейін себебін жазыңыз.",
+  swapConfirm: "Екі клубты тексердім және орындарды ауыстыруды растаймын.",
+  swapInvalid:
+    "Себу ауыстырылмады. Бетті жаңартып, әртүрлі орындарды, себебін, нұсқаны және жариялау күйін тексеріңіз.",
+  seedAdjustment: "Себуді қолмен түзету",
+  chooseSeed: "Себу орнын таңдаңыз",
+
   groupStandings: "Топ кестесі",
   refreshStandings: "Кестені жаңарту",
   drawTies: "Тең командаларға жеребе тарту",

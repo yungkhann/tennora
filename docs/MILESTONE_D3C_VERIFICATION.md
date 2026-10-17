@@ -1,0 +1,15 @@
+# D3c — audited Organizer seed adjustments
+
+18 October 2026. Completes Task D together with D1/D2/D3a/D3b; native scoring and correction workflows remain E.
+
+Migration 020 supplies Organizer-only seed-position swaps. A swap requires a unique request ID, the latest source draft/revision, two distinct in-range seeds and a reason. It appends a new draft, copies the selected source's frozen entries/player ratings/tie lots/map and rebuilds all match paths through the graph builder shared with normal generation. Current ratings are not reread. Earlier drafts/graphs remain intact. An immutable receipt and audit preserve source, positions, reason, actor/time and before/after order.
+
+Publication/generation/adjustment serialize through the existing administration and parent-row locks. Published graphs reject new adjustments. Exact receipt retries return the same revision after publication, while changed payloads and stale source revisions fail. Main Judges retain review/generation/publication authority but cannot perform manual swaps. Direct staff mutation, private-helper execution and anonymous access remain denied.
+
+Localized Organizer controls show club-labelled positions, a reason and confirmation; a successful adjustment shows its reason/new revision and supplies a fresh form. Publication removes these controls. The action uses the verified staff user's client, Zod validation and independent RPC authority checks. A delegated decision, I04, records the preservation policy.
+
+Verification: typecheck, zero-warning lint, 104 unit tests, production build and formatting/diff checks pass. All 437 pgTAP assertions pass on the existing database and a separate project recreated from empty volumes with all twenty migrations; that temporary project was stopped. SQL checks prove frozen inputs survive later rating changes, both swapped entries move through rebuilt snake groups, both 96-match graphs remain, one audit survives retries, and stale/published/unauthorized requests fail. Existing round-robin, composite and standalone knockout fixtures pass after graph extraction.
+
+The complete 26 desktop/mobile cases plus the real Auth/invitation/session case pass. The new browser scenario denies Main Judge controls, adjusts an eight-team knockout as Organizer, compares every copied rating/identity against its source despite a changed current rating, publishes and verifies four ready lineup links. Desktop/mobile form screenshots were visually inspected; there is no horizontal overflow. `npm run test:draw-adjustment-concurrency` proves a publication holds the lock for about 1,974 ms and a waiting swap is rejected without another revision.
+
+Verification corrected a SQL parameter/column ambiguity in the cloned-entry query. Browser tests now address the selectors by their accessible combobox names and use a bounded action timeout. No live score, Elo update, result correction, table scheduling or public projection is implied by closing Task D. Those remain E–G, followed by measured H/I release gates.

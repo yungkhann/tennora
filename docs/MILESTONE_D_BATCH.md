@@ -47,3 +47,11 @@ D3a is committed as `dc68819`. Exact planned files: `supabase/migrations/2026101
 Provide immutable balanced seed-map data for practical power-of-two sizes 2, 4, 8, 16 and 32. Initial participants come from frozen entry sources; later rounds retain winner/loser edges and all-place classification. Opposite halves keep seeds 1/2 apart until the final, quarters keep the top four apart, and every entry appears once. Unsupported sizes/maps fail explicitly without a partial graph. Source readiness validates frozen entry identity/draw as well as earlier results. Existing confirmed 4x6/three-bracket generation remains unchanged. D3c will add Organizer seed adjustment; do not mark D complete before that verification.
 
 D3b is verified in MILESTONE_D3B_VERIFICATION.md; D3c remains before completing Task D.
+
+## D3c — Organizer seed adjustment before publication
+
+D3b is committed as `96114ab`. Exact planned files: `supabase/migrations/202610180003_draw_adjustments.sql`, `supabase/tests/011_draw_adjustments.sql`, regenerated types, draw actions/validation/forms/page/locales, `tests/e2e/draw-adjustments.spec.ts`, reusable fixture cleanup, `scripts/test-draw-adjustment-concurrency.mjs` and package script, and decisions/database/routes/status/milestone documentation.
+
+FR-7 requires Organizer adjustment, not only regeneration. Provide a reasoned swap of two seed positions as an append-only draft revision, copying the selected draw's frozen entry/player/rating/map data without reading current ratings. Rebuild groups/brackets from those copied inputs using the same graph helper as ordinary generation. Earlier drafts remain intact. Only active Organizers may adjust; Main Judges retain generation/review/publication authority but no manual swap. Validate current source/expected revision, distinct in-range seeds, reason and exact idempotent request ID. Serialize with publication/generation; never change a published graph. Record source draw, both seed positions, reason, actor and before/after order.
+
+D3c is verified in MILESTONE_D3C_VERIFICATION.md. Task D is complete. E must integrate authoritative singles/result/Elo/advancement and correction resolution; D fixtures do not provide a live result-write bypass.

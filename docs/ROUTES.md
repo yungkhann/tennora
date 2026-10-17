@@ -71,3 +71,7 @@ Localized `/matches` lists published matches with pagination: assigned Trainer s
 The existing localized `/draws/[tourId]/[ageGroup]?group=...` page adds current group standings, complete/provisional/unresolved states and mini-table evidence. Organizer/Main Judge may refresh from current result revisions; only Organizer sees and may execute a final audited random draw, with a required confirmation and current revision. Actions reauthorize and use the verified user's client; direct RPC authorization independently enforces the same roles. Bracket participants show actual advanced club names. No native result-entry control is added before E.
 
 Private lineup status now includes `sources_ready`, a boolean only. A stale qualifier source disables submission in the page and is rejected independently by the database. No hidden identities are added to polling.
+
+## Seed adjustment (D3c)
+
+The private draw page exposes two club-labelled seed selectors and a required reason/confirmation only to Organizers while the latest draw remains a draft. A successful swap shows the new revision and reason, resets the form, and rebuilds group/bracket previews from copied frozen inputs. Publication removes adjustment controls; an independent RPC guard rejects direct/stale changes. Main Judge review/publication routes remain available.

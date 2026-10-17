@@ -197,6 +197,59 @@ export type Database = {
           },
         ];
       };
+      draw_seed_adjustments: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          draw_id: string;
+          reason: string;
+          seed_a: number;
+          seed_b: number;
+          source_draw_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          draw_id: string;
+          reason: string;
+          seed_a: number;
+          seed_b: number;
+          source_draw_id: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          draw_id?: string;
+          reason?: string;
+          seed_a?: number;
+          seed_b?: number;
+          source_draw_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "draw_seed_adjustments_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "draw_seed_adjustments_draw_id_fkey";
+            columns: ["draw_id"];
+            isOneToOne: true;
+            referencedRelation: "draw_revisions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "draw_seed_adjustments_source_draw_id_fkey";
+            columns: ["source_draw_id"];
+            isOneToOne: false;
+            referencedRelation: "draw_revisions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       draw_seed_maps: {
         Row: {
           group_count: number;
@@ -2308,6 +2361,17 @@ export type Database = {
           subteam: string;
         };
         Returns: Json;
+      };
+      swap_draw_seeds: {
+        Args: {
+          draw_id: string;
+          expected_revision: number;
+          reason: string;
+          seed_a: number;
+          seed_b: number;
+          source_draw: string;
+        };
+        Returns: string;
       };
       transfer_player: {
         Args: { new_club: string; player: string; reason: string };

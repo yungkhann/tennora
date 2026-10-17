@@ -54,6 +54,10 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
           .in("plan_id", planIds),
         drawIds = (draws.data ?? []).map((v) => v.id);
       if (drawIds.length) {
+        await remove(
+          "seed adjustments",
+          admin.from("draw_seed_adjustments").delete().in("draw_id", drawIds),
+        );
         const matches = await admin
             .from("team_matches")
             .select("id")

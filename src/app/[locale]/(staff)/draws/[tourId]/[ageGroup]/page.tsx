@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { localeOf, messages } from "@/lib/locales";
 import { requireDrawManager } from "@/features/draws/access";
-import { GenerateDrawForm, PublishDrawForm } from "@/features/draws/forms";
+import {
+  GenerateDrawForm,
+  PublishDrawForm,
+  SwapSeedsForm,
+} from "@/features/draws/forms";
 import { StandingsForm } from "@/features/standings/forms";
 import { standingData } from "@/features/standings/validation";
 import { Card } from "@/components/ui/card";
@@ -90,7 +94,7 @@ export default async function Page({
   ]);
   if (entriesResult?.error || matchesResult?.error || countResult?.error)
     throw new Error(t.failed);
-  const [headResult, namesResult] = await Promise.all([
+  const [headResult, namesResult, adjustmentResult] = await Promise.all([
     selected?.stages.kind === "round_robin" && draw?.published_at
       ? supabase
           .from("group_standing_heads")
@@ -101,11 +105,19 @@ export default async function Page({
     draw
       ? supabase
           .from("draw_entries")
-          .select("subteam_id,subteams(teams(name))")
+          .select("subteam_id,seed,subteams(teams(name))")
           .eq("draw_id", draw.id)
       : null,
+    draw
+      ? supabase
+          .from("draw_seed_adjustments")
+          .select("reason,source_draw_id")
+          .eq("draw_id", draw.id)
+          .maybeSingle()
+      : null,
   ]);
-  if (headResult?.error || namesResult?.error) throw new Error(t.failed);
+  if (headResult?.error || namesResult?.error || adjustmentResult?.error)
+    throw new Error(t.failed);
   const snapshot = headResult?.data?.group_standing_snapshots;
   const standing = snapshot ? standingData.parse(snapshot.data) : null;
   const criteria = {
@@ -154,6 +166,11 @@ export default async function Page({
       ) : (
         <p className="mt-4 text-sm">{t.noDraw}</p>
       )}
+      {adjustmentResult?.data && (
+        <p className="mt-4 break-words text-sm">
+          <strong>{t.seedAdjustment}:</strong> {adjustmentResult.data.reason}
+        </p>
+      )}
       {!draw?.published_at && (
         <Card className="mt-6 grid gap-5 p-6">
           {tour.seasons.status !== "started" || !plan ? (
@@ -166,6 +183,20 @@ export default async function Page({
               age={age.data}
               revision={draw?.revision ?? 0}
             />
+          )}
+          {draw && roles.includes("organizer") && (
+            <div className="border-t pt-5">
+              <SwapSeedsForm
+                key={draw.id}
+                locale={locale}
+                id={randomUUID()}
+                source={draw.id}
+                revision={draw.revision}
+                entries={(namesResult?.data ?? [])
+                  .sort((a, b) => a.seed - b.seed)
+                  .map((e) => ({ seed: e.seed, name: e.subteams.teams.name }))}
+              />
+            </div>
           )}
           {draw && (
             <div className="border-t pt-5">
