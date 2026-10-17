@@ -41,3 +41,5 @@ E1 private scoring/Elo rules and TypeScript/PostgreSQL parity are verified in MI
 E2a match-day authority and numeric storage prerequisites are verified in MILESTONE_E2A_VERIFICATION.md. E2b live-match leases and atomic scoring/result/Elo writes, E2c judge transport/UI and E3 corrections remain before Task E is complete.
 
 E2b1 live lifecycle/resource leases and transfer-safe lineups are verified in MILESTONE_E2B1_VERIFICATION.md. E2b2 point/result/Elo transactions and E2c judge transport/UI remain; E3 corrections/replay and the full F allocator still follow.
+
+E2b2 atomic score/event/result/Elo transactions are implemented; verification is recorded in MILESTONE_E2B2_VERIFICATION.md. E2c judge HTTP/UI and E3 completed-result correction/replay remain before Task E is complete. Hall allocation and public projections remain F/G.

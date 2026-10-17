@@ -42,25 +42,6 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
       if (result.error) errors.push(label);
     }
     await operator.auth.signOut();
-    const assignments = await admin
-      .from("table_judge_assignments")
-      .select("id")
-      .eq("context_tour_id", tour);
-    if (assignments.error) errors.push("judge assignment lookup");
-    if (assignments.data?.length) {
-      const assignmentIds = assignments.data.map((v) => v.id);
-      await remove(
-        "day heads",
-        admin
-          .from("table_day_heads")
-          .delete()
-          .in("assignment_id", assignmentIds),
-      );
-      await remove(
-        "judge assignments",
-        admin.from("table_judge_assignments").delete().in("id", assignmentIds),
-      );
-    }
     if (players.length)
       await remove(
         "player rest",
@@ -98,6 +79,62 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
           admin.from("tour_placements").delete().in("draw_id", drawIds),
         );
         if (matchIds.length) {
+          const games = await admin
+            .from("singles_games")
+            .select("id")
+            .in("match_id", matchIds);
+          if (games.error) errors.push("score game lookup");
+          const gameIds = (games.data ?? []).map((v) => v.id);
+          if (gameIds.length) {
+            for (const table of [
+              "active_score_points",
+              "score_events",
+              "game_sets",
+              "player_end_events",
+            ] as const)
+              await remove(
+                table,
+                admin.from(table).delete().in("game_id", gameIds),
+              );
+            const results = await admin
+              .from("singles_results")
+              .select("id")
+              .in("game_id", gameIds);
+            if (results.error) errors.push("singles result lookup");
+            if (results.data?.length)
+              await remove(
+                "linked ratings",
+                admin
+                  .from("rating_history")
+                  .delete()
+                  .in(
+                    "game_result_id",
+                    results.data.map((v) => v.id),
+                  ),
+              );
+            await remove(
+              "rating heads",
+              admin
+                .from("rating_calculation_heads")
+                .delete()
+                .in("game_id", gameIds),
+            );
+            await remove(
+              "rating calculations",
+              admin.from("rating_calculations").delete().in("game_id", gameIds),
+            );
+            await remove(
+              "singles pointers",
+              admin
+                .from("singles_games")
+                .update({ result_id: null, result_revision: 0 })
+                .in("id", gameIds),
+            );
+            await remove(
+              "singles results",
+              admin.from("singles_results").delete().in("game_id", gameIds),
+            );
+          }
           await remove(
             "live players",
             admin.from("live_players").delete().in("match_id", matchIds),
@@ -235,6 +272,25 @@ export async function drawFixture(options: { knockoutSize?: number } = {}) {
         .delete()
         .eq("season_id", season),
     );
+    const assignments = await admin
+      .from("table_judge_assignments")
+      .select("id")
+      .eq("context_tour_id", tour);
+    if (assignments.error) errors.push("judge assignment lookup");
+    if (assignments.data?.length) {
+      const assignmentIds = assignments.data.map((v) => v.id);
+      await remove(
+        "day heads",
+        admin
+          .from("table_day_heads")
+          .delete()
+          .in("assignment_id", assignmentIds),
+      );
+      await remove(
+        "judge assignments",
+        admin.from("table_judge_assignments").delete().in("id", assignmentIds),
+      );
+    }
     await remove(
       "settings",
       admin.from("tournament_settings").delete().eq("tour_id", tour),

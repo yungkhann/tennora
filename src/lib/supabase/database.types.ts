@@ -34,6 +34,46 @@ export type Database = {
   };
   public: {
     Tables: {
+      active_score_points: {
+        Row: {
+          event_id: string;
+          event_version: number;
+          game_id: string;
+          set_number: number;
+          side: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          event_id: string;
+          event_version: number;
+          game_id: string;
+          set_number: number;
+          side: string;
+        };
+        Update: {
+          event_id?: string;
+          event_version?: number;
+          game_id?: string;
+          set_number?: number;
+          side?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "active_score_points_event_id_fkey";
+            columns: ["event_id"];
+            isOneToOne: true;
+            referencedRelation: "score_events";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "active_score_points_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       audit_logs: {
         Row: {
           action: string;
@@ -305,6 +345,42 @@ export type Database = {
             columns: ["player_id"];
             isOneToOne: false;
             referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      game_sets: {
+        Row: {
+          first_server: string;
+          game_id: string;
+          points_a: number;
+          points_b: number;
+          set_number: number;
+          winner: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          first_server: string;
+          game_id: string;
+          points_a: number;
+          points_b: number;
+          set_number: number;
+          winner?: string | null;
+        };
+        Update: {
+          first_server?: string;
+          game_id?: string;
+          points_a?: number;
+          points_b?: number;
+          set_number?: number;
+          winner?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "game_sets_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_games";
             referencedColumns: ["id"];
           },
         ];
@@ -945,6 +1021,56 @@ export type Database = {
         };
         Relationships: [];
       };
+      player_end_events: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          ended_at: string;
+          game_id: string;
+          id: string;
+          player_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          ended_at: string;
+          game_id: string;
+          id?: string;
+          player_id: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          ended_at?: string;
+          game_id?: string;
+          id?: string;
+          player_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "player_end_events_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "player_end_events_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "player_end_events_player_id_fkey";
+            columns: ["player_id"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       player_photo_assets: {
         Row: {
           consent_version: string;
@@ -1275,10 +1401,151 @@ export type Database = {
           },
         ];
       };
+      rating_calculation_heads: {
+        Row: {
+          calculation_id: string;
+          game_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          calculation_id: string;
+          game_id: string;
+        };
+        Update: {
+          calculation_id?: string;
+          game_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rating_calculation_heads_calculation_id_fkey";
+            columns: ["calculation_id"];
+            isOneToOne: false;
+            referencedRelation: "rating_calculations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_calculation_heads_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: true;
+            referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rating_calculations: {
+        Row: {
+          a_after: number;
+          a_before: number;
+          b_after: number;
+          b_before: number;
+          completion_order: number;
+          created_at: string;
+          created_by: string;
+          game_id: string;
+          id: string;
+          k_factor: number;
+          player_a: string;
+          player_b: string;
+          previous_calculation_id: string | null;
+          result_id: string;
+          revision: number;
+          settings_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          a_after: number;
+          a_before: number;
+          b_after: number;
+          b_before: number;
+          completion_order: number;
+          created_at?: string;
+          created_by: string;
+          game_id: string;
+          id?: string;
+          k_factor: number;
+          player_a: string;
+          player_b: string;
+          previous_calculation_id?: string | null;
+          result_id: string;
+          revision: number;
+          settings_id: string;
+        };
+        Update: {
+          a_after?: number;
+          a_before?: number;
+          b_after?: number;
+          b_before?: number;
+          completion_order?: number;
+          created_at?: string;
+          created_by?: string;
+          game_id?: string;
+          id?: string;
+          k_factor?: number;
+          player_a?: string;
+          player_b?: string;
+          previous_calculation_id?: string | null;
+          result_id?: string;
+          revision?: number;
+          settings_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rating_calculations_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_calculations_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_calculations_player_a_fkey";
+            columns: ["player_a"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_calculations_player_b_fkey";
+            columns: ["player_b"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_calculations_previous_calculation_id_fkey";
+            columns: ["previous_calculation_id"];
+            isOneToOne: false;
+            referencedRelation: "rating_calculations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_calculations_result_id_fkey";
+            columns: ["result_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_results";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_calculations_settings_id_fkey";
+            columns: ["settings_id"];
+            isOneToOne: false;
+            referencedRelation: "tournament_settings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       rating_history: {
         Row: {
+          calculation_id: string | null;
           created_at: string;
           external_rating_id: string | null;
+          game_result_id: string | null;
           id: string;
           import_id: string | null;
           player_id: string;
@@ -1288,8 +1555,10 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          calculation_id?: string | null;
           created_at?: string;
           external_rating_id?: string | null;
+          game_result_id?: string | null;
           id?: string;
           import_id?: string | null;
           player_id: string;
@@ -1298,8 +1567,10 @@ export type Database = {
           source: string;
         };
         Update: {
+          calculation_id?: string | null;
           created_at?: string;
           external_rating_id?: string | null;
+          game_result_id?: string | null;
           id?: string;
           import_id?: string | null;
           player_id?: string;
@@ -1308,6 +1579,20 @@ export type Database = {
           source?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "rating_history_calculation_id_fkey";
+            columns: ["calculation_id"];
+            isOneToOne: false;
+            referencedRelation: "rating_calculations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rating_history_game_result_id_fkey";
+            columns: ["game_result_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_results";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "rating_history_import_id_fkey";
             columns: ["import_id"];
@@ -1409,6 +1694,103 @@ export type Database = {
             columns: ["subteam_id"];
             isOneToOne: false;
             referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      score_events: {
+        Row: {
+          actor_id: string;
+          actor_role: Database["public"]["Enums"]["staff_role"];
+          after_state: NonNullable<Json>;
+          assignment_id: string | null;
+          authority: string;
+          before_state: NonNullable<Json>;
+          created_at: string;
+          game_id: string;
+          id: string;
+          kind: string;
+          request: NonNullable<Json>;
+          table_number: number | null;
+          undo_set_number: number | null;
+          undo_target_id: string | null;
+          venue_day: string | null;
+          version_after: number;
+          version_before: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          actor_id: string;
+          actor_role: Database["public"]["Enums"]["staff_role"];
+          after_state: NonNullable<Json>;
+          assignment_id?: string | null;
+          authority: string;
+          before_state: NonNullable<Json>;
+          created_at?: string;
+          game_id: string;
+          id: string;
+          kind: string;
+          request: NonNullable<Json>;
+          table_number?: number | null;
+          undo_set_number?: number | null;
+          undo_target_id?: string | null;
+          venue_day?: string | null;
+          version_after: number;
+          version_before: number;
+        };
+        Update: {
+          actor_id?: string;
+          actor_role?: Database["public"]["Enums"]["staff_role"];
+          after_state?: NonNullable<Json>;
+          assignment_id?: string | null;
+          authority?: string;
+          before_state?: NonNullable<Json>;
+          created_at?: string;
+          game_id?: string;
+          id?: string;
+          kind?: string;
+          request?: NonNullable<Json>;
+          table_number?: number | null;
+          undo_set_number?: number | null;
+          undo_target_id?: string | null;
+          venue_day?: string | null;
+          version_after?: number;
+          version_before?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "score_events_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "score_events_assignment_id_fkey";
+            columns: ["assignment_id"];
+            isOneToOne: false;
+            referencedRelation: "table_judge_assignments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "score_events_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "score_events_table_number_fkey";
+            columns: ["table_number"];
+            isOneToOne: false;
+            referencedRelation: "league_tables";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "score_events_undo_target_id_fkey";
+            columns: ["undo_target_id"];
+            isOneToOne: false;
+            referencedRelation: "score_events";
             referencedColumns: ["id"];
           },
         ];
@@ -1523,29 +1905,62 @@ export type Database = {
       };
       singles_games: {
         Row: {
+          completion_order: number | null;
+          ended_at: string | null;
           id: string;
           match_id: string;
           player_a: string;
+          player_a_name: string | null;
           player_b: string;
+          player_b_name: string | null;
+          result_id: string | null;
+          result_revision: number;
+          score_state: Json | null;
+          score_version: number;
           slot: number;
+          started_at: string | null;
           status: Database["public"]["Enums"]["singles_game_status"];
+          timeout_side: string | null;
+          timeout_until: string | null;
         };
         ComputedFields: never;
         Insert: {
+          completion_order?: number | null;
+          ended_at?: string | null;
           id?: string;
           match_id: string;
           player_a: string;
+          player_a_name?: string | null;
           player_b: string;
+          player_b_name?: string | null;
+          result_id?: string | null;
+          result_revision?: number;
+          score_state?: Json | null;
+          score_version?: number;
           slot: number;
+          started_at?: string | null;
           status?: Database["public"]["Enums"]["singles_game_status"];
+          timeout_side?: string | null;
+          timeout_until?: string | null;
         };
         Update: {
+          completion_order?: number | null;
+          ended_at?: string | null;
           id?: string;
           match_id?: string;
           player_a?: string;
+          player_a_name?: string | null;
           player_b?: string;
+          player_b_name?: string | null;
+          result_id?: string | null;
+          result_revision?: number;
+          score_state?: Json | null;
+          score_version?: number;
           slot?: number;
+          started_at?: string | null;
           status?: Database["public"]["Enums"]["singles_game_status"];
+          timeout_side?: string | null;
+          timeout_until?: string | null;
         };
         Relationships: [
           {
@@ -1567,6 +1982,129 @@ export type Database = {
             columns: ["player_b"];
             isOneToOne: false;
             referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_games_result_id_fkey";
+            columns: ["result_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_results";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      singles_results: {
+        Row: {
+          actual_sets: NonNullable<Json>;
+          completion_order: number;
+          created_at: string;
+          created_by: string;
+          ended_at: string;
+          game_id: string;
+          id: string;
+          k_factor: number;
+          kind: string;
+          player_a: string;
+          player_a_name: string;
+          player_b: string;
+          player_b_name: string;
+          points_a: number;
+          points_b: number;
+          previous_result_id: string | null;
+          revision: number;
+          sets_a: number;
+          sets_b: number;
+          settings_id: string;
+          winner: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          actual_sets: NonNullable<Json>;
+          completion_order: number;
+          created_at?: string;
+          created_by: string;
+          ended_at: string;
+          game_id: string;
+          id?: string;
+          k_factor: number;
+          kind: string;
+          player_a: string;
+          player_a_name: string;
+          player_b: string;
+          player_b_name: string;
+          points_a: number;
+          points_b: number;
+          previous_result_id?: string | null;
+          revision: number;
+          sets_a: number;
+          sets_b: number;
+          settings_id: string;
+          winner: string;
+        };
+        Update: {
+          actual_sets?: NonNullable<Json>;
+          completion_order?: number;
+          created_at?: string;
+          created_by?: string;
+          ended_at?: string;
+          game_id?: string;
+          id?: string;
+          k_factor?: number;
+          kind?: string;
+          player_a?: string;
+          player_a_name?: string;
+          player_b?: string;
+          player_b_name?: string;
+          points_a?: number;
+          points_b?: number;
+          previous_result_id?: string | null;
+          revision?: number;
+          sets_a?: number;
+          sets_b?: number;
+          settings_id?: string;
+          winner?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "singles_results_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_results_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_results_player_a_fkey";
+            columns: ["player_a"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_results_player_b_fkey";
+            columns: ["player_b"];
+            isOneToOne: false;
+            referencedRelation: "players";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_results_previous_result_id_fkey";
+            columns: ["previous_result_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_results";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "singles_results_settings_id_fkey";
+            columns: ["settings_id"];
+            isOneToOne: false;
+            referencedRelation: "tournament_settings";
             referencedColumns: ["id"];
           },
         ];
@@ -2577,6 +3115,7 @@ export type Database = {
         };
         Returns: string;
       };
+      get_game_score: { Args: { game: string }; Returns: Json };
       get_lineup_status: { Args: { match: string }; Returns: Json };
       get_match_operation: { Args: { match: string }; Returns: Json };
       is_player_photo_approved: { Args: { asset: string }; Returns: boolean };
@@ -2683,6 +3222,17 @@ export type Database = {
           tournament: string;
         };
         Returns: string;
+      };
+      score_command: {
+        Args: {
+          command_id: string;
+          expected_version: number;
+          game: string;
+          kind: string;
+          note?: string;
+          side: string;
+        };
+        Returns: Json;
       };
       season_configuration_readiness: {
         Args: { parent_season: string };
