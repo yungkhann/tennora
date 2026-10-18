@@ -300,6 +300,45 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
         "/manifest.webmanifest",
       ].sort(),
     );
+    // Finish the played singles, then leave the roster. Public history and
+    // metadata must remain accessible without putting the player back in ranking.
+    for (let i = 0; i < 31; i++)
+      check(
+        await judge.rpc("score_command", {
+          command_id: randomUUID(),
+          game,
+          kind: "point",
+          side: "a",
+          expected_version: i + 4,
+        }),
+      );
+    check(
+      await f.operator.rpc("drop_player", {
+        player,
+        effective_date: today,
+        reason: "Leaving after a completed result",
+      }),
+    );
+    const current = await f.admin
+      .from("public_league_players")
+      .select("id")
+      .eq("id", player);
+    check(current);
+    expect(current.data).toHaveLength(0);
+    for (const locale of ["en", "ru", "kk"]) {
+      const response = await page.goto(`/${locale}/player/${player}`);
+      expect(response?.status()).toBe(200);
+      await expect(page.getByRole("heading", { level: 1 })).toContainText(
+        "Seed",
+      );
+      await expect(page.getByRole("table")).toBeVisible();
+      expect(await page.title()).toContain("Seed");
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true);
+    }
     expect(pageErrors).toEqual([]);
     await judge.auth.signOut();
   } finally {

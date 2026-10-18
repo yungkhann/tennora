@@ -29,6 +29,12 @@ export const publicPlayers = cache(async () => {
   if (r.error) throw new Error("Public ranking unavailable");
   return publicPlayerSchema.array().parse(r.data);
 });
+export const publicPlayer = cache(async (id: string) => {
+  if (!publicSupabaseEnv()) return null;
+  const r = await anonymousClient().rpc("get_public_player", { player: id });
+  if (r.error) throw new Error("Public player unavailable");
+  return r.data === null ? null : publicPlayerSchema.parse(r.data);
+});
 export async function publicMatches(tour?: string) {
   if (!publicSupabaseEnv()) return [];
   let q = anonymousClient()

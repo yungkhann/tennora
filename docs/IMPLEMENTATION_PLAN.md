@@ -2,17 +2,17 @@
 
 The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md](TABLE_TENNIS_IMPLEMENTATION_PLAN.md). Confirmed: Next.js/Supabase, one league, coexisting staff roles. This file records actual status; proposed dates are in the detailed plan and are not completion claims. Original tennis Phase 1 roadmap is archived in archive/PHASE_1_IMPLEMENTATION_PLAN.md; its historical verification remains in VERIFICATION.md.
 
-| Task                      | Status                  | Next gate                                                                                       |
-| ------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------- |
-| A - Rebaseline            | Complete                | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                   |
-| B - Staff foundation      | Complete                | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
-| C - Seasons/teams/players | Complete                | C1/C2/C3a/C3b verified; see milestone reports                                                   |
-| D - Draws/lineups         | Complete                | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
-| E - Scoring/Elo           | Complete                | Audit correction/retirement/recovery regressions fixed and verified; see AUDIT_FIXES.md         |
-| F - Hall operations       | Complete                | Continuing-player reservation/rest regression fixed and verified; see AUDIT_FIXES.md            |
-| G - Public/locales/live   | Audit fixes in progress | Historical public profile defect; see AUDIT_FIXES.md                                            |
-| H - Readiness             | In progress             | CI/observability/local restore/load tooling implemented; hosted capacity/recovery proof remains |
-| I - Rehearsal/release     | Blocked externally      | Release validator/runbook prepared; provider, hosted load and venue evidence required           |
+| Task                      | Status             | Next gate                                                                                       |
+| ------------------------- | ------------------ | ----------------------------------------------------------------------------------------------- |
+| A - Rebaseline            | Complete           | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                   |
+| B - Staff foundation      | Complete           | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
+| C - Seasons/teams/players | Complete           | C1/C2/C3a/C3b verified; see milestone reports                                                   |
+| D - Draws/lineups         | Complete           | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
+| E - Scoring/Elo           | Complete           | Audit correction/retirement/recovery regressions fixed and verified; see AUDIT_FIXES.md         |
+| F - Hall operations       | Complete           | Continuing-player reservation/rest regression fixed and verified; see AUDIT_FIXES.md            |
+| G - Public/locales/live   | Complete           | Historical public profile regression fixed and verified; see AUDIT_FIXES.md                     |
+| H - Readiness             | In progress        | CI/observability/local restore/load tooling implemented; hosted capacity/recovery proof remains |
+| I - Rehearsal/release     | Blocked externally | Release validator/runbook prepared; provider, hosted load and venue evidence required           |
 
 ## A: exact files and changes
 
@@ -59,3 +59,7 @@ G is verified in MILESTONE_G_VERIFICATION.md: curated public projections, weight
 ## H/I: release readiness
 
 See MILESTONE_H_VERIFICATION.md for the implemented operational batch and exact evidence. CI now exercises real backend integrations, health and redacted timing are available, browser secrets are checked, encrypted database/Storage restore is verified, and load/release tooling plus runbooks are ready. All 842 database assertions pass on both the working and fresh 31-migration database; 130 unit tests, 38 responsive browser scenarios, Auth, parity/races/scale, lint/typecheck/build pass. Local 25-viewer smoke passes, but 100-viewer fan-out and 2,000-viewer connection attempts fail local Realtime limits. H remains in progress; I is externally blocked. Provider capacity/budget/region, hosted 30-minute load and commit latency, PITR/off-site retention/restore, alert delivery, privacy approval and actual venue/tablet/cutover acceptance remain mandatory. The release checker rejects missing/failing evidence.
+
+## Audit corrections: 18 October 2026
+
+See AUDIT_FIXES.md for the exact three-batch inventory and measured evidence. Continuing-player reservation/rest symmetry, deciding-set end changes, uncertain scoring retries, match-specific retirement, reviewed team-forfeit correction/reopening and retained historical public profiles are fixed. I14 records the synchronous ranking/photo architecture deviation; no delayed worker is claimed. Current verification passes: 136 unit tests, 902 SQL assertions, 40 desktop/mobile browser scenarios plus Auth, all 34 migrations on a clean isolated database, scoring/Elo/team/standings parity, ten concurrency checks, hall scale, encrypted isolated restore, browser-secret scan, typecheck/lint/build and formatting. H/I external gates above remain unchanged; the release checker continues to block missing reviewed evidence.

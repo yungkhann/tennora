@@ -355,6 +355,10 @@ export async function drawFixture(
     );
     if (players.length) {
       await remove(
+        "player status events",
+        admin.from("player_status_events").delete().in("player_id", players),
+      );
+      await remove(
         "ratings",
         admin.from("rating_history").delete().in("player_id", players),
       );
@@ -395,7 +399,8 @@ export async function drawFixture(
         "accounts",
         admin.from("staff_accounts").delete().in("id", users),
       );
-      for (const id of users) check(await admin.auth.admin.deleteUser(id));
+      for (const id of users)
+        await remove("Auth fixture account", admin.auth.admin.deleteUser(id));
     }
     if (errors.length)
       throw new Error(`Draw fixture cleanup failed: ${errors.join(", ")}`);

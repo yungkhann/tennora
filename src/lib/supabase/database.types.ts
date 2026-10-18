@@ -3685,6 +3685,7 @@ export type Database = {
       get_match_operation: { Args: { match: string }; Returns: Json };
       get_public_directory: { Args: Record<PropertyKey, never>; Returns: Json };
       get_public_health: { Args: Record<PropertyKey, never>; Returns: string };
+      get_public_player: { Args: { player: string }; Returns: Json };
       get_public_player_history: { Args: { player: string }; Returns: Json };
       get_public_season_standings: { Args: { season: string }; Returns: Json };
       get_result_correction: { Args: { request_id: string }; Returns: Json };

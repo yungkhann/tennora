@@ -1,6 +1,6 @@
 # Architecture
 
-Task A target architecture, 17 October 2026. This describes the authorized direction, not completed league features. Historical architecture: archive/PHASE_1_ARCHITECTURE.md. Implementation evidence: VERIFICATION.md and milestone reports.
+Approved architecture, updated 18 October 2026 after the implementation audit. This describes the authorized boundaries; actual verified status is tracked separately. Historical architecture: archive/PHASE_1_ARCHITECTURE.md. Implementation evidence: VERIFICATION.md and milestone reports.
 
 ## Runtime and boundary
 
@@ -22,7 +22,7 @@ Players have independent IDs, not Auth profile identities. Separate private play
 
 Keep pure TypeScript scoring/draw/rating modules separately testable. PostgreSQL is authoritative: directly callable score RPCs must validate/recompute transitions, not accept a caller-supplied official score. Shared vectors and generated command sequences prove TypeScript/SQL parity. UUID command receipts, payload consistency, expected versions and row locks protect against duplicates and races. Use deterministic lock ordering for match/game and player ratings.
 
-One transaction appends event/receipt, updates set/game/team status, synchronous Elo/history, necessary advancement/public projection and before/after audit. Three singles wins cancel remaining games exactly once. Failures roll back everything. Corrections append events and preserve original K/history; post-completion behavior is blocked on D07. Queued work cannot determine official score or advance from stale standings.
+One transaction appends event/receipt, updates set/game/team status, synchronous Elo/history, necessary advancement/public projection and before/after audit. Three singles wins cancel remaining games exactly once. Failures roll back everything. Corrections append events and preserve original K/history; completed singles and team-forfeit corrections follow C22 and I08/I09/I13, including explicit Organizer resolution of affected started play. Queued work cannot determine official score or advance from stale standings.
 
 ## Live transport
 
@@ -32,7 +32,7 @@ Only safe published projections enter anonymous Realtime. Never subscribe public
 
 ## Files, jobs and deployment
 
-Private Storage holds player originals and consent evidence; approved photo delivery must support revocation/cache invalidation. Database backups do not restore Storage bytes; recovery must cover both. Durable SQL jobs/outbox with idempotent retries handle delayed rankings/photo work; scores and Elo remain synchronous.
+Private Storage holds player originals and consent evidence; approved photo delivery must support revocation/cache invalidation. Database backups do not restore Storage bytes; recovery must cover both. The current release calculates standings/rankings synchronously in SQL and sanitizes bounded photos in the verified server request. Durable photo asset states, hashes and guarded publication support interrupted-request retries. No delayed ranking/photo worker or outbox is implemented; I14 explicitly records this design change. Future off-request work requires durable jobs/outbox with deduplication, retries and observable state. Scores, Elo and advancement remain synchronous and atomic.
 
 Use separate staging/production projects, Netlify-compatible Next.js hosting and reviewed deployment migrations. Preserve RPO 5 minutes, RTO 30 minutes, encrypted off-site copies and retention targets until explicitly revised. Verify paid/available PITR and restore performance early; do not assume service-tier capability. External alerts, region and consent-process decisions precede real minors' data.
 

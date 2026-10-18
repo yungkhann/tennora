@@ -2,7 +2,7 @@
 
 ## Current implementation
 
-Task B implements localized `/[locale]/login`, `/forgot-password`, `/reset-password`, `/workspace`, `/organizer/staff` and `/settings/profile` for ru/kk/en. C1 adds `/organizer/seasons`; C2 adds `/team`, `/team/[teamId]` and `/subteam/[subteamId]` with private scope checks. C3b adds `/organizer/tournaments/[tourId]` for versioned settings and reusable stage plans; season pages expose readiness and the actual start action. Callbacks remain unlocalized. Old auth/workspace bookmarks redirect to Russian equivalents; signup redirects to staff login. Organization onboarding is retired. `/` and `/live` retain transitional public pages until G. Historical routes: archive/PHASE_1_ROUTES.md.
+Task B implements localized `/[locale]/login`, `/forgot-password`, `/reset-password`, `/workspace`, `/organizer/staff` and `/settings/profile` for ru/kk/en. C1 adds `/organizer/seasons`; C2 adds `/team`, `/team/[teamId]` and `/subteam/[subteamId]` with private scope checks. C3b adds `/organizer/tournaments/[tourId]` for versioned settings and reusable stage plans; season pages expose readiness and the actual start action. Callbacks remain unlocalized. Old auth/workspace bookmarks redirect to Russian equivalents; signup redirects to staff login. Organization onboarding is retired. `/` and `/live` redirect to the implemented Russian public home and live center. Historical routes: archive/PHASE_1_ROUTES.md.
 
 ## Target public routes (milestone G)
 
@@ -111,3 +111,5 @@ H adds public `GET /api/health`: operational clocks/status only, no-store, 503 o
 The authorized judge's score screen includes a localized retirement form with player side, required reason and explicit confirmation. It affects only the current singles. Uncertain command UUIDs survive HTTP throttling and temporary loss of authorization until a definitive RPC response reconciles them.
 
 The existing match correction route now offers a completed team forfeit's winner revision or reopening for actual play. Team proposals use the same private review/application route, show club identities and dependency effects, and require Organizer confirmation for started play. Applied reopening links to the fresh match's lineup route. Staff snapshots remain no-store; no early player identities or staff sessions are exposed publicly.
+
+Historical public player routes and metadata now use `get_public_player`, independently of the active ranking list. Approved profiles and effective match/rating history remain accessible after dropout, roster exit or transfer in RU/KK/EN; unknown/unpublished players remain 404. No DOB, contact, consent evidence or new unpublished transfer association is returned.

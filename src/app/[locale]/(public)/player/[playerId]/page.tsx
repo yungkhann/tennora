@@ -4,7 +4,7 @@ import { z } from "zod";
 import { notFound } from "next/navigation";
 import { localeOf } from "@/lib/locales";
 import { publicMessages } from "@/features/public/messages";
-import { publicPlayers, playerHistory } from "@/features/public/data";
+import { publicPlayer, playerHistory } from "@/features/public/data";
 import { Card } from "@/components/ui/card";
 export async function generateMetadata({
   params,
@@ -13,7 +13,7 @@ export async function generateMetadata({
 }) {
   const { playerId } = await params;
   if (!z.uuid().safeParse(playerId).success) return {};
-  const p = (await publicPlayers()).find((v) => v.id === playerId);
+  const p = await publicPlayer(playerId);
   return p
     ? { title: `${p.first_name} ${p.last_name} · ${p.team_name}` }
     : { title: "Tennora" };
@@ -27,7 +27,7 @@ export default async function Page({
     locale = localeOf(p.locale),
     t = publicMessages(locale);
   if (!z.uuid().safeParse(p.playerId).success) notFound();
-  const player = (await publicPlayers()).find((v) => v.id === p.playerId);
+  const player = await publicPlayer(p.playerId);
   if (!player) notFound();
   const history = await playerHistory(player.id),
     rated = history.filter((v) => v.after !== null),

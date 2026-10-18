@@ -1,6 +1,6 @@
 # Technical Requirements: Table Tennis League Management
 
-Revision 0.2 - 17 October 2026. Based on the source document dated 17 October 2026, attributed to @kelliosli. This revision records the user's confirmed Next.js/Supabase, single-league and multiple-staff-role choices. It is a requirements baseline, not a claim that the application implements the league. Preserve the original 16-page PDF unchanged.
+Revision 0.3 - 18 October 2026. The audit amendments I12–I14 clarify match retirement, team-forfeit correction and the current synchronous processing design; the original source PDF and generated revision 0.2 requirements PDF remain historical artifacts. Based on the source document dated 17 October 2026, attributed to @kelliosli. This revision records the user's confirmed Next.js/Supabase, single-league and multiple-staff-role choices. It is a requirements baseline, not a claim that the application implements the league. Preserve the original 16-page PDF unchanged.
 
 ## Revision summary
 
@@ -110,20 +110,20 @@ Staff use /organizer for seasons/settings/staff, /hall, /team, /team/{teamId}, /
 
 ## 4. Architecture and stack
 
-| Layer                | Revised requirement                                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Application          | Next.js App Router and TypeScript, server components by default, Server Actions and Route Handlers, Zod validation        |
-| UI                   | Existing Tailwind/shadcn components and tokens; responsive light/dark themes, translated labels and accessible controls   |
-| Auth                 | Supabase Auth; active staff and assigned roles stored in database, not user metadata                                      |
-| Database             | Supabase PostgreSQL; constrained functions/RLS, row locks, immutable histories and atomic mutations                       |
-| Real time            | Supabase Realtime for committed public-safe notifications; snapshots remain authoritative                                 |
-| Staff commands       | Same-origin HTTPS to Next.js; one user-authorized PostgreSQL RPC per scoring command                                      |
-| Private staff status | Authorized no-store polling/snapshots; never expose staff JWTs to add private browser subscriptions                       |
-| Delayed work         | Durable SQL jobs/outbox plus supported scheduling for ranking refresh, thumbnails and later import; retries/deduplication |
-| Files                | Private Supabase Storage; explicit consent and approved photo delivery/revocation; separate object backups                |
-| Deployment           | Netlify-compatible Next.js plus separate staging/production Supabase projects; local Supabase for development             |
-| Observability        | Error tracking, structured logs, transport/command/job/database metrics and event-day alerts                              |
-| Recovery             | Managed PITR capability plus encrypted off-site exports, object backups and measured restore rehearsal                    |
+| Layer                | Revised requirement                                                                                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Application          | Next.js App Router and TypeScript, server components by default, Server Actions and Route Handlers, Zod validation                                                           |
+| UI                   | Existing Tailwind/shadcn components and tokens; responsive light/dark themes, translated labels and accessible controls                                                      |
+| Auth                 | Supabase Auth; active staff and assigned roles stored in database, not user metadata                                                                                         |
+| Database             | Supabase PostgreSQL; constrained functions/RLS, row locks, immutable histories and atomic mutations                                                                          |
+| Real time            | Supabase Realtime for committed public-safe notifications; snapshots remain authoritative                                                                                    |
+| Staff commands       | Same-origin HTTPS to Next.js; one user-authorized PostgreSQL RPC per scoring command                                                                                         |
+| Private staff status | Authorized no-store polling/snapshots; never expose staff JWTs to add private browser subscriptions                                                                          |
+| Delayed work         | Synchronous SQL rankings and bounded request-time photo processing with retryable asset states (I14); future delayed work/import requires durable jobs/outbox and scheduling |
+| Files                | Private Supabase Storage; explicit consent and approved photo delivery/revocation; separate object backups                                                                   |
+| Deployment           | Netlify-compatible Next.js plus separate staging/production Supabase projects; local Supabase for development                                                                |
+| Observability        | Error tracking, structured logs, transport/command/job/database metrics and event-day alerts                                                                                 |
+| Recovery             | Managed PITR capability plus encrypted off-site exports, object backups and measured restore rehearsal                                                                       |
 
 Keep score/result/Elo/status/audit changes synchronous in one database transaction; delayed jobs may not award points or mutate official results independently. A pure TypeScript replay/scoring module must match authoritative SQL transitions through shared vectors and generated-command parity tests.
 
@@ -135,30 +135,30 @@ Secure HTTP-only staff cookies are server-refreshed. Anonymous public Realtime u
 
 Use UUIDs, created/updated timestamps, foreign keys and reviewed migrations. Preserve existing profiles, organizations, membership and audit history during transition; new league authority is separate.
 
-| Record family                     | Required fields/relationships and invariants                                                                             |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| staff_accounts / staff_roles      | Auth/profile ID, active/provisioning state, explicit coexisting roles; unique staff/role assignment, no self-grant       |
-| trainer_profiles / assignments    | Trainer identity, private contact, team/subteam scope; no cross-club assignment                                          |
-| teams / subteams / season entries | Club name/region; unique team/age group; season participation and roster history                                         |
-| players / memberships             | Names, gender, hand/style, DOB, sports level, rating/status, external ID; eligible active membership cap ten under races |
-| player_trainer_refs               | First/personal kind; linked trainer or free first/last name                                                              |
-| player_status_events              | Active/dropped-out status, effective date, reason and actor; preserve history                                            |
-| photo consent                     | Asset/evidence, consent status/version, actor/time and revocation handling                                               |
-| seasons / tours                   | Dates, locked configuration, tour ordinal and placement weight                                                           |
-| tournament_settings               | K/table count/rest/finals/version/effective time/actor; immutable versions                                               |
-| stage_templates / stages / groups | Ordered format data, qualifier/seeding maps and validated configuration                                                  |
-| stage_entries                     | Subteam, seed, frozen eligible players/ratings and draw revision                                                         |
-| standings / placements            | Stage/group game/set/point differences and place, tour placement, season score/rank/tie evidence, source revision        |
-| team_matches                      | Participants, stage/group/round, status, table/times, winner/result type and version                                     |
-| lineups / lineup_slots            | Unique match/subteam, submit/lock actor/time, slots 1..5, gender constraints and hidden/revealed revision                |
-| lineup_replacements               | Old/new player, slot, reason, privileged actor/time; approved mid-game semantics                                         |
-| singles_games / game_sets         | Match/slot/players/status/winner, set number/points/initial server/result; 11-point win-by-two checks                    |
-| point_events / receipts           | Ordered append-only commands/results, UUID idempotency, normalized payload, actor, before/after and versions             |
-| rating_history / rating_imports   | Initial/import/game provenance, before/after, K/settings/game; approved compensating correction history                  |
-| hall_tables / table_assignments   | Default twelve active tables, planned times, auto/manual actor, conflict/rest checks                                     |
-| line_judge_assignments            | Judge/table/venue day, unique judge/day; enforce table/day for every score command                                       |
-| audit_logs                        | Actor/effective role/action/entity/before/after/time/trusted request context; append-only; retain legacy context         |
-| public projections / jobs         | Only approved published columns; durable job ID/deduplication/revision/retry state                                       |
+| Record family                     | Required fields/relationships and invariants                                                                                                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| staff_accounts / staff_roles      | Auth/profile ID, active/provisioning state, explicit coexisting roles; unique staff/role assignment, no self-grant                                |
+| trainer_profiles / assignments    | Trainer identity, private contact, team/subteam scope; no cross-club assignment                                                                   |
+| teams / subteams / season entries | Club name/region; unique team/age group; season participation and roster history                                                                  |
+| players / memberships             | Names, gender, hand/style, DOB, sports level, rating/status, external ID; eligible active membership cap ten under races                          |
+| player_trainer_refs               | First/personal kind; linked trainer or free first/last name                                                                                       |
+| player_status_events              | Active/dropped-out status, effective date, reason and actor; preserve history                                                                     |
+| photo consent                     | Asset/evidence, consent status/version, actor/time and revocation handling                                                                        |
+| seasons / tours                   | Dates, locked configuration, tour ordinal and placement weight                                                                                    |
+| tournament_settings               | K/table count/rest/finals/version/effective time/actor; immutable versions                                                                        |
+| stage_templates / stages / groups | Ordered format data, qualifier/seeding maps and validated configuration                                                                           |
+| stage_entries                     | Subteam, seed, frozen eligible players/ratings and draw revision                                                                                  |
+| standings / placements            | Stage/group game/set/point differences and place, tour placement, season score/rank/tie evidence, source revision                                 |
+| team_matches                      | Participants, stage/group/round, status, table/times, winner/result type and version                                                              |
+| lineups / lineup_slots            | Unique match/subteam, submit/lock actor/time, slots 1..5, gender constraints and hidden/revealed revision                                         |
+| lineup_replacements               | Old/new player, slot, reason, privileged actor/time; approved mid-game semantics                                                                  |
+| singles_games / game_sets         | Match/slot/players/status/winner, set number/points/initial server/result; 11-point win-by-two checks                                             |
+| point_events / receipts           | Ordered append-only commands/results, UUID idempotency, normalized payload, actor, before/after and versions                                      |
+| rating_history / rating_imports   | Initial/import/game provenance, before/after, K/settings/game; approved compensating correction history                                           |
+| hall_tables / table_assignments   | Default twelve active tables, planned times, auto/manual actor, conflict/rest checks                                                              |
+| line_judge_assignments            | Judge/table/venue day, unique judge/day; enforce table/day for every score command                                                                |
+| audit_logs                        | Actor/effective role/action/entity/before/after/time/trusted request context; append-only; retain legacy context                                  |
+| public projections / jobs         | Only approved published columns; current synchronous projections and retryable photo states; durable job identity/retries for future delayed work |
 
 Database constraints and RPCs reject locked-lineup bypass, invalid slots/results, unauthorized actors, duplicate commands with changed payloads and simultaneous player/table use. A played team result needs three singles wins; forfeit/no-show exceptions must be explicit. Direct application writes cannot bypass audit or scoring invariants. Accounts/players soft-deactivate; preserve history and prevent destructive cascades. Index event sequence, match status/schedule/table, player membership/status and assignment lookups.
 
