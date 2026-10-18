@@ -176,6 +176,8 @@ const en = {
     "I confirm the season configuration. Starting freezes dates, registrations and stage plans; only prospective K changes remain available.",
   notReady: "Complete the readiness checklist before starting.",
   ready: "Ready to start",
+  unsupported_final_groups:
+    "Multiple final groups need knockout classification stages. A single final round-robin group is also supported.",
   no_tours: "Add at least one tournament.",
   missing_settings: "Configure settings for every tournament.",
   missing_stage_plans: "Configure all three age groups in every tournament.",
@@ -557,6 +559,8 @@ const ru: Messages = {
     "Подтверждаю конфигурацию сезона. Старт блокирует даты, регистрацию клубов и планы этапов; доступны только будущие изменения K.",
   notReady: "Перед стартом завершите проверку готовности.",
   ready: "Готов к старту",
+  unsupported_final_groups:
+    "Для нескольких итоговых групп добавьте классификационные сетки. Также поддерживается одна итоговая круговая группа.",
   no_tours: "Добавьте хотя бы один турнир.",
   missing_settings: "Настройте параметры каждого турнира.",
   missing_stage_plans: "Настройте все три возраста в каждом турнире.",
@@ -937,6 +941,8 @@ const kk: Messages = {
     "Маусым баптауын растаймын. Бастау күндерді, клуб тіркеуін және кезең жоспарларын бекітеді; тек болашақ K өзгерістері қолжетімді болады.",
   notReady: "Бастамас бұрын дайындық тізімін аяқтаңыз.",
   ready: "Бастауға дайын",
+  unsupported_final_groups:
+    "Бірнеше қорытынды топ үшін жіктеу торларын қосыңыз. Бір қорытынды айналмалы топ та қолдау табады.",
   no_tours: "Кемінде бір турнир қосыңыз.",
   missing_settings: "Әр турнирдің параметрлерін баптаңыз.",
   missing_stage_plans: "Әр турнирде үш жас тобын да баптаңыз.",

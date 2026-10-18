@@ -1,13 +1,15 @@
+import { SkipLink } from "@/components/skip-link";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 export const metadata: Metadata = {
   title: {
-    default: "Tennora — A better day on court",
+    default: "Tennora · Table Tennis League",
     template: "%s · Tennora",
   },
+  manifest: "/manifest.webmanifest",
   description:
-    "One table tennis league. Staff workspaces and league operations.",
+    "One table tennis league. Results, rankings and committed live scores.",
 };
 export default function RootLayout({
   children,
@@ -15,15 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-card focus:p-4"
-          >
-            Skip to content
-          </a>
+          <SkipLink />
           {children}
         </ThemeProvider>
       </body>

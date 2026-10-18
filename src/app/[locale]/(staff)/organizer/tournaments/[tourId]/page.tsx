@@ -1,3 +1,5 @@
+import { TourWeightForm } from "@/features/configuration/weight-form";
+import { publicMessages } from "@/features/public/messages";
 import { randomUUID } from "node:crypto";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -31,7 +33,7 @@ export default async function Page({
   if (!z.uuid().safeParse(p.tourId).success) notFound();
   const { data: tour, error } = await supabase
     .from("tours")
-    .select("id,name,season_id,seasons(name,status)")
+    .select("id,name,season_id,placement_weight,seasons(name,status)")
     .eq("id", p.tourId)
     .single();
   if (error || !tour) notFound();
@@ -66,6 +68,19 @@ export default async function Page({
         {t.seasons} · {tour.seasons.name}
       </Link>
       <h1 className="mt-4 break-words text-3xl font-semibold">{tour.name}</h1>
+      <Card className="mt-6 p-5">
+        <p className="mb-4 text-sm">
+          {publicMessages(locale).weight}:{" "}
+          {new Intl.NumberFormat(locale).format(tour.placement_weight)}
+        </p>
+        {!locked && (
+          <TourWeightForm
+            locale={locale}
+            tour={tour.id}
+            weight={tour.placement_weight}
+          />
+        )}
+      </Card>
       <p className="mt-3 text-sm leading-6 text-muted-foreground">
         {t.configurationIntro}
       </p>

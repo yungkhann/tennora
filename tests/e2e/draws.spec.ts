@@ -176,6 +176,48 @@ test("Main Judge reviews frozen seeds and classification paths, appends a draft 
       path: testInfo.outputPath("published-classification.png"),
       fullPage: true,
     });
+    const published = await f.admin
+      .from("draw_revisions")
+      .select("id")
+      .eq("plan_id", plans.data!.id)
+      .not("published_at", "is", null)
+      .single();
+    expect(published.error).toBeNull();
+    await page.goto(`/en/tournament/${f.tour}/draws/${published.data!.id}`);
+    await expect(
+      page.getByRole("heading", { name: "Group A", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Draws 1–8", exact: true }),
+    ).toBeVisible();
+    await page.goto("/en");
+    await expect(
+      page.getByRole("heading", {
+        name: "Table tennis. Every point counts.",
+        exact: true,
+      }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(page.viewportSize()!.width);
+    const ratingCell = await page
+      .locator("tbody tr")
+      .first()
+      .locator("td")
+      .last()
+      .boundingBox();
+    expect(ratingCell!.x + ratingCell!.width).toBeLessThanOrEqual(
+      page.viewportSize()!.width,
+    );
+    await page.screenshot({
+      path: testInfo.outputPath("public-home.png"),
+      fullPage: true,
+    });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
   } finally {
     test.setTimeout(120000);
     await trainerContext.close();

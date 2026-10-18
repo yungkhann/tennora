@@ -6,10 +6,10 @@ test("public navigation, accessible theme persistence and mobile layout", async 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "A better day on court." }),
+    page.getByRole("heading", { name: "Настольный теннис. Каждый розыгрыш." }),
   ).toBeVisible();
   const before = await page.locator("html").getAttribute("class");
-  await page.getByRole("button", { name: "Toggle color theme" }).click();
+  await page.getByRole("button", { name: "Переключить цветовую тему" }).click();
   await expect
     .poll(() => page.locator("html").getAttribute("class"))
     .not.toBe(before);
@@ -21,11 +21,13 @@ test("public navigation, accessible theme persistence and mobile layout", async 
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page.getByRole("link", { name: "Match center", exact: true }).click();
+  await page.getByRole("link", { name: "Матчи в эфире", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "The courts are quiet for now" }),
+    page.getByRole("heading", { name: "Матчи в эфире" }),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Sign in", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Вход для сотрудников", exact: true })
+    .click();
   await expect(page).toHaveURL(/\/ru\/login$/);
   await expect(page.getByLabel("Электронная почта")).toBeVisible();
   await page.goto("/register");
@@ -61,9 +63,7 @@ test("protected workspace requires authentication or explicit setup", async ({
 test("keyboard skip link leads to main content", async ({ page }) => {
   await page.goto("/");
   await page.keyboard.press("Tab");
-  await expect(
-    page.getByRole("link", { name: "Skip to content" }),
-  ).toBeFocused();
+  await expect(page.getByRole("link", { name: "К содержимому" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#main-content$/);
 });

@@ -94,7 +94,9 @@ export default async function Page({
                                 ? t.missing_settings
                                 : code === "missing_stage_plans"
                                   ? t.missing_stage_plans
-                                  : t.entry_count_mismatch}
+                                  : code === "unsupported_final_groups"
+                                    ? t.unsupported_final_groups
+                                    : t.entry_count_mismatch}
                           </li>
                         ))}
                     </ul>

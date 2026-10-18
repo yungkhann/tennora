@@ -10,7 +10,7 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | D - Draws/lineups         | Complete    | D1/D2/D3a/D3b/D3c verified; see milestone reports                                                |
 | E - Scoring/Elo           | Complete    | E1/E2/E3 corrections and continuation verified; see MILESTONE_E3B2_VERIFICATION.md               |
 | F - Hall operations       | Complete    | Hall allocation, bulk start, table/day controls and scale proof; see MILESTONE_F_VERIFICATION.md |
-| G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                             |
+| G - Public/locales/live   | Complete    | Public projections, rankings, committed live/recovery/PWA; see MILESTONE_G_VERIFICATION.md       |
 | H - Readiness             | Not started | Provider/recovery feasibility and complete integration evidence                                  |
 | I - Rehearsal/release     | Not started | All measured go-live gates pass; no silent integrity/privacy waivers                             |
 
@@ -53,3 +53,5 @@ E3b1 immutable correction proposals and deterministic team/qualifier/dependency 
 E3b2 atomic correction application, preserved dependent attempts, saved-K replay and continuation are verified in MILESTONE_E3B2_VERIFICATION.md. Task E is complete. Next is F: full hall allocation, start-all, ownership/override and continuation controls. Production deployment/load/recovery acceptance remains H/I.
 
 F is verified in MILESTONE_F_VERIFICATION.md: 809 database assertions, 128 unit tests, 34 responsive browser scenarios, Auth, real allocation/start-all races and a 72-subteam/288-match queue with twelve conflict-free initial allocations. Next is G: public safe projections, rankings/season scores, localized public pages and live/recovery/PWA delivery. H/I retain production deployment/load/restore/venue gates.
+
+G is verified in MILESTONE_G_VERIFICATION.md: curated public projections, weighted season standings/effective histories, RU/KK/EN public routes, real anonymous Realtime, polling/reconnect/stale-version recovery and a static-only PWA cache. All 839 SQL assertions, 128 unit tests, 36 responsive browser scenarios, Auth and production build pass. Next is H: complete CI/observability/load/restore/release tooling and factual provider/recovery readiness, then I rehearsal and release gates. No hosted deployment or venue acceptance is implied.

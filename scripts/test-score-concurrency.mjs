@@ -307,6 +307,7 @@ try {
     delete from public.table_judge_assignments where context_tour_id='${tour}';
     update public.match_sources set source_snapshot_id=null,source_result_id=null where match_id in(${matchScope});
     update public.team_matches set result_id=null,result_revision=0 where draw_id='${draw}';
+    delete from public.tour_placements where draw_id='${draw}';
     delete from public.team_match_results where match_id in(${matchScope});
     delete from public.group_standing_heads where group_id in(select id from public.stage_groups where draw_id='${draw}');
     delete from public.group_standing_snapshots where group_id in(select id from public.stage_groups where draw_id='${draw}');

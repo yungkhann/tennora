@@ -1,9 +1,15 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-export function Brand({ className }: { className?: string }) {
+export function Brand({
+  className,
+  href = "/",
+}: {
+  className?: string;
+  href?: string;
+}) {
   return (
     <Link
-      href="/"
+      href={href}
       aria-label="Tennora home"
       className={cn(
         "inline-flex items-center gap-2.5 text-2xl font-bold tracking-[-0.07em]",
