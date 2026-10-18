@@ -1,9 +1,12 @@
-import Link from "next/link";
 import { z } from "zod";
 import { notFound } from "next/navigation";
 import { localeOf } from "@/lib/locales";
 import { publicMessages } from "@/features/public/messages";
 import { publicDirectory, publicMatches } from "@/features/public/data";
+import {
+  TournamentHeader,
+  CompetitionTabs,
+} from "@/features/public/competition";
 import { LiveMatches } from "@/features/public/live";
 export default async function Page({
   params,
@@ -19,18 +22,20 @@ export default async function Page({
   if (!tour) notFound();
   return (
     <>
-      <Link
-        className="text-sm underline"
-        href={`/${locale}/tournament/${tour.id}`}
-      >
-        {tour.name}
-      </Link>
-      <h1 className="mt-5 mb-6 text-3xl font-semibold">{t.schedule}</h1>
+      <TournamentHeader tour={tour} locale={locale} />
+      <CompetitionTabs
+        tour={tour}
+        locale={locale}
+        draws={d.draws}
+        current="matches"
+      />
+      <h2 className="display-title mt-7 mb-5 text-3xl">{t.schedule}</h2>
       <LiveMatches
         initial={await publicMatches(tour.id)}
         locale={locale}
         tour={tour.id}
         all
+        browse
       />
     </>
   );

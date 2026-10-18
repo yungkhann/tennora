@@ -51,7 +51,7 @@ export default async function Page({
       <Link className="text-sm underline" href={`/${locale}/ranking`}>
         {t.ranking}
       </Link>
-      <header className="mt-6 flex flex-wrap items-center gap-6 border-b pb-8">
+      <header className="mt-6 flex flex-wrap items-center gap-6 rounded-2xl border bg-card p-6 sm:p-8">
         {player.has_photo && (
           <Image
             src={`/api/public/player-photo/${player.id}`}
@@ -66,12 +66,12 @@ export default async function Page({
           <p className="text-sm text-muted-foreground">
             {player.team_name} · {player.age_group}
           </p>
-          <h1 className="mt-2 break-words text-3xl font-semibold md:text-5xl">
+          <h1 className="display-title mt-2 break-words text-4xl md:text-6xl">
             {player.first_name} {player.last_name}
           </h1>
         </div>
-        <div className="rounded-xl border bg-card px-6 py-4">
-          <p className="text-xs text-muted-foreground">{t.rating}</p>
+        <div className="rounded-xl bg-accent px-6 py-4 text-accent-foreground">
+          <p className="text-xs font-semibold">{t.rating}</p>
           <p className="mt-1 font-mono text-4xl font-semibold tabular-nums">
             {new Intl.NumberFormat(locale).format(player.rating)}
           </p>

@@ -54,7 +54,10 @@ test("Organizer configures a season and tour; Main Judge cannot configure; start
     await page.getByLabel("Password", { exact: true }).fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await expect(page).toHaveURL(/\/en\/workspace$/);
-    await page.getByRole("link", { name: "Seasons", exact: true }).click();
+    await page
+      .getByRole("navigation", { name: "Workspace", exact: true })
+      .getByRole("link", { name: "Seasons", exact: true })
+      .click();
     await expect(page).toHaveURL(/\/en\/organizer\/seasons$/);
     const create = page.getByRole("form", {
       name: "Create season",

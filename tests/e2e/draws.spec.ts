@@ -24,7 +24,10 @@ test("Main Judge reviews frozen seeds and classification paths, appends a draft 
     await page.getByLabel("Password", { exact: true }).fill(f.password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await expect(page).toHaveURL(/\/en\/workspace$/);
-    await page.getByRole("link", { name: "Draws", exact: true }).click();
+    await page
+      .getByRole("navigation", { name: "Workspace", exact: true })
+      .getByRole("link", { name: "Draws", exact: true })
+      .click();
     await expect(page).toHaveURL(/\/en\/draws$/);
     const card = page
       .getByRole("heading", {
@@ -191,12 +194,9 @@ test("Main Judge reviews frozen seeds and classification paths, appends a draft 
       page.getByRole("link", { name: "Draws 1–8", exact: true }),
     ).toBeVisible();
     await page.goto("/en");
-    await expect(
-      page.getByRole("heading", {
-        name: "Table tennis. Every point counts.",
-        exact: true,
-      }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "EVERY MATCH.",
+    );
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(page.viewportSize()!.width);

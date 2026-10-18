@@ -330,7 +330,7 @@ export function Scoreboard({
           {t.teamWins} · A {snapshot.team_wins.a} : {snapshot.team_wins.b} B
         </p>
       </div>
-      <div className="relative grid grid-cols-2 overflow-hidden rounded-xl border bg-card">
+      <div className="judge-court">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 left-1/2 z-10 border-l-2 border-dashed border-border"
@@ -344,17 +344,17 @@ export function Scoreboard({
               aria-label={`${side} ${player.name}`}
               className="flex min-w-0 flex-col p-3 sm:p-5"
             >
-              <p className="min-h-8 text-xs text-muted-foreground break-words sm:min-h-4">
+              <p className="judge-team min-h-8 text-xs break-words sm:min-h-4">
                 {side.toUpperCase()} · {snapshot.teams[side]}
               </p>
               <h2 className="mt-2 min-h-14 text-lg leading-tight font-semibold break-words">
                 {player.name}
               </h2>
-              <p className="mt-2 min-h-6 text-xs font-semibold text-primary">
+              <p className="judge-server mt-2 min-h-6 text-xs font-semibold">
                 {serving ? `● ${t.server}` : "\u00a0"}
               </p>
               <Button
-                variant="ghost"
+                variant="court"
                 data-testid={`point-${side}`}
                 aria-label={`${t.point} ${side.toUpperCase()}`}
                 disabled={!playing}
@@ -362,7 +362,7 @@ export function Scoreboard({
                   if (e.repeat) e.preventDefault();
                 }}
                 onClick={() => send("point", side)}
-                className="my-2 h-auto min-h-36 w-full flex-col gap-0 rounded-lg border border-border bg-secondary py-5 font-mono text-7xl tabular-nums sm:min-h-44 sm:text-8xl"
+                className="my-2 h-auto min-h-36 w-full flex-col gap-0 rounded-xl border py-5 font-display text-7xl tabular-nums transition-colors sm:min-h-44 sm:text-8xl"
               >
                 <span data-testid={`points-${side}`}>
                   {side === "a"
@@ -384,7 +384,7 @@ export function Scoreboard({
               </p>
               <Button
                 className="mt-4 min-h-12 w-full whitespace-normal"
-                variant="outline"
+                variant="court"
                 disabled={!playing || snapshot.timeouts[side]}
                 onClick={() => send("timeout", side)}
               >
@@ -491,7 +491,12 @@ export function Scoreboard({
               />
               {t.retirementConfirm}
             </label>
-            <Button type="submit" variant="outline" disabled={!writable}>
+            <Button
+              type="submit"
+              variant="outline"
+              className="text-destructive"
+              disabled={!writable}
+            >
               {t.retirement}
             </Button>
           </fieldset>

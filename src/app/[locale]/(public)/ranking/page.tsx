@@ -34,8 +34,13 @@ export default async function Page({
     );
   return (
     <>
-      <h1 className="text-3xl font-semibold md:text-4xl">{t.ranking}</h1>
-      <form className="mt-6 mb-8 grid items-end gap-4 sm:grid-cols-[1fr_auto_auto]">
+      <header className="page-heading">
+        <div>
+          <p className="eyebrow mb-3">Tennora / {t.player}</p>
+          <h1>{t.ranking}</h1>
+        </div>
+      </header>
+      <form className="mb-6 grid items-end gap-4 rounded-2xl border bg-card p-5 sm:grid-cols-[1fr_auto_auto]">
         <label className="text-sm">
           {t.search}
           <Input name="q" defaultValue={q} maxLength={80} />

@@ -4,6 +4,11 @@ import { notFound } from "next/navigation";
 import { localeOf, messages } from "@/lib/locales";
 import { publicMessages } from "@/features/public/messages";
 import { publicDirectory, publicMatches } from "@/features/public/data";
+import {
+  BracketMatches,
+  TournamentHeader,
+  CompetitionTabs,
+} from "@/features/public/competition";
 import { MatchCard } from "@/features/public/components";
 export default async function Page({
   params,
@@ -24,6 +29,8 @@ export default async function Page({
   const d = await publicDirectory(),
     draw = d.draws.find((v) => v.id === p.drawId && v.tour_id === p.tourId);
   if (!draw) notFound();
+  const tour = d.tours.find((v) => v.id === p.tourId);
+  if (!tour) notFound();
   const selected = (await searchParams).group,
     group = draw.groups.find((v) => v.id === selected) ?? draw.groups[0],
     matches = (await publicMatches(p.tourId))
@@ -48,19 +55,21 @@ export default async function Page({
   };
   return (
     <>
-      <Link
-        className="text-sm underline"
-        href={`/${locale}/tournament/${p.tourId}`}
-      >
-        {t.tour}
-      </Link>
-      <h1 className="mt-5 text-3xl font-semibold">
+      <TournamentHeader tour={tour} locale={locale} />
+      <CompetitionTabs
+        tour={tour}
+        locale={locale}
+        draws={d.draws}
+        current={draw.id}
+      />
+      <h2 className="display-title mt-7 text-3xl">
         {t.draws} · {draw.age_group}
-      </h1>
-      <nav className="mt-6 flex flex-wrap gap-3">
+      </h2>
+      <nav className="mt-5 flex flex-wrap gap-2">
         {draw.groups.map((g) => (
           <Link
-            className={`rounded-lg border px-4 py-3 text-sm ${g.id === group?.id ? "bg-primary text-primary-foreground" : "bg-card"}`}
+            aria-current={g.id === group?.id ? "page" : undefined}
+            className={`rounded-full border px-4 py-3 text-xs font-bold ${g.id === group?.id ? "bg-primary text-primary-foreground" : "bg-card"}`}
             href={`?group=${g.id}`}
             key={g.id}
           >
@@ -156,10 +165,16 @@ export default async function Page({
               </table>
             </div>
           )}
-          <div className="mt-7 grid gap-5 lg:grid-cols-2">
-            {matches.map((v) => (
-              <MatchCard key={v.match_id} locale={locale} match={v.data} />
-            ))}
+          <div className="mt-7">
+            {group.kind === "knockout" ? (
+              <BracketMatches matches={matches} locale={locale} />
+            ) : (
+              <div className="grid gap-4 lg:grid-cols-2">
+                {matches.map((v) => (
+                  <MatchCard key={v.match_id} locale={locale} match={v.data} />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}

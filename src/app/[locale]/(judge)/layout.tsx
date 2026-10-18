@@ -1,3 +1,5 @@
+import { ThemeToggle } from "@/components/theme-toggle";
+import { publicMessages } from "@/features/public/messages";
 import Link from "next/link";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
@@ -39,6 +41,7 @@ export default async function JudgeLayout({
               </Link>
             ))}
           </nav>
+          <ThemeToggle label={publicMessages(locale).theme} />
           <form action={signOut}>
             <input type="hidden" name="locale" value={locale} />
             <Button variant="ghost" type="submit">

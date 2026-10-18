@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowUpRight, UserRound } from "lucide-react";
 import { PublicDataRefresh } from "@/features/public/refresh";
 import { Brand } from "@/components/brand";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -6,6 +7,7 @@ import { localeOf } from "@/lib/locales";
 import { publicMessages } from "@/features/public/messages";
 import { PublicLocaleLinks } from "@/features/public/locale-links";
 import { PublicInstall } from "@/features/public/install";
+import { PublicNavigation } from "@/features/public/navigation";
 export const dynamic = "force-dynamic";
 export default async function Layout({
   children,
@@ -17,50 +19,42 @@ export default async function Layout({
   const locale = localeOf((await params).locale),
     t = publicMessages(locale);
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[1480px] flex-col px-5 md:px-10">
+    <div className="public-shell">
       <PublicDataRefresh />
-      <header className="flex flex-wrap items-center justify-between gap-5 border-b py-5">
-        <Brand href={`/${locale}`} />
-        <nav
-          className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium"
-          aria-label={t.navigation}
-        >
-          {[
-            ["", t.home],
-            ["/live", t.live],
-            ["/ranking", t.ranking],
-            ["/seasons", t.seasons],
-            ["/teams", t.teams],
-          ].map(([path, label]) => (
+      <header className="site-header">
+        <div className="header-top">
+          <Brand href={`/${locale}`} />
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+            <PublicLocaleLinks locale={locale} label={t.language} />
+            <ThemeToggle label={t.theme} />
             <Link
-              className="min-h-11 py-3 hover:underline"
-              key={path}
-              href={`/${locale}${path}`}
+              className="staff-entry"
+              href={`/${locale}/login`}
+              aria-label={t.staff}
             >
-              {label}
+              <UserRound className="size-4" aria-hidden="true" />
+              <span className="hidden xl:inline">{t.staff}</span>
             </Link>
-          ))}
-        </nav>
-        <div className="flex flex-wrap items-center gap-3">
-          <PublicLocaleLinks locale={locale} label={t.language} />
-          <ThemeToggle label={t.theme} />
-          <Link
-            className="rounded-lg border px-4 py-3 text-sm"
-            href={`/${locale}/login`}
-          >
-            {t.staff}
-          </Link>
+          </div>
         </div>
+        <PublicNavigation locale={locale} />
       </header>
-      <main id="main-content" className="min-w-0 flex-1 py-8 md:py-12">
+      <main id="main-content" className="min-w-0 flex-1 py-6 md:py-9">
         {children}
       </main>
-      <footer className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t py-6 text-xs text-muted-foreground">
-        <p>
-          © {new Date().getUTCFullYear()} Tennora · {t.footer}
-        </p>
-        <Link href={`/${locale}/scoreboard`} className="underline">
+      <footer className="mt-10 flex flex-wrap items-center justify-between gap-5 border-t py-7 text-[11px] text-muted-foreground">
+        <div>
+          <Brand href={`/${locale}`} className="mb-2 text-foreground" />
+          <p>
+            © {new Date().getUTCFullYear()} · {t.footer}
+          </p>
+        </div>
+        <Link
+          href={`/${locale}/scoreboard`}
+          className="inline-flex min-h-11 items-center gap-2 font-semibold"
+        >
           {t.scoreboard}
+          <ArrowUpRight className="size-4" />
         </Link>
         <PublicInstall locale={locale} />
       </footer>

@@ -4,7 +4,10 @@ import { publicBrowserClient } from "@/lib/supabase/public-browser";
 import type { Locale } from "@/lib/locales";
 import { publicRowSchema, type PublicRow } from "./validation";
 import { publicMessages } from "./messages";
-import { MatchCard } from "./components";
+import { MatchCard, MatchStatusBadge } from "./components";
+import Link from "next/link";
+import { ArrowUpRight, Search, Trophy } from "lucide-react";
+import { designMessages } from "./design-messages";
 function PublicTimeout({ until, label }: { until: string; label: string }) {
   const [active, setActive] = useState(true);
   useEffect(() => {
@@ -22,6 +25,7 @@ export function LiveMatches({
   match,
   large = false,
   all = false,
+  browse = false,
 }: {
   initial: PublicRow[];
   locale: Locale;
@@ -29,7 +33,14 @@ export function LiveMatches({
   match?: string;
   large?: boolean;
   all?: boolean;
+  browse?: boolean;
 }) {
+  const [view, setView] = useState<"live" | "upcoming" | "finished" | "all">(
+    all ? "all" : "live",
+  );
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
+  const d = designMessages(locale);
   const [rows, setRows] = useState(initial),
     [connection, setConnection] = useState<
       "connecting" | "connected" | "polling" | "offline" | "resync"
@@ -183,23 +194,144 @@ export function LiveMatches({
   }, [tour, match]);
   const matches = rows
     .map((r) => r.data)
-    .filter((m) => all || match || ["called", "in_progress"].includes(m.status))
+    .filter(
+      (m) =>
+        browse || all || match || ["called", "in_progress"].includes(m.status),
+    )
     .sort(
       (a, b) =>
         (a.table ?? 999) - (b.table ?? 999) ||
         a.round - b.round ||
         a.number - b.number,
     );
+  const inView = (m: (typeof matches)[number], filter: typeof view) =>
+    filter === "all" ||
+    (filter === "live"
+      ? ["called", "in_progress"].includes(m.status)
+      : filter === "upcoming"
+        ? m.status === "scheduled"
+        : m.status === "finished");
+  const visibleMatches = matches.filter(
+    (m) =>
+      inView(m, view) &&
+      `${m.a.name ?? ""} ${m.b.name ?? ""} ${m.age_group}`
+        .toLocaleLowerCase(locale)
+        .includes(query.toLocaleLowerCase(locale)),
+  );
+  const featured =
+    visibleMatches.find((m) => m.id === selected) ?? visibleMatches[0];
   return (
     <>
+      {browse && (
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
+          <div className="live-filters" role="group" aria-label={t.filter}>
+            {(["live", "upcoming", "finished", "all"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                aria-pressed={view === v}
+                onClick={() => setView(v)}
+              >
+                {v === "live"
+                  ? d.liveNow
+                  : v === "upcoming"
+                    ? d.upcoming
+                    : v === "finished"
+                      ? d.finished
+                      : t.all}
+                <span className="text-[10px] opacity-65">
+                  {matches.filter((m) => inView(m, v)).length}
+                </span>
+              </button>
+            ))}
+          </div>
+          <label className="flex min-h-11 w-full items-center gap-2 rounded-full border bg-card px-4 sm:w-60">
+            <Search
+              className="size-4 shrink-0 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <input
+              className="min-w-0 flex-1 bg-transparent py-3 text-xs outline-none"
+              aria-label={d.searchMatches}
+              placeholder={d.searchMatches}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              maxLength={80}
+            />
+          </label>
+        </div>
+      )}
       <p
         role="status"
         aria-live="polite"
-        className="mb-5 text-xs text-muted-foreground"
+        className="connection-status mb-4"
+        data-state={connection}
       >
         {t[connection]}
       </p>
-      {matches.length ? (
+      {browse ? (
+        featured ? (
+          <div className="live-workspace">
+            <div className="match-list">
+              {visibleMatches.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  className="match-list-item"
+                  aria-pressed={featured.id === m.id}
+                  onClick={() => setSelected(m.id)}
+                >
+                  <span className="mb-3 flex items-center justify-between gap-2 text-[10px] text-muted-foreground">
+                    <span>
+                      {m.age_group} · {t.round} {m.round}
+                      {m.table ? ` · ${t.table} ${m.table}` : ""}
+                    </span>
+                    <MatchStatusBadge status={m.status} locale={locale} />
+                  </span>
+                  {(["a", "b"] as const).map((side) => (
+                    <span
+                      key={side}
+                      className="mt-2 flex items-center justify-between gap-3 text-xs"
+                    >
+                      <span className="min-w-0 break-words font-semibold">
+                        {m[side].name ?? t.pending}
+                      </span>
+                      <strong className="font-mono">
+                        {m.result
+                          ? side === "a"
+                            ? m.result.games_a
+                            : m.result.games_b
+                          : m.singles.filter(
+                              (g) =>
+                                g.status === "finished" && g.winner === side,
+                            ).length}
+                      </strong>
+                    </span>
+                  ))}
+                </button>
+              ))}
+            </div>
+            <div className="min-w-0">
+              <h2 className="eyebrow mb-3">{d.selectedMatch}</h2>
+              <MatchCard match={featured} locale={locale} large />
+              <Link
+                className="mt-4 flex min-h-16 items-center justify-between gap-3 rounded-2xl border bg-card px-5 text-xs font-bold"
+                href={`/${locale}/tournament/${featured.tour_id}`}
+              >
+                <span className="inline-flex items-center gap-3">
+                  <Trophy className="size-4 text-primary" />
+                  {d.tourContext}
+                </span>
+                <ArrowUpRight className="size-4" />
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <p className="rounded-2xl border border-dashed bg-card p-8 text-sm text-muted-foreground">
+            {view === "live" && !query ? t.noLive : d.noMatches}
+          </p>
+        )
+      ) : matches.length ? (
         <div
           className={`grid grid-cols-1 gap-5 ${match ? "" : "lg:grid-cols-2"} ${large && !match ? "2xl:grid-cols-3" : ""}`}
         >

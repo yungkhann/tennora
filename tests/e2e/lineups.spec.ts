@@ -197,7 +197,10 @@ test("Trainers lock hidden lineups; officials and opponents cannot read them; jo
     await login(page, f.emails[1], f.password);
     await login(aPage, f.emails[2], f.password);
     await login(bPage, emailB, f.password);
-    await aPage.getByRole("link", { name: "Matches", exact: true }).click();
+    await aPage
+      .getByRole("navigation", { name: "Workspace", exact: true })
+      .getByRole("link", { name: "Matches", exact: true })
+      .click();
     await expect(
       aPage.getByText(aSub.teams.name, { exact: false }).first(),
     ).toBeVisible();

@@ -78,7 +78,10 @@ test("club staff create, roster, transfer and drop a player with private history
         .error,
     ).toBeNull();
     await login(page, emails[0], password);
-    await page.getByRole("link", { name: "Clubs", exact: true }).click();
+    await page
+      .getByRole("navigation", { name: "Workspace", exact: true })
+      .getByRole("link", { name: "Clubs", exact: true })
+      .click();
     await expect(page).toHaveURL(/\/en\/team$/);
     const createClub = page.getByRole("form", {
       name: "Create club",

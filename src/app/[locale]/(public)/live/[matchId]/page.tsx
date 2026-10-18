@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import { notFound } from "next/navigation";
 import { localeOf } from "@/lib/locales";
@@ -17,7 +19,14 @@ export default async function Page({
   if (!match) notFound();
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="mb-6 text-2xl font-semibold">
+      <Link
+        className="mb-5 inline-flex min-h-11 items-center gap-2 text-xs font-bold text-muted-foreground"
+        href={`/${locale}/live`}
+      >
+        <ArrowLeft className="size-4" />
+        {t.live}
+      </Link>
+      <h1 className="display-title mb-6 text-3xl sm:text-4xl">
         {t.match} · {match.data.a.name ?? t.pending} /{" "}
         {match.data.b.name ?? t.pending}
       </h1>

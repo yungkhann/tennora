@@ -12,7 +12,7 @@ export function Brand({
       href={href}
       aria-label="Tennora home"
       className={cn(
-        "inline-flex items-center gap-2.5 text-2xl font-bold tracking-[-0.07em]",
+        "brand-wordmark inline-flex shrink-0 items-center gap-2.5",
         className,
       )}
     >
@@ -21,7 +21,7 @@ export function Brand({
         viewBox="0 0 32 32"
         className="size-8 shrink-0 text-primary"
       >
-        <rect width="32" height="32" rx="10" fill="currentColor" />
+        <rect width="32" height="32" rx="9" fill="currentColor" />
         <path
           d="M7 9h18M16 9v16M9 15h14"
           stroke="var(--brand-mark)"
@@ -29,7 +29,9 @@ export function Brand({
           fill="none"
         />
       </svg>
-      tennora<span className="text-primary">.</span>
+      <span>
+        tennora<span className="text-primary">.</span>
+      </span>
     </Link>
   );
 }

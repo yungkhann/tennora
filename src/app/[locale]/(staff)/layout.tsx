@@ -1,3 +1,6 @@
+import { NavLink } from "@/components/nav-link";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { publicMessages } from "@/features/public/messages";
 import Link from "next/link";
 import { hallMessages } from "@/features/hall/messages";
 import { Brand } from "@/components/brand";
@@ -18,42 +21,41 @@ export default async function StaffLayout({
     t = messages(locale);
   const { staff, roles } = await requireStaff(locale);
   return (
-    <div className="min-h-dvh md:grid md:grid-cols-[250px_1fr]">
-      <aside className="border-b bg-card p-6 md:border-r">
+    <div className="staff-shell">
+      <aside className="staff-sidebar">
         <Brand />
         <p className="eyebrow mt-8 mb-5">{t.league}</p>
-        <nav
-          aria-label={t.workspace}
-          className="grid grid-cols-2 gap-4 text-sm md:grid-cols-1"
-        >
-          <Link href={`/${locale}/workspace`}>{t.workspace}</Link>
+        <nav aria-label={t.workspace} className="staff-navigation">
+          <NavLink href={`/${locale}/workspace`}>{t.workspace}</NavLink>
           {roles.some((r) => r === "organizer" || r === "main_judge") && (
-            <Link href={`/${locale}/hall`}>{hallMessages(locale).title}</Link>
+            <NavLink href={`/${locale}/hall`}>
+              {hallMessages(locale).title}
+            </NavLink>
           )}
           {roles.includes("organizer") && (
-            <Link href={`/${locale}/organizer/staff`}>{t.staff}</Link>
+            <NavLink href={`/${locale}/organizer/staff`}>{t.staff}</NavLink>
           )}
           {roles.includes("organizer") && (
-            <Link href={`/${locale}/organizer/seasons`}>{t.seasons}</Link>
+            <NavLink href={`/${locale}/organizer/seasons`}>{t.seasons}</NavLink>
           )}
           {roles.some((r) =>
             ["organizer", "main_judge", "trainer"].includes(r),
-          ) && <Link href={`/${locale}/team`}>{t.teams}</Link>}
+          ) && <NavLink href={`/${locale}/team`}>{t.teams}</NavLink>}
           {roles.some((r) => r === "organizer" || r === "main_judge") && (
-            <Link href={`/${locale}/draws`}>{t.draws}</Link>
+            <NavLink href={`/${locale}/draws`}>{t.draws}</NavLink>
           )}
           {roles.some((r) =>
             ["organizer", "main_judge", "trainer"].includes(r),
-          ) && <Link href={`/${locale}/matches`}>{t.matches}</Link>}
+          ) && <NavLink href={`/${locale}/matches`}>{t.matches}</NavLink>}
           {roles.some((r) =>
             ["organizer", "main_judge", "line_judge"].includes(r),
           ) && (
-            <Link href={`/${locale}/linear-judge`}>
+            <NavLink href={`/${locale}/linear-judge`}>
               {scoringMessages(locale).desk}
-            </Link>
+            </NavLink>
           )}
-          <Link href={`/${locale}/settings/profile`}>{t.profile}</Link>
-          <Link href="/">{t.publicHome}</Link>
+          <NavLink href={`/${locale}/settings/profile`}>{t.profile}</NavLink>
+          <NavLink href="/">{t.publicHome}</NavLink>
         </nav>
         <p className="mt-8 break-words text-sm font-semibold">
           {staff.display_name}
@@ -76,14 +78,20 @@ export default async function StaffLayout({
               </Link>
             ))}
           </nav>
-          <form action={signOut}>
-            <input type="hidden" name="locale" value={locale} />
-            <Button variant="ghost" type="submit">
-              {t.signOut}
-            </Button>
-          </form>
+          <div className="flex items-center gap-3">
+            <ThemeToggle label={publicMessages(locale).theme} />
+            <form action={signOut}>
+              <input type="hidden" name="locale" value={locale} />
+              <Button variant="ghost" type="submit">
+                {t.signOut}
+              </Button>
+            </form>
+          </div>
         </header>
-        <main id="main-content" className="mx-auto max-w-6xl p-6 md:p-10">
+        <main
+          id="main-content"
+          className="staff-content mx-auto max-w-6xl p-5 md:p-8"
+        >
           {children}
         </main>
       </div>

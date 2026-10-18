@@ -96,6 +96,40 @@ test("Main Judge generates and publishes an eight-team seeded classification kno
         { exact: true },
       ),
     ).toHaveCount(0);
+    const publicPage = await page.context().newPage();
+    await publicPage.goto(`/en/tournament/${f.tour}`);
+    await publicPage
+      .getByRole("link", { name: "Draws · U13", exact: true })
+      .click();
+    const bracket = publicPage.getByRole("region", {
+      name: "Draws",
+      exact: true,
+    });
+    await expect(bracket).toBeVisible();
+    expect(await bracket.locator(".bracket-round").count()).toBeGreaterThan(1);
+    for (const width of [375, 430, 768, 1024, 1440]) {
+      await publicPage.setViewportSize({ width, height: 1000 });
+      expect(
+        await publicPage.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true);
+    }
+    await publicPage.screenshot({
+      path: `/tmp/tennora-bracket-${testInfo.project.name}.png`,
+      fullPage: true,
+      animations: "disabled",
+    });
+    await publicPage.setViewportSize({ width: 375, height: 1000 });
+    expect(
+      await bracket.evaluate((el) => el.scrollWidth > el.clientWidth),
+    ).toBe(true);
+    await bracket.focus();
+    await publicPage.keyboard.press("ArrowRight");
+    await expect
+      .poll(() => bracket.evaluate((el) => el.scrollLeft))
+      .toBeGreaterThan(0);
+    await publicPage.close();
   } finally {
     await f.cleanup();
   }

@@ -1,3 +1,4 @@
+import { Users } from "lucide-react";
 import Link from "next/link";
 import { localeOf } from "@/lib/locales";
 import { publicMessages } from "@/features/public/messages";
@@ -16,18 +17,28 @@ export default async function Page({
     ].sort((a, b) => a[1].localeCompare(b[1], locale));
   return (
     <>
-      <h1 className="mb-7 text-3xl font-semibold">{t.teams}</h1>
+      <header className="page-heading">
+        <div>
+          <p className="eyebrow mb-3">Tennora / {t.club}</p>
+          <h1>{t.teams}</h1>
+        </div>
+      </header>
       {!clubs.length ? (
         <EmptyCompetition locale={locale} />
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
           {clubs.map(([id, name]) => (
             <section
-              className="scroll-mt-6 rounded-xl border bg-card p-6"
+              className="scroll-mt-44 overflow-hidden rounded-2xl border bg-card p-5 sm:p-6"
               id={id}
               key={id}
             >
-              <h2 className="text-2xl font-semibold">{name}</h2>
+              <h2 className="flex items-center gap-3 border-b pb-5 text-xl font-bold">
+                <span className="feature-icon">
+                  <Users className="size-5" />
+                </span>
+                {name}
+              </h2>
               {["U13", "U15", "U17"]
                 .filter((age) =>
                   players.some((p) => p.team_id === id && p.age_group === age),
@@ -40,7 +51,7 @@ export default async function Page({
                         .filter((p) => p.team_id === id && p.age_group === age)
                         .map((p) => (
                           <li
-                            className="flex justify-between gap-4 text-sm"
+                            className="flex justify-between gap-4 border-b pb-3 text-xs last:border-0"
                             key={p.id}
                           >
                             <Link

@@ -1,3 +1,4 @@
+import { TournamentCard } from "@/features/public/competition";
 import Link from "next/link";
 import { z } from "zod";
 import { notFound } from "next/navigation";
@@ -23,20 +24,10 @@ export default async function Page({
       <Link href={`/${locale}/seasons`} className="text-sm underline">
         {t.seasons}
       </Link>
-      <h1 className="mt-5 text-3xl font-semibold md:text-4xl">{s.name}</h1>
+      <h1 className="display-title mt-5 text-4xl md:text-6xl">{s.name}</h1>
       <div className="mt-7 grid gap-4 md:grid-cols-3">
         {tours.map((v) => (
-          <Link
-            className="rounded-xl border bg-card p-5"
-            href={`/${locale}/tournament/${v.id}`}
-            key={v.id}
-          >
-            <p className="text-xs text-muted-foreground">
-              {t.tour} {v.ordinal} · {t.weight}{" "}
-              {new Intl.NumberFormat(locale).format(v.weight)}
-            </p>
-            <h2 className="mt-2 text-xl font-semibold">{v.name} ↗</h2>
-          </Link>
+          <TournamentCard key={v.id} tour={v} locale={locale} />
         ))}
       </div>
       <h2 className="mt-10 text-2xl font-semibold">{t.seasonStandings}</h2>

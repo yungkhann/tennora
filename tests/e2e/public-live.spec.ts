@@ -273,6 +273,8 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
       .click();
     await expect(page.getByRole("table")).toBeVisible();
     await page.goto(`/en/live/${m.id}`);
+    const languageMenu = page.locator(".site-header summary");
+    if (await languageMenu.isVisible()) await languageMenu.click();
     await page.getByRole("link", { name: "KK", exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/kk/live/${m.id}$`));
     await expect(page.getByRole("heading", { name: /Матч/ })).toBeVisible();

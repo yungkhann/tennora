@@ -5,9 +5,9 @@ test("public navigation, accessible theme persistence and mobile layout", async 
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: "Настольный теннис. Каждый розыгрыш." }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "КАЖДЫЙ МАТЧ.",
+  );
   const before = await page.locator("html").getAttribute("class");
   await page.getByRole("button", { name: "Переключить цветовую тему" }).click();
   await expect
@@ -21,7 +21,10 @@ test("public navigation, accessible theme persistence and mobile layout", async 
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page.getByRole("link", { name: "Матчи в эфире", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Навигация лиги" })
+    .getByRole("link", { name: "Матчи в эфире", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Матчи в эфире" }),
   ).toBeVisible();

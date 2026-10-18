@@ -160,7 +160,10 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
     await page.getByLabel("Password", { exact: true }).fill(f.password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await expect(page).toHaveURL(/\/en\/workspace$/);
-    await page.getByRole("link", { name: "Judge desk", exact: true }).click();
+    await page
+      .getByRole("navigation", { name: "Workspace", exact: true })
+      .getByRole("link", { name: "Judge desk", exact: true })
+      .click();
     await expect(
       page.getByRole("heading", { name: `Table ${table}`, exact: true }),
     ).toBeVisible();
@@ -209,6 +212,35 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
     ).toBe(400);
     await page.getByRole("button", { name: "Start · A serves" }).click();
     await expect(page.getByTestId("point-a")).toBeEnabled();
+    const controlContrast = await page
+      .locator(".judge-court button")
+      .evaluateAll((buttons) => {
+        const luminance = (css: string) => {
+          const channels = css
+            .match(/[\d.]+/g)!
+            .slice(0, 3)
+            .map(Number)
+            .map((v) => {
+              const n = v / 255;
+              return n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
+            });
+          return (
+            channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722
+          );
+        };
+        return buttons.map((button) => {
+          const style = getComputedStyle(button),
+            a = luminance(style.color),
+            b = luminance(style.backgroundColor);
+          return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        });
+      });
+    expect(Math.min(...controlContrast)).toBeGreaterThanOrEqual(4.5);
+    await page.screenshot({
+      path: `/tmp/tennora-judge-${testInfo.project.name}.png`,
+      fullPage: true,
+      animations: "disabled",
+    });
     expect(
       (
         await page.request.post("/api/scoring", {
