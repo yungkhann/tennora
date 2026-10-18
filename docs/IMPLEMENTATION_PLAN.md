@@ -47,3 +47,5 @@ E2b2 atomic score/event/result/Elo transactions are implemented; verification is
 E2c private judge discovery, validated HTTPS command/snapshot transport and RU/KK/EN tablet controls are implemented; see MILESTONE_E2C_VERIFICATION.md for verification. E3 official corrections/dependency resolution/saved-K replay remain before Task E is complete. Full hall operations, public live/rankings and operational release gates still follow in order.
 
 E3a rating anchors, linked-history integrity and private chronological saved-K replay are implemented; see MILESTONE_E3A_VERIFICATION.md. Official result amendment/reopen, dependent-match resolution and correction controls remain E3b before Task E is complete.
+
+E3b1 immutable correction proposals and deterministic team/qualifier/dependency preview are verified; see MILESTONE_E3B1_VERIFICATION.md (726 database assertions, 125 unit tests, 30 responsive browser scenarios, Auth, parity/concurrency and production build pass). The current official result remains unchanged during review. E3b2 atomic application, dependency resolution, continuation and official UI are the next batch before Task E is complete.

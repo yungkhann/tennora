@@ -1679,6 +1679,160 @@ export type Database = {
           },
         ];
       };
+      result_correction_events: {
+        Row: {
+          actor_id: string;
+          actor_role: Database["public"]["Enums"]["staff_role"];
+          after_state: NonNullable<Json>;
+          before_state: Json | null;
+          created_at: string;
+          id: string;
+          kind: string;
+          payload: NonNullable<Json>;
+          request_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          actor_id: string;
+          actor_role: Database["public"]["Enums"]["staff_role"];
+          after_state: NonNullable<Json>;
+          before_state?: Json | null;
+          created_at?: string;
+          id: string;
+          kind: string;
+          payload: NonNullable<Json>;
+          request_id: string;
+        };
+        Update: {
+          actor_id?: string;
+          actor_role?: Database["public"]["Enums"]["staff_role"];
+          after_state?: NonNullable<Json>;
+          before_state?: Json | null;
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          payload?: NonNullable<Json>;
+          request_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "result_correction_events_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "result_correction_events_request_id_fkey";
+            columns: ["request_id"];
+            isOneToOne: false;
+            referencedRelation: "result_correction_requests";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      result_correction_requests: {
+        Row: {
+          base_result_id: string;
+          created_at: string;
+          game_id: string;
+          id: string;
+          payload: NonNullable<Json>;
+          proposed_kind: string;
+          proposed_state: NonNullable<Json>;
+          proposed_winner: string;
+          reason: string;
+          submitted_by: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          base_result_id: string;
+          created_at?: string;
+          game_id: string;
+          id: string;
+          payload: NonNullable<Json>;
+          proposed_kind: string;
+          proposed_state: NonNullable<Json>;
+          proposed_winner: string;
+          reason: string;
+          submitted_by: string;
+        };
+        Update: {
+          base_result_id?: string;
+          created_at?: string;
+          game_id?: string;
+          id?: string;
+          payload?: NonNullable<Json>;
+          proposed_kind?: string;
+          proposed_state?: NonNullable<Json>;
+          proposed_winner?: string;
+          reason?: string;
+          submitted_by?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "result_correction_requests_base_result_id_fkey";
+            columns: ["base_result_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_results";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "result_correction_requests_game_id_fkey";
+            columns: ["game_id"];
+            isOneToOne: false;
+            referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "result_correction_requests_submitted_by_fkey";
+            columns: ["submitted_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      result_correction_states: {
+        Row: {
+          request_id: string;
+          status: string;
+          updated_at: string;
+          updated_by: string;
+          version: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          request_id: string;
+          status?: string;
+          updated_at?: string;
+          updated_by: string;
+          version?: number;
+        };
+        Update: {
+          request_id?: string;
+          status?: string;
+          updated_at?: string;
+          updated_by?: string;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "result_correction_states_request_id_fkey";
+            columns: ["request_id"];
+            isOneToOne: true;
+            referencedRelation: "result_correction_requests";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "result_correction_states_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       roster_memberships: {
         Row: {
           created_at: string;
@@ -3160,6 +3314,7 @@ export type Database = {
       get_judge_desk: { Args: Record<PropertyKey, never>; Returns: Json };
       get_lineup_status: { Args: { match: string }; Returns: Json };
       get_match_operation: { Args: { match: string }; Returns: Json };
+      get_result_correction: { Args: { request_id: string }; Returns: Json };
       is_player_photo_approved: { Args: { asset: string }; Returns: boolean };
       lineup_match_names: {
         Args: { matches: string[] };
@@ -3301,6 +3456,18 @@ export type Database = {
           match: string;
           players: string[];
           subteam: string;
+        };
+        Returns: Json;
+      };
+      submit_result_correction: {
+        Args: {
+          base_result: string;
+          game: string;
+          kind: string;
+          reason: string;
+          request_id: string;
+          score: Json;
+          winner: string;
         };
         Returns: Json;
       };

@@ -193,6 +193,40 @@ try {
   }
   prepare(games[0], false, 32);
   const staleMs = await compete(games[0], false, "stale");
+  const reviewId = randomUUID(),
+    reviewApp = `tennora-review-${token}`;
+  const originalResult = sql(
+    `select result_id from public.singles_games where id='${games[0]}'`,
+  ).trim();
+  const reviewPayload = `select public.submit_result_correction('${reviewId}','${games[0]}','${originalResult}','played','a','{"initial_server":"a","sets":[{"a":11,"b":1},{"a":11,"b":0},{"a":11,"b":0}],"timeouts":{"a":false,"b":false}}','Review race');`;
+  const reviewA = session(
+    `set application_name='${reviewApp}';begin;${claims(users[0])}${reviewPayload}select pg_sleep(2);commit;`,
+  );
+  let reviewWaiting = false;
+  for (let i = 0; i < 50; i++) {
+    if (
+      sql(
+        `select count(*) from pg_stat_activity where application_name='${reviewApp}' and wait_event='PgSleep'`,
+      ).trim() === "1"
+    ) {
+      reviewWaiting = true;
+      break;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  }
+  if (!reviewWaiting) throw new Error("Correction review barrier not reached");
+  const reviewBegan = Date.now(),
+    reviewB = session(`begin;${claims(users[0])}${reviewPayload}commit;`);
+  const reviewResults = await Promise.all([reviewA, reviewB]),
+    reviewMs = Date.now() - reviewBegan;
+  if (
+    reviewResults.some((v) => v.code !== 0) ||
+    reviewMs < 700 ||
+    sql(
+      `select count(*) from public.result_correction_events where request_id='${reviewId}'`,
+    ).trim() !== "1"
+  )
+    throw new Error("Correction review receipt race failed");
   prepare(games[1], true, 33);
   prepare(games[2], true, 32);
   const duplicateMs = await compete(games[2], true, "duplicate");
@@ -204,12 +238,15 @@ try {
       "Atomic team completion/resource/advancement invariant failed",
     );
   console.log(
-    `PASS: finishing point races overlap ${staleMs}/${duplicateMs} ms; stale command rejected, exact duplicate acknowledged once, one result/Elo pair per singles, atomic team completion/advancement/resource release; no global administration locks during points; an exclusive saved-K replay safely waits for the shared finishing transaction.`,
+    `PASS: finishing point races overlap ${staleMs}/${duplicateMs} ms; stale command rejected, exact duplicate acknowledged once, one result/Elo pair per singles, atomic team completion/advancement/resource release; no global administration locks during points; an exclusive saved-K replay safely waits for the shared finishing transaction; correction review retries overlap ${reviewMs} ms with one immutable event.`,
   );
 } finally {
   // Only random fixture IDs are removed; existing league accounts/history stay untouched.
   sql(`begin;
     delete from public.audit_logs where actor_id in(${users.map((id) => `'${id}'`).join(",")});
+    delete from public.result_correction_events where request_id in(select id from public.result_correction_requests where game_id in(${gameScope}));
+    delete from public.result_correction_states where request_id in(select id from public.result_correction_requests where game_id in(${gameScope}));
+    delete from public.result_correction_requests where game_id in(${gameScope});
     delete from public.active_score_points where game_id in(${gameScope});
     delete from public.score_events where game_id in(${gameScope});
     delete from public.game_sets where game_id in(${gameScope});
