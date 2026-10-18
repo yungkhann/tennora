@@ -105,6 +105,13 @@ export async function drawFixture(
             if (corrections.data?.length) {
               const ids = corrections.data.map((v) => v.id);
               await remove(
+                "correction attempts",
+                admin
+                  .from("correction_attempts")
+                  .delete()
+                  .in("request_id", ids),
+              );
+              await remove(
                 "correction events",
                 admin
                   .from("result_correction_events")

@@ -125,6 +125,53 @@ export type Database = {
           },
         ];
       };
+      correction_attempts: {
+        Row: {
+          created_at: string;
+          new_match_id: string;
+          old_match_id: string;
+          original: NonNullable<Json>;
+          request_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          new_match_id: string;
+          old_match_id: string;
+          original: NonNullable<Json>;
+          request_id: string;
+        };
+        Update: {
+          created_at?: string;
+          new_match_id?: string;
+          old_match_id?: string;
+          original?: NonNullable<Json>;
+          request_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "correction_attempts_new_match_id_fkey";
+            columns: ["new_match_id"];
+            isOneToOne: true;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "correction_attempts_old_match_id_fkey";
+            columns: ["old_match_id"];
+            isOneToOne: true;
+            referencedRelation: "team_matches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "correction_attempts_request_id_fkey";
+            columns: ["request_id"];
+            isOneToOne: false;
+            referencedRelation: "result_correction_requests";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       draw_entries: {
         Row: {
           draw_id: string;
@@ -2802,6 +2849,7 @@ export type Database = {
           status: Database["public"]["Enums"]["team_match_status"];
           subteam_a: string | null;
           subteam_b: string | null;
+          superseded_by: string | null;
           version: number;
         };
         ComputedFields: never;
@@ -2825,6 +2873,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["team_match_status"];
           subteam_a?: string | null;
           subteam_b?: string | null;
+          superseded_by?: string | null;
           version?: number;
         };
         Update: {
@@ -2847,6 +2896,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["team_match_status"];
           subteam_a?: string | null;
           subteam_b?: string | null;
+          superseded_by?: string | null;
           version?: number;
         };
         Relationships: [
@@ -2890,6 +2940,13 @@ export type Database = {
             columns: ["subteam_b"];
             isOneToOne: false;
             referencedRelation: "subteams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matches_superseded_by_fkey";
+            columns: ["superseded_by"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
             referencedColumns: ["id"];
           },
         ];
@@ -3163,6 +3220,16 @@ export type Database = {
         Args: { birth_year: number; season_year: number };
         Returns: string;
       };
+      apply_result_correction: {
+        Args: {
+          command_id: string;
+          expected_digest: string;
+          reason: string;
+          request_id: string;
+          resolve_started: boolean;
+        };
+        Returns: Json;
+      };
       assign_table_judge: {
         Args: {
           assignment_id: string;
@@ -3355,6 +3422,15 @@ export type Database = {
           replacement_id: string;
           slot: number;
           subteam: string;
+        };
+        Returns: Json;
+      };
+      resume_corrected_match: {
+        Args: {
+          command_id: string;
+          expected_version: number;
+          match: string;
+          reason: string;
         };
         Returns: Json;
       };

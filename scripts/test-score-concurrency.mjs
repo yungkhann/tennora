@@ -237,13 +237,54 @@ try {
     throw new Error(
       "Atomic team completion/resource/advancement invariant failed",
     );
+  const applyId = randomUUID();
+  const digest = sql(
+    `begin;${claims(users[0])}select public.get_result_correction('${reviewId}')->'plan'->>'digest';commit;`,
+  )
+    .trim()
+    .split("\n")
+    .find((v) => /^[a-f0-9]{32}$/.test(v));
+  if (!digest) throw new Error("Current correction digest required");
+  const applyPayload = `select public.apply_result_correction('${applyId}','${reviewId}','${digest}',false,'Apply race');`;
+  const applyA = session(
+    `set application_name='${reviewApp}';begin;${claims(users[0])}${applyPayload}select pg_sleep(2);commit;`,
+  );
+  let applyWaiting = false;
+  for (let i = 0; i < 50; i++) {
+    if (
+      sql(
+        `select count(*) from pg_stat_activity where application_name='${reviewApp}' and wait_event='PgSleep'`,
+      ).trim() === "1"
+    ) {
+      applyWaiting = true;
+      break;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  }
+  if (!applyWaiting) throw new Error("Correction apply barrier not reached");
+  const applyBegan = Date.now(),
+    applyB = session(`begin;${claims(users[0])}${applyPayload}commit;`),
+    applyResults = await Promise.all([applyA, applyB]),
+    applyMs = Date.now() - applyBegan;
+  if (
+    applyResults.some((v) => v.code !== 0) ||
+    applyMs < 700 ||
+    sql(
+      `select count(*) from public.result_correction_events where id='${applyId}' and kind='applied'`,
+    ).trim() !== "1" ||
+    sql(
+      `select result_revision from public.singles_games where id='${games[0]}'`,
+    ).trim() !== "2"
+  )
+    throw new Error("Correction apply race failed");
   console.log(
-    `PASS: finishing point races overlap ${staleMs}/${duplicateMs} ms; stale command rejected, exact duplicate acknowledged once, one result/Elo pair per singles, atomic team completion/advancement/resource release; no global administration locks during points; an exclusive saved-K replay safely waits for the shared finishing transaction; correction review retries overlap ${reviewMs} ms with one immutable event.`,
+    `PASS: finishing point races overlap ${staleMs}/${duplicateMs} ms; stale command rejected, exact duplicate acknowledged once, one result/Elo pair per singles, atomic team completion/advancement/resource release; no global administration locks during points; an exclusive saved-K replay safely waits for the shared finishing transaction; correction review/apply retries overlap ${reviewMs}/${applyMs} ms with one event per command.`,
   );
 } finally {
   // Only random fixture IDs are removed; existing league accounts/history stay untouched.
   sql(`begin;
     delete from public.audit_logs where actor_id in(${users.map((id) => `'${id}'`).join(",")});
+    delete from public.correction_attempts where request_id in(select id from public.result_correction_requests where game_id in(${gameScope}));
     delete from public.result_correction_events where request_id in(select id from public.result_correction_requests where game_id in(${gameScope}));
     delete from public.result_correction_states where request_id in(select id from public.result_correction_requests where game_id in(${gameScope}));
     delete from public.result_correction_requests where game_id in(${gameScope});

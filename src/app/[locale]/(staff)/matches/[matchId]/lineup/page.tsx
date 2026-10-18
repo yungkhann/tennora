@@ -1,3 +1,4 @@
+import { correctionMessages } from "@/features/corrections/messages";
 import { randomUUID } from "node:crypto";
 import Link from "next/link";
 import { requireLineupMatch } from "@/features/lineups/access";
@@ -84,6 +85,14 @@ export default async function Page({
       <h1 className="mt-2 break-words text-3xl font-semibold">
         {context.teams[0].name} / {context.teams[1].name}
       </h1>
+      {context.official && status.revealed && (
+        <Link
+          className="mt-4 inline-block text-sm underline"
+          href={`/${locale}/matches/${match.id}/corrections`}
+        >
+          {correctionMessages(locale).title}
+        </Link>
+      )}
       <p className="mt-4 rounded-lg border bg-card p-4 text-sm" role="status">
         {status.revealed ? t.lineupsRevealed : t.lineupsHidden}
       </p>

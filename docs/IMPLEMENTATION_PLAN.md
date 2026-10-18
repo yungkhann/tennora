@@ -8,7 +8,7 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
 | C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                   |
 | D - Draws/lineups         | Complete    | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
-| E - Scoring/Elo           | In progress | E1/E2 scoring, Elo and judge controls verified; E3 corrections remain                           |
+| E - Scoring/Elo           | Complete    | E1/E2/E3 corrections and continuation verified; see MILESTONE_E3B2_VERIFICATION.md              |
 | F - Hall operations       | Not started | D09 venue/rest/finals/device policy                                                             |
 | G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                            |
 | H - Readiness             | Not started | Provider/recovery feasibility and complete integration evidence                                 |
@@ -49,3 +49,5 @@ E2c private judge discovery, validated HTTPS command/snapshot transport and RU/K
 E3a rating anchors, linked-history integrity and private chronological saved-K replay are implemented; see MILESTONE_E3A_VERIFICATION.md. Official result amendment/reopen, dependent-match resolution and correction controls remain E3b before Task E is complete.
 
 E3b1 immutable correction proposals and deterministic team/qualifier/dependency preview are verified; see MILESTONE_E3B1_VERIFICATION.md (726 database assertions, 125 unit tests, 30 responsive browser scenarios, Auth, parity/concurrency and production build pass). The current official result remains unchanged during review. E3b2 atomic application, dependency resolution, continuation and official UI are the next batch before Task E is complete.
+
+E3b2 atomic correction application, preserved dependent attempts, saved-K replay and continuation are verified in MILESTONE_E3B2_VERIFICATION.md. Task E is complete. Next is F: full hall allocation, start-all, ownership/override and continuation controls. Production deployment/load/recovery acceptance remains H/I.
