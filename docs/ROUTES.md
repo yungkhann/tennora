@@ -105,3 +105,9 @@ The UI uses committed acknowledgements without optimistic or offline scoring. It
 The manifest and generated brand icons support installation. The service worker positively allowlists only four static public shell assets. It never caches navigations, Auth/session/private APIs, score commands or even public score responses. Offline scoring is unavailable. Its scope does not grant private data access; all non-allowlisted requests use the network.
 
 H adds public `GET /api/health`: operational clocks/status only, no-store, 503 on dependency failure, five-second database timeout. Scoring responses include redacted request IDs and transport/RPC timing without changing verified-session authorization or cache rules.
+
+## Audit corrections — retirement and team forfeits
+
+The authorized judge's score screen includes a localized retirement form with player side, required reason and explicit confirmation. It affects only the current singles. Uncertain command UUIDs survive HTTP throttling and temporary loss of authorization until a definitive RPC response reconciles them.
+
+The existing match correction route now offers a completed team forfeit's winner revision or reopening for actual play. Team proposals use the same private review/application route, show club identities and dependency effects, and require Organizer confirmation for started play. Applied reopening links to the fresh match's lineup route. Staff snapshots remain no-store; no early player identities or staff sessions are exposed publicly.

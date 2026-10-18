@@ -1975,39 +1975,45 @@ export type Database = {
       };
       result_correction_requests: {
         Row: {
-          base_result_id: string;
+          base_result_id: string | null;
+          base_team_result_id: string | null;
           created_at: string;
-          game_id: string;
+          game_id: string | null;
           id: string;
+          match_id: string | null;
           payload: NonNullable<Json>;
           proposed_kind: string;
           proposed_state: NonNullable<Json>;
-          proposed_winner: string;
+          proposed_winner: string | null;
           reason: string;
           submitted_by: string;
         };
         ComputedFields: never;
         Insert: {
-          base_result_id: string;
+          base_result_id?: string | null;
+          base_team_result_id?: string | null;
           created_at?: string;
-          game_id: string;
+          game_id?: string | null;
           id: string;
+          match_id?: string | null;
           payload: NonNullable<Json>;
           proposed_kind: string;
           proposed_state: NonNullable<Json>;
-          proposed_winner: string;
+          proposed_winner?: string | null;
           reason: string;
           submitted_by: string;
         };
         Update: {
-          base_result_id?: string;
+          base_result_id?: string | null;
+          base_team_result_id?: string | null;
           created_at?: string;
-          game_id?: string;
+          game_id?: string | null;
           id?: string;
+          match_id?: string | null;
           payload?: NonNullable<Json>;
           proposed_kind?: string;
           proposed_state?: NonNullable<Json>;
-          proposed_winner?: string;
+          proposed_winner?: string | null;
           reason?: string;
           submitted_by?: string;
         };
@@ -2020,10 +2026,24 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "result_correction_requests_base_team_result_id_fkey";
+            columns: ["base_team_result_id"];
+            isOneToOne: false;
+            referencedRelation: "team_match_results";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "result_correction_requests_game_id_fkey";
             columns: ["game_id"];
             isOneToOne: false;
             referencedRelation: "singles_games";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "result_correction_requests_match_id_fkey";
+            columns: ["match_id"];
+            isOneToOne: false;
+            referencedRelation: "team_matches";
             referencedColumns: ["id"];
           },
           {
@@ -3838,6 +3858,17 @@ export type Database = {
           reason: string;
           request_id: string;
           score: Json;
+          winner: string;
+        };
+        Returns: Json;
+      };
+      submit_team_result_correction: {
+        Args: {
+          base_result: string;
+          kind: string;
+          match: string;
+          reason: string;
+          request_id: string;
           winner: string;
         };
         Returns: Json;

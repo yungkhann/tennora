@@ -28,7 +28,7 @@ export default async function Page({
     <>
       <Link
         className="text-sm underline"
-        href={`/${locale}/matches/${plan.match_id}/corrections`}
+        href={`/${locale}/matches/${r.current_match_id ?? plan.match_id}/corrections`}
       >
         {t.title}
       </Link>
@@ -38,21 +38,37 @@ export default async function Page({
       <p className="mt-4">
         A {r.original.player_a_name} / B {r.original.player_b_name}
       </p>
-      <p className="mt-2 text-sm">
-        {t.savedK}: <span className="font-mono">{r.original.k}</span>
-      </p>
+      {r.original.k !== null && (
+        <p className="mt-2 text-sm">
+          {t.savedK}: <span className="font-mono">{r.original.k}</span>
+        </p>
+      )}
       <p className="mt-4 break-words">{r.reason}</p>
       <p className="mt-3">
-        {t.winner}: {r.winner.toUpperCase()} ·{" "}
-        {r.kind === "played" ? t.played : t.withdrawal}
+        {r.winner && `${t.winner}: ${r.winner.toUpperCase()} · `}
+        {r.kind === "reopen"
+          ? t.reopen
+          : r.kind === "team_forfeit"
+            ? t.forfeit
+            : r.kind === "played"
+              ? t.played
+              : t.withdrawal}
       </p>
       <p className="mt-2 font-mono tabular-nums">
         {r.score.sets.map((v) => `${v.a}:${v.b}`).join(" / ")}
       </p>
       {r.status === "applied" ? (
-        <p className="mt-6" role="status">
-          {t.applied}
-        </p>
+        <div className="mt-6">
+          <p role="status">{t.applied}</p>
+          {r.kind === "reopen" && r.current_match_id && (
+            <Link
+              className="mt-4 inline-block underline"
+              href={`/${locale}/matches/${r.current_match_id}/lineup`}
+            >
+              {t.freshMatch}
+            </Link>
+          )}
+        </div>
       ) : plan.stale ? (
         <p className="mt-6" role="alert">
           {t.stale}
@@ -66,7 +82,11 @@ export default async function Page({
                 {plan.games_a} : {plan.games_b}
               </span>
             </h2>
-            {!plan.team_complete && <p className="mt-3 text-sm">{t.pending}</p>}
+            {!plan.team_complete && (
+              <p className="mt-3 text-sm">
+                {r.kind === "reopen" ? t.reopenHelp : t.pending}
+              </p>
+            )}
             <p className="mt-4 text-sm">
               {t.trailing}:{" "}
               {plan.trailing_games?.map((v) => v.slot).join(", ") || "0"}

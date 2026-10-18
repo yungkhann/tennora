@@ -67,7 +67,7 @@ select throws_ok($$select * from public.subteams$$,'42501',null,'public player p
 reset role;
 set local role anon;
 select ok(not ((select payload from public_fixture)::text ~ 'date_of_birth|submitted_by|actor_id|email|consent|score_events'),'public match projection contains approved fields only');
-select is(jsonb_array_length(public.get_public_directory()->'seasons'),1,'directory lists published seasons');
+select is((select count(*)::int from jsonb_array_elements(public.get_public_directory()->'seasons') value where value->>'id'='bbbbf100-0000-4000-8000-000000000001'),1,'directory lists this published season alongside existing league data');
 select is(jsonb_array_length(public.get_public_season_standings('bbbbf100-0000-4000-8000-000000000001')),6,'standings include three subteams per registered club');
 select ok((public.get_public_season_standings('bbbbf100-0000-4000-8000-000000000001')->0->>'provisional')::boolean,'unfinished tours remain provisional');
 select throws_ok($$select * from public.lineup_slots$$,'42501',null,'public projection grants no private lineup access');

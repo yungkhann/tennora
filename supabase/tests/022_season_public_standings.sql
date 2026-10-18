@@ -123,7 +123,7 @@ select throws_ok($$select public.configure_tour_weight('ccccf200-0000-4000-8000-
 select throws_ok($$select public.configure_tour_weight('ccccf200-0000-4000-8000-000000000099',1.0001)$$,'22023','Valid tour weight required','unsupported tour-weight precision is rejected');
 reset role;
 set local role anon;
-select is(jsonb_array_length(public.get_public_directory()->'seasons'),1,'draft setup remains absent from the public directory');
+select is((select count(*)::int from jsonb_array_elements(public.get_public_directory()->'seasons') value where value->>'id'='bbbbf200-0000-4000-8000-000000000099'),0,'draft setup remains absent from the public directory');
 reset role;
 select * from finish();
 rollback;

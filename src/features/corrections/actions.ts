@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireDrawManager } from "@/features/draws/access";
 import { localeOf } from "@/lib/locales";
 import type { FormState } from "@/lib/validation";
-import { proposalSchema, applySchema } from "./validation";
+import { proposalSchema, applySchema, teamProposalSchema } from "./validation";
 import { correctionMessages } from "./messages";
 export async function proposeCorrection(
   _old: FormState,
@@ -70,4 +70,29 @@ export async function applyCorrection(
   revalidatePath(`/${locale}/draws`, "layout");
   revalidatePath(`/${locale}/corrections/${d.request}`);
   return { status: "success", message: t.applied };
+}
+
+export async function proposeTeamCorrection(
+  _old: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const locale = localeOf(form.get("locale")),
+    t = correctionMessages(locale),
+    staff = await requireDrawManager(locale),
+    parsed = teamProposalSchema.safeParse({
+      ...Object.fromEntries(form),
+      winner: form.get("kind") === "reopen" ? null : form.get("winner"),
+    });
+  if (!parsed.success) return { status: "error", message: t.failed };
+  const d = parsed.data;
+  const result = await staff.supabase.rpc("submit_team_result_correction", {
+    request_id: d.id,
+    match: d.match,
+    base_result: d.base,
+    kind: d.kind,
+    winner: d.winner!,
+    reason: d.reason,
+  });
+  if (result.error) return { status: "error", message: t.failed };
+  redirect(`/${locale}/corrections/${d.id}`);
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/locales";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   scoreCommandSchema,
   scoreSnapshotSchema,
@@ -247,7 +248,11 @@ export function Scoreboard({
     snapshot.status === "in_progress" &&
     !unavailable &&
     timeoutLeft === 0;
-  function send(kind: ScoreCommand["kind"], side: "a" | "b" | null = null) {
+  function send(
+    kind: ScoreCommand["kind"],
+    side: "a" | "b" | null = null,
+    note = "",
+  ) {
     if (
       !writable ||
       pendingRef.current ||
@@ -261,7 +266,7 @@ export function Scoreboard({
       kind,
       side,
       expected_version: current.current.version,
-      note: "",
+      note,
     });
     void transmit(command);
   }
@@ -437,6 +442,60 @@ export function Scoreboard({
             </Button>
           )}
         </div>
+      )}
+      {snapshot.status === "in_progress" && !unavailable && (
+        <form
+          aria-label={t.retirement}
+          className="mt-5 rounded-lg border p-5"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const form = new FormData(event.currentTarget);
+            const side = form.get("retiringSide");
+            if (side === "a" || side === "b")
+              send(
+                "withdrawal",
+                side,
+                String(form.get("retirementReason") ?? "").trim(),
+              );
+          }}
+        >
+          <fieldset disabled={!writable} className="grid gap-3">
+            <legend className="mb-3 font-semibold">{t.retirement}</legend>
+            <p className="text-sm text-muted-foreground">{t.retirementHelp}</p>
+            <label className="text-sm">
+              {t.retiringSide}
+              <select
+                name="retiringSide"
+                required
+                className="mt-1 min-h-12 w-full rounded-lg border bg-background px-3"
+              >
+                <option value="a">A · {snapshot.players.a.name}</option>
+                <option value="b">B · {snapshot.players.b.name}</option>
+              </select>
+            </label>
+            <label className="text-sm">
+              {t.retirementReason}
+              <Input
+                name="retirementReason"
+                required
+                minLength={1}
+                maxLength={500}
+              />
+            </label>
+            <label className="flex items-start gap-3 text-sm">
+              <input
+                type="checkbox"
+                required
+                name="confirmRetirement"
+                className="mt-1 size-4 shrink-0"
+              />
+              {t.retirementConfirm}
+            </label>
+            <Button type="submit" variant="outline" disabled={!writable}>
+              {t.retirement}
+            </Button>
+          </fieldset>
+        </form>
       )}
       {snapshot.status === "in_progress" && (
         <div className="mt-5 grid gap-3 sm:grid-cols-2">

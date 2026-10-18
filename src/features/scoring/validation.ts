@@ -13,9 +13,19 @@ export const scoreCommandSchema = z.discriminatedUnion("kind", [
   }),
   z.strictObject({
     ...base,
-    kind: z.enum(["undo_point", "undo_set", "resume_timeout", "withdrawal"]),
+    kind: z.enum(["undo_point", "undo_set", "resume_timeout"]),
     side: z.null(),
   }),
+  z
+    .strictObject({
+      ...base,
+      kind: z.literal("withdrawal"),
+      side: z.enum(["a", "b"]).nullable(),
+    })
+    .superRefine((v, ctx) => {
+      if (v.side !== null && !v.note.trim())
+        ctx.addIssue({ code: "custom", message: "Retirement reason required" });
+    }),
 ]);
 export type ScoreCommand = z.infer<typeof scoreCommandSchema>;
 const side = z.enum(["a", "b"]);

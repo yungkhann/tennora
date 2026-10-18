@@ -12,7 +12,11 @@ Before the fix, four unit cases failed on the fifth-point end change, the SQL re
 
 ## Batch 2 — withdrawals and team-forfeit corrections
 
-Add match-specific retirement without global player dropout and audited correction/reopening of team forfeits, preserving prior attempts and checking downstream play. Expand exact inventory before implementation. Status: pending.
+Add match-specific retirement without global player dropout and audited correction/reopening of team forfeits, preserving prior attempts and checking downstream play. Status: verified.
+
+Exact inventory: `supabase/migrations/202610180016_result_lifecycle.sql`, `supabase/tests/{021_public_league,022_season_public_standings,025_team_forfeit_corrections,026_singles_retirement,027_seeded_forfeit}.sql`, `src/lib/supabase/database.types.ts`, `src/features/scoring/{validation,scoreboard,messages}.ts*`, `src/features/corrections/{validation,actions,forms,messages}.ts*`, `src/app/[locale]/(staff)/matches/[matchId]/corrections/page.tsx`, `src/app/[locale]/(staff)/corrections/[requestId]/page.tsx`, `tests/unit/scoring.test.ts`, `tests/e2e/{scoring,corrections}.spec.ts`, `tests/e2e/helpers/draw-fixture.ts`, `scripts/lib/local-fixture-cleanup.mjs`, and `docs/{AUDIT_FIXES,IMPLEMENTATION_PLAN,DECISIONS,DATABASE,ROUTES}.md`.
+
+Verification: the original regressions failed on the absent team RPC and rejected retirement side. After migration 033, all 136 unit tests and 890 SQL assertions pass. Typecheck, zero-warning lint and production build pass. Scoring/Elo/team and standings parity, real score/correction races and hall races pass. All six affected desktop/mobile browser scenarios pass, including HTTP-only private flows, retirement with retained roster, winner revision and fresh-lineup reopening. The clean isolated replay of all 33 migrations and all SQL suites also passes. SQL covers late-audit rollback, direct-RPC Trainer/anonymous/private-applier denial, stale digests, duplicate receipts, Organizer-only started-play resolution, preserved rest, repeated corrections and seeded source retention. The browser caught the need to retain frozen seed-entry sources when copying a standalone knockout root; this now has a SQL regression. Public directory assertions now scope their own fixture IDs so unrelated retained league data does not fail the suite. No business operation uses the Auth admin client.
 
 ## Batch 3 — public history and documentation
 

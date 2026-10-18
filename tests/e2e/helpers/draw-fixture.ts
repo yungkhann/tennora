@@ -100,40 +100,41 @@ export async function drawFixture(
             .in("match_id", matchIds);
           if (games.error) errors.push("score game lookup");
           const gameIds = (games.data ?? []).map((v) => v.id);
+          const corrections = await admin
+            .from("result_correction_requests")
+            .select("id")
+            .or(
+              gameIds.length
+                ? `match_id.in.(${matchIds.join(",")}),game_id.in.(${gameIds.join(",")})`
+                : `match_id.in.(${matchIds.join(",")})`,
+            );
+          if (corrections.error) errors.push("correction lookup");
+          if (corrections.data?.length) {
+            const ids = corrections.data.map((v) => v.id);
+            await remove(
+              "correction attempts",
+              admin.from("correction_attempts").delete().in("request_id", ids),
+            );
+            await remove(
+              "correction events",
+              admin
+                .from("result_correction_events")
+                .delete()
+                .in("request_id", ids),
+            );
+            await remove(
+              "correction states",
+              admin
+                .from("result_correction_states")
+                .delete()
+                .in("request_id", ids),
+            );
+            await remove(
+              "correction requests",
+              admin.from("result_correction_requests").delete().in("id", ids),
+            );
+          }
           if (gameIds.length) {
-            const corrections = await admin
-              .from("result_correction_requests")
-              .select("id")
-              .in("game_id", gameIds);
-            if (corrections.error) errors.push("correction lookup");
-            if (corrections.data?.length) {
-              const ids = corrections.data.map((v) => v.id);
-              await remove(
-                "correction attempts",
-                admin
-                  .from("correction_attempts")
-                  .delete()
-                  .in("request_id", ids),
-              );
-              await remove(
-                "correction events",
-                admin
-                  .from("result_correction_events")
-                  .delete()
-                  .in("request_id", ids),
-              );
-              await remove(
-                "correction states",
-                admin
-                  .from("result_correction_states")
-                  .delete()
-                  .in("request_id", ids),
-              );
-              await remove(
-                "correction requests",
-                admin.from("result_correction_requests").delete().in("id", ids),
-              );
-            }
             for (const table of [
               "active_score_points",
               "score_events",

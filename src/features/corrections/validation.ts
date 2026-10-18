@@ -42,11 +42,28 @@ export const applySchema = z.object({
   reason: z.string().trim().min(1).max(500),
   confirm: z.literal("yes"),
 });
+export const teamProposalSchema = z
+  .object({
+    id: z.uuid(),
+    match: z.uuid(),
+    base: z.uuid(),
+    kind: z.enum(["team_forfeit", "reopen"]),
+    winner: z.enum(["a", "b"]).nullable(),
+    reason: z.string().trim().min(1).max(500),
+  })
+  .superRefine((v, ctx) => {
+    if ((v.kind === "reopen") !== (v.winner === null))
+      ctx.addIssue({
+        code: "custom",
+        message: "Valid forfeit correction required",
+      });
+  });
 export const reviewSchema = z.object({
   id: z.uuid(),
-  game_id: z.uuid(),
+  game_id: z.uuid().nullable(),
+  current_match_id: z.uuid().optional(),
   kind: z.string(),
-  winner: z.string(),
+  winner: z.string().nullable(),
   reason: z.string(),
   score: z.object({
     sets: z.array(z.object({ a: z.number(), b: z.number() })),
@@ -55,7 +72,7 @@ export const reviewSchema = z.object({
   original: z.object({
     player_a_name: z.string(),
     player_b_name: z.string(),
-    k: z.number(),
+    k: z.number().nullable(),
   }),
   plan: z.object({
     stale: z.boolean(),

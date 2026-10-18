@@ -2,7 +2,11 @@ import { randomUUID } from "node:crypto";
 import { MutationForm } from "@/components/mutation-form";
 import { Input } from "@/components/ui/input";
 import type { Locale } from "@/lib/locales";
-import { proposeCorrection, applyCorrection } from "./actions";
+import {
+  proposeCorrection,
+  applyCorrection,
+  proposeTeamCorrection,
+} from "./actions";
 import { correctionMessages } from "./messages";
 export function CorrectionForm({
   locale,
@@ -135,5 +139,55 @@ export function ApplyCorrectionForm({
         </label>
       )}
     </MutationForm>
+  );
+}
+
+export function TeamCorrectionForm({
+  locale,
+  match,
+  base,
+}: {
+  locale: Locale;
+  match: string;
+  base: string;
+}) {
+  const t = correctionMessages(locale);
+  return (
+    <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      {(["reopen", "team_forfeit"] as const).map((kind) => (
+        <section key={kind} className="rounded-xl border bg-card p-5">
+          <h2 className="mb-3 font-semibold">
+            {kind === "reopen" ? t.reopen : t.forfeit}
+          </h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            {kind === "reopen" ? t.reopenHelp : t.forfeitHelp}
+          </p>
+          <MutationForm
+            locale={locale}
+            action={proposeTeamCorrection}
+            label={t.propose}
+            hidden={{ id: randomUUID(), match, base, kind }}
+          >
+            {kind === "team_forfeit" && (
+              <label>
+                {t.winner}
+                <select
+                  name="winner"
+                  required
+                  className="mt-1 min-h-12 w-full rounded-lg border bg-background px-3"
+                >
+                  <option value="a">A</option>
+                  <option value="b">B</option>
+                </select>
+              </label>
+            )}
+            <label>
+              {t.reason}
+              <Input name="reason" required maxLength={500} />
+            </label>
+          </MutationForm>
+        </section>
+      ))}
+    </div>
   );
 }

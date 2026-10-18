@@ -1,5 +1,7 @@
 import { expect, it } from "vitest";
 import vectors from "../fixtures/scoring.json";
+import { scoreCommandSchema } from "../../src/features/scoring/validation";
+import { teamProposalSchema } from "../../src/features/corrections/validation";
 import {
   initialScore,
   scoreTransition,
@@ -115,3 +117,43 @@ it.each(["a", "b"] as const)(
     ).toBe(false);
   },
 );
+
+it("requires a reason and a valid side for match-specific retirement", () => {
+  const command = {
+    command_id: "aaaaa026-0000-4000-8000-000000000090",
+    game: "aaaaa026-0000-4000-8000-000000000091",
+    kind: "withdrawal",
+    side: "a",
+    expected_version: 1,
+    note: "Injury",
+  };
+  expect(scoreCommandSchema.safeParse(command).success).toBe(true);
+  expect(scoreCommandSchema.safeParse({ ...command, note: " " }).success).toBe(
+    false,
+  );
+  expect(scoreCommandSchema.safeParse({ ...command, side: "c" }).success).toBe(
+    false,
+  );
+  expect(
+    scoreCommandSchema.safeParse({ ...command, actor_id: command.game })
+      .success,
+  ).toBe(false);
+});
+
+it("reopening a team forfeit cannot award a winner", () => {
+  const proposal = {
+    id: "aaaaa025-0000-4000-8000-000000000090",
+    match: "aaaaa025-0000-4000-8000-000000000091",
+    base: "aaaaa025-0000-4000-8000-000000000092",
+    kind: "reopen",
+    winner: null,
+    reason: "Play the match",
+  };
+  expect(teamProposalSchema.safeParse(proposal).success).toBe(true);
+  expect(
+    teamProposalSchema.safeParse({ ...proposal, winner: "a" }).success,
+  ).toBe(false);
+  expect(
+    teamProposalSchema.safeParse({ ...proposal, kind: "team_forfeit" }).success,
+  ).toBe(false);
+});

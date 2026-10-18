@@ -81,10 +81,10 @@ export function cleanupLoadFixture(value) {
   localSql(`begin;
 delete from public.audit_logs where actor_id in(${users});
 delete from public.hall_commands where tour_id='${f.tour}';
-delete from public.correction_attempts where request_id in(select id from public.result_correction_requests where game_id in(${games}));
-delete from public.result_correction_events where request_id in(select id from public.result_correction_requests where game_id in(${games}));
-delete from public.result_correction_states where request_id in(select id from public.result_correction_requests where game_id in(${games}));
-delete from public.result_correction_requests where game_id in(${games});
+delete from public.correction_attempts where request_id in(select id from public.result_correction_requests where game_id in(${games}) or match_id in(${matches}));
+delete from public.result_correction_events where request_id in(select id from public.result_correction_requests where game_id in(${games}) or match_id in(${matches}));
+delete from public.result_correction_states where request_id in(select id from public.result_correction_requests where game_id in(${games}) or match_id in(${matches}));
+delete from public.result_correction_requests where game_id in(${games}) or match_id in(${matches});
 delete from public.active_score_points where game_id in(${games});delete from public.score_events where game_id in(${games});delete from public.game_sets where game_id in(${games});delete from public.player_end_events where game_id in(${games});
 delete from public.rating_replay_anchors where player_id in(${players});delete from public.rating_history where player_id in(${players});delete from public.rating_calculation_heads where game_id in(${games});delete from public.rating_calculations where game_id in(${games});
 update public.singles_games set result_id=null,result_revision=0 where id in(${games});delete from public.singles_results where game_id in(${games});

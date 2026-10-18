@@ -365,6 +365,65 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
     await expect(
       page.getByRole("heading", { name: "Жеке ойын аяқталды", exact: true }),
     ).toBeVisible();
+    // A singles retirement is independent of league-wide dropout.
+    await page.goto("/en/login");
+    await page.getByLabel("Email address").fill(f.emails[0]);
+    await page.getByLabel("Password", { exact: true }).fill(f.password);
+    await page.getByRole("button", { name: "Sign in", exact: true }).click();
+    await expect(page).toHaveURL(/\/en\/workspace$/);
+    const next = games.data![1].id;
+    await page.goto(`/en/linear-judge/${next}`);
+    await page.getByRole("button", { name: "Start · A serves" }).click();
+    const retirement = page.getByRole("form", {
+      name: "Record singles retirement",
+      exact: true,
+    });
+    await retirement
+      .getByLabel("Retirement reason", { exact: true })
+      .fill("Injury during this singles only");
+    await retirement.getByRole("checkbox").check();
+    await retirement
+      .getByRole("button", { name: "Record singles retirement", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Singles complete", exact: true }),
+    ).toBeVisible();
+    const retired = await f.admin
+      .from("singles_games")
+      .select(
+        "player_a,player_b,singles_results!singles_games_result_id_fkey(kind,winner)",
+      )
+      .eq("id", next)
+      .single();
+    check(retired);
+    expect(retired.data?.singles_results).toEqual({
+      kind: "withdrawal",
+      winner: "b",
+    });
+    const roster = await f.admin
+      .from("roster_memberships")
+      .select("player_id")
+      .in("player_id", [retired.data!.player_a, retired.data!.player_b])
+      .is("ended_at", null);
+    check(roster);
+    expect(roster.data).toHaveLength(2);
+    const states = await f.admin
+      .from("players")
+      .select("status")
+      .in("id", [retired.data!.player_a, retired.data!.player_b]);
+    check(states);
+    expect(states.data!.every((p) => p.status === "active")).toBe(true);
+    const calculations = await f.admin
+      .from("rating_calculations")
+      .select("id")
+      .eq("game_id", next);
+    check(calculations);
+    expect(calculations.data).toHaveLength(0);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
     expect(pageErrors).toEqual([]);
   } finally {
     await context.setOffline(false);

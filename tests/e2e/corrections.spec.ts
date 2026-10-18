@@ -260,3 +260,201 @@ test("official reviews a correction and atomically applies its saved-K result", 
     await f.cleanup();
   }
 });
+
+test("official corrects a team forfeit and reopens a fresh match without fabricated singles", async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120000);
+  page.setDefaultTimeout(15000);
+  const f = await drawFixture({
+    knockoutSize: 2,
+    currentDay: true,
+    tables: 128,
+  });
+  const check = (r: { error: unknown }) => expect(r.error).toBeNull();
+  const pageErrors: string[] = [];
+  page.on("pageerror", (e) => pageErrors.push(e.message));
+  try {
+    check(
+      await f.admin
+        .from("staff_roles")
+        .insert({ user_id: f.users[0], role: "trainer" }),
+    );
+    const draw = randomUUID();
+    check(
+      await f.operator.rpc("generate_tour_draw", {
+        draw_id: draw,
+        tournament: f.tour,
+        age: "U13",
+        expected_revision: 0,
+      }),
+    );
+    check(
+      await f.operator.rpc("publish_tour_draw", { draw, expected_revision: 1 }),
+    );
+    const match = await f.admin
+      .from("team_matches")
+      .select("id,subteam_a")
+      .eq("draw_id", draw)
+      .single();
+    check(match);
+    const m = match.data!;
+    const sub = await f.admin
+      .from("subteams")
+      .select("team_id")
+      .eq("id", m.subteam_a!)
+      .single();
+    check(sub);
+    check(
+      await f.operator.rpc("assign_team_trainer", {
+        trainer: f.users[0],
+        club: sub.data!.team_id,
+        coached_subteams: [m.subteam_a!],
+      }),
+    );
+    const players = await f.admin
+      .from("players")
+      .select("id,gender")
+      .eq("team_id", sub.data!.team_id);
+    check(players);
+    const boys = players.data!.filter((p) => p.gender === "boy"),
+      girls = players.data!.filter((p) => p.gender === "girl");
+    check(
+      await f.operator.rpc("submit_lineup", {
+        lineup_id: randomUUID(),
+        match: m.id,
+        subteam: m.subteam_a!,
+        players: [boys[0].id, girls[0].id, boys[1].id, girls[1].id, boys[2].id],
+      }),
+    );
+    for (const [operation, version] of [
+      ["assign", 1],
+      ["start", 2],
+    ] as const)
+      check(
+        await f.operator.rpc("manage_match", {
+          command_id: randomUUID(),
+          match: m.id,
+          operation,
+          table_no:
+            operation === "assign"
+              ? testInfo.project.name === "mobile"
+                ? 128
+                : 127
+              : null!,
+          expected_version: version,
+          reason: "One team cannot field a lineup",
+        }),
+      );
+    await page.goto("/en/login");
+    await page.getByLabel("Email address").fill(f.emails[0]);
+    await page.getByLabel("Password", { exact: true }).fill(f.password);
+    await page.getByRole("button", { name: "Sign in", exact: true }).click();
+    await expect(page).toHaveURL(/\/en\/workspace$/);
+    const response = await page.goto(`/en/matches/${m.id}/corrections`);
+    expect(response?.headers()["cache-control"]).toContain("no-store");
+    const revise = page
+      .getByRole("heading", {
+        name: "Correct team-forfeit winner",
+        exact: true,
+      })
+      .locator("..")
+      .getByRole("form");
+    await revise
+      .getByRole("combobox", { name: "Winner", exact: true })
+      .selectOption("b");
+    await revise
+      .getByLabel("Reason", { exact: true })
+      .fill("The absent side was entered incorrectly");
+    await revise
+      .getByRole("button", { name: "Review correction", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Correction review", exact: true }),
+    ).toBeVisible();
+    await page
+      .getByLabel("Reason", { exact: true })
+      .fill("Reviewed the forfeit record");
+    await page.getByRole("checkbox").check();
+    await page
+      .getByRole("button", { name: "Apply reviewed correction", exact: true })
+      .click();
+    await expect(
+      page.getByText(
+        "Correction applied. Ratings and dependent matches were updated together.",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    await page.goto(`/en/matches/${m.id}/corrections`);
+    const reopen = page
+      .getByRole("heading", {
+        name: "Reopen team forfeit for play",
+        exact: true,
+      })
+      .locator("..")
+      .getByRole("form");
+    await reopen
+      .getByLabel("Reason", { exact: true })
+      .fill("Both teams can play after the review");
+    await reopen
+      .getByRole("button", { name: "Review correction", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Correction review", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        "Preserve the forfeit and create a fresh match requiring new lineups. Review affected matches before applying.",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    await page
+      .getByLabel("Reason", { exact: true })
+      .fill("Approved fresh play and new lineups");
+    await page.getByRole("checkbox").check();
+    await page
+      .getByRole("button", { name: "Apply reviewed correction", exact: true })
+      .click();
+    const fresh = page.getByRole("link", {
+      name: "Open fresh match lineups",
+      exact: true,
+    });
+    await expect(fresh).toBeVisible();
+    const saved = await f.admin
+      .from("team_matches")
+      .select("superseded_by,result_revision")
+      .eq("id", m.id)
+      .single();
+    check(saved);
+    expect(saved.data?.result_revision).toBe(2);
+    expect(saved.data?.superseded_by).toBeTruthy();
+    const newMatch = saved.data!.superseded_by!;
+    expect(await fresh.getAttribute("href")).toBe(
+      `/en/matches/${newMatch}/lineup`,
+    );
+    const lineups = await f.admin
+      .from("lineups")
+      .select("id")
+      .eq("match_id", newMatch);
+    check(lineups);
+    expect(lineups.data).toHaveLength(0);
+    await fresh.click();
+    await expect(page).toHaveURL(new RegExp(`/en/matches/${newMatch}/lineup$`));
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    for (const locale of ["ru", "kk"]) {
+      await page.goto(`/${locale}/matches/${newMatch}/lineup`);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true);
+    }
+    expect(pageErrors).toEqual([]);
+  } finally {
+    await f.cleanup();
+  }
+});

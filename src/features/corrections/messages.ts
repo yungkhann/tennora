@@ -33,6 +33,13 @@ const en = {
   trailing: "Later singles made ineffective",
   team: "Proposed team singles",
   appliedTitle: "Applied correction",
+  reopen: "Reopen team forfeit for play",
+  reopenHelp:
+    "Preserve the forfeit and create a fresh match requiring new lineups. Review affected matches before applying.",
+  forfeit: "Correct team-forfeit winner",
+  forfeitHelp:
+    "Record the correct automatic 3–0 winner without creating singles or Elo results.",
+  freshMatch: "Open fresh match lineups",
 };
 const ru: typeof en = {
   title: "Исправление результатов",
@@ -65,6 +72,13 @@ const ru: typeof en = {
   trailing: "Последующие одиночные встречи, утратившие силу",
   team: "Предлагаемый счёт матча",
   appliedTitle: "Исправление применено",
+  reopen: "Возобновить матч после технического поражения",
+  reopenHelp:
+    "Исходный результат сохраняется. Новый матч требует новых составов. Перед применением проверьте зависимые матчи.",
+  forfeit: "Исправить победителя технического матча",
+  forfeitHelp:
+    "Укажите победителя со счётом 3–0 без создания одиночных результатов и изменений Elo.",
+  freshMatch: "Открыть составы нового матча",
 };
 const kk: typeof en = {
   title: "Нәтижелерді түзету",
@@ -97,5 +111,12 @@ const kk: typeof en = {
   trailing: "Күшін жоятын кейінгі жеке ойындар",
   team: "Ұсынылған матч есебі",
   appliedTitle: "Түзету қолданылды",
+  reopen: "Техникалық жеңілістен кейін матчты қайта ашу",
+  reopenHelp:
+    "Бастапқы нәтиже сақталады. Жаңа матчқа жаңа құрамдар қажет. Қолданар алдында тәуелді матчтарды тексеріңіз.",
+  forfeit: "Техникалық матч жеңімпазын түзету",
+  forfeitHelp:
+    "Жеке ойын нәтижелері мен Elo өзгерістерінсіз 3–0 жеңімпазын көрсетіңіз.",
+  freshMatch: "Жаңа матч құрамдарын ашу",
 };
 export const correctionMessages = (locale: Locale) => ({ en, ru, kk })[locale];

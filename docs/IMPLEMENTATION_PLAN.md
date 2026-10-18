@@ -8,7 +8,7 @@ The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md
 | B - Staff foundation      | Complete                | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
 | C - Seasons/teams/players | Complete                | C1/C2/C3a/C3b verified; see milestone reports                                                   |
 | D - Draws/lineups         | Complete                | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
-| E - Scoring/Elo           | Audit fixes in progress | Correction, retirement and recovery defects; see AUDIT_FIXES.md                                 |
+| E - Scoring/Elo           | Complete                | Audit correction/retirement/recovery regressions fixed and verified; see AUDIT_FIXES.md         |
 | F - Hall operations       | Complete                | Continuing-player reservation/rest regression fixed and verified; see AUDIT_FIXES.md            |
 | G - Public/locales/live   | Audit fixes in progress | Historical public profile defect; see AUDIT_FIXES.md                                            |
 | H - Readiness             | In progress             | CI/observability/local restore/load tooling implemented; hosted capacity/recovery proof remains |

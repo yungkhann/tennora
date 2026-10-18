@@ -44,6 +44,12 @@ const en = {
   automatic: "Automatic loss",
   savedK: "Saved Elo K",
   changeEnds: "Ends changed",
+  retirement: "Record singles retirement",
+  retiringSide: "Retiring player",
+  retirementReason: "Retirement reason",
+  retirementHelp:
+    "The opponent wins this singles without an Elo change. The player stays on the roster.",
+  retirementConfirm: "I confirm this player is retiring from this singles.",
   timeoutUsed: "Timeout used",
   storage:
     "This browser cannot preserve an unconfirmed command. Enable session storage before scoring.",
@@ -94,6 +100,12 @@ const ru: typeof en = {
   automatic: "Автоматическое поражение",
   savedK: "Сохранённый K Elo",
   changeEnds: "Стороны сменились",
+  retirement: "Зафиксировать отказ в одиночной игре",
+  retiringSide: "Отказавшийся игрок",
+  retirementReason: "Причина отказа",
+  retirementHelp:
+    "Сопернику присуждается победа без изменения Elo. Игрок остаётся в составе.",
+  retirementConfirm: "Подтверждаю отказ игрока от этой одиночной игры.",
   timeoutUsed: "Тайм-аут использован",
   storage:
     "Браузер не сохраняет неподтверждённую команду. Разрешите хранение данных сеанса.",
@@ -142,6 +154,11 @@ const kk: typeof en = {
   automatic: "Автоматты жеңіліс",
   savedK: "Сақталған Elo K",
   changeEnds: "Тараптар ауысты",
+  retirement: "Жеке ойыннан бас тартуды тіркеу",
+  retiringSide: "Бас тартқан ойыншы",
+  retirementReason: "Бас тарту себебі",
+  retirementHelp: "Қарсылас Elo өзгерісінсіз жеңеді. Ойыншы құрамда қалады.",
+  retirementConfirm: "Ойыншының осы жеке ойыннан бас тартқанын растаймын.",
   timeoutUsed: "Тайм-аут пайдаланылды",
   storage:
     "Браузер расталмаған пәрменді сақтай алмайды. Сеанс деректерін сақтауға рұқсат беріңіз.",
