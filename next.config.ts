@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
+  distDir: process.env.TENNORA_BUILD_DIR ?? ".next",
   experimental: { serverActions: { bodySizeLimit: "5mb" } },
   async headers() {
     return [

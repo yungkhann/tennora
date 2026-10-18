@@ -46,3 +46,7 @@ Use separate staging/production projects, Netlify-compatible Next.js hosting and
 - https://nextjs.org/docs/app/guides/authentication
 
 These are design references, not evidence of implemented product behavior.
+
+## Implemented readiness boundary (H)
+
+`/api/health` probes an anonymous database clock with a five-second timeout and no-store response. Server-only observation emits random request IDs, operation/status and elapsed time; it does not serialize staff/player/request data. `Server-Timing` distinguishes end-to-end handler and RPC round trips, neither of which substitutes for measured database commit latency. CI boots actual Auth/Storage/Realtime before integration tests. The isolated production TLS/load harness and encrypted local restore rehearsal preserve the working application/data. Hosted capacity, paid recovery features, off-site retention, alert delivery and physical venue acceptance remain [explicit release gates](ACCEPTANCE.md).

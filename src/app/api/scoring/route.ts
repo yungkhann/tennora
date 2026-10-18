@@ -1,3 +1,4 @@
+import { observedResponse } from "@/lib/observability";
 import { scoreCommandSchema } from "@/features/scoring/validation";
 import {
   boundedJson,
@@ -7,7 +8,7 @@ import {
   trustedScoreOrigin,
 } from "@/features/scoring/http";
 export const dynamic = "force-dynamic";
-export async function POST(request: Request) {
+async function command(request: Request) {
   if (!trustedScoreOrigin(request)) return failure("origin", 403);
   let input;
   try {
@@ -18,6 +19,7 @@ export async function POST(request: Request) {
   if (!input.success) return failure("invalid", 400);
   const account = await scoringAccount("write");
   if (account.response) return account.response;
+  const rpcStarted = performance.now();
   const { data, error } = await account.client.rpc("score_command", {
     ...input.data,
     // The generated function argument type omits SQL nullability. Zod and SQL
@@ -44,5 +46,14 @@ export async function POST(request: Request) {
       status,
     );
   }
-  return Response.json(data, { headers: privateHeaders });
+  return Response.json(data, {
+    headers: {
+      ...privateHeaders,
+      "Server-Timing": `rpc;dur=${Math.round((performance.now() - rpcStarted) * 100) / 100}`,
+    },
+  });
+}
+
+export async function POST(request: Request) {
+  return observedResponse("scoring.command", () => command(request));
 }

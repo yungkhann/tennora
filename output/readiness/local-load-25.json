@@ -1,0 +1,58 @@
+{
+  "scope": "local HTTPS production runtime with disposable emulated tablets; not hosted/venue acceptance",
+  "runtime": "v26.5.0",
+  "viewers": 25,
+  "active_matches": 30,
+  "requested_seconds": 20,
+  "elapsed_seconds": 30,
+  "reconnected": true,
+  "forced_disconnects": 25,
+  "score_errors": 0,
+  "read_errors": 0,
+  "gaps": 0,
+  "metrics": {
+    "tap_ack": {
+      "samples": 60,
+      "p50_ms": 27,
+      "p95_ms": 52,
+      "p99_ms": 61,
+      "max_ms": 61
+    },
+    "rpc_round_trip": {
+      "samples": 60,
+      "p50_ms": 10,
+      "p95_ms": 21,
+      "p99_ms": 31,
+      "max_ms": 31
+    },
+    "tap_to_viewer": {
+      "samples": 1367,
+      "p50_ms": 259,
+      "p95_ms": 519,
+      "p99_ms": 536,
+      "max_ms": 538
+    },
+    "connect_snapshot": {
+      "samples": 25,
+      "p50_ms": 73,
+      "p95_ms": 99,
+      "p99_ms": 103,
+      "max_ms": 103
+    },
+    "reconnect": {
+      "samples": 25,
+      "p50_ms": 69,
+      "p95_ms": 76,
+      "p99_ms": 77,
+      "max_ms": 77
+    },
+    "public_read": {
+      "samples": 20,
+      "p50_ms": 12,
+      "p95_ms": 20,
+      "p99_ms": 24,
+      "max_ms": 24
+    }
+  },
+  "local_targets_passed": true
+}

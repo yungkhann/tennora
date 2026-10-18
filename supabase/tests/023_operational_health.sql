@@ -1,0 +1,10 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select plan(3);
+set local role anon;
+select ok(abs(extract(epoch from public.get_public_health()-clock_timestamp()))<1,'anonymous health reports only the current database clock');
+select throws_ok($$select * from public.staff_accounts$$,'42501',null,'health grants no staff access');
+select throws_ok($$select private.replay_effective_ratings()$$,'42501',null,'health grants no replay authority');
+reset role;
+select * from finish();
+rollback;

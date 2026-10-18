@@ -1,10 +1,11 @@
-name: Foundation checks
+name: League verification
 on: [push, pull_request]
 permissions:
   contents: read
 jobs:
   checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
         with:
@@ -14,12 +15,36 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run check
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
-      - run: npx supabase start -x realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
-      - run: npm run test:db
+      - name: Start isolated local backend including Realtime and Storage
+        run: npx supabase start -x imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
       - run: node scripts/setup-local-env.mjs
+      - run: npm run check
+      - run: npm run test:browser-secrets
+      - run: npm run test:db
+      - run: npm run test:scoring-parity
+      - run: npm run test:standings-parity
+      # These scripts share physical fixture tables: keep them sequential.
+      - run: npm run test:staff-concurrency
+      - run: npm run test:roster-concurrency
+      - run: npm run test:draw-concurrency
+      - run: npm run test:lineup-concurrency
+      - run: npm run test:standings-concurrency
+      - run: npm run test:draw-adjustment-concurrency
+      - run: npm run test:table-owner-concurrency
+      - run: npm run test:match-start-concurrency
+      - run: npm run test:score-concurrency
+      - run: npm run test:hall-concurrency
+      - run: npm run test:hall-scale
+      - run: npm run test:e2e
       - run: npm run test:auth
+      - run: npm run test:restore
+      - name: Preserve browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failures
+          path: test-results/
+          retention-days: 7
       - if: always()
         run: npx supabase stop

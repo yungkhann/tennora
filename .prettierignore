@@ -6,3 +6,4 @@ test-results
 coverage
 supabase/.temp
 supabase/.branches
+.next-readiness

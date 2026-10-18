@@ -1,0 +1,17 @@
+{
+  "scope": "local isolated restore; not hosted PITR/off-site/venue acceptance",
+  "verified": true,
+  "encrypted_bytes": 2174628,
+  "database_bytes": 1621711,
+  "storage_bytes": 9216,
+  "restore_ms": 2045,
+  "critical_tables": 17,
+  "policies": 72,
+  "auth_rows": 9,
+  "storage_objects": 2,
+  "tamper_rejected": true,
+  "rls_and_grants_verified": true,
+  "security_schema_verified": true,
+  "storage_bytes_verified": true,
+  "encrypted_sha256": "84828482fe64fc85c19c9933994cc416b1af8cc6e0c33750150ab9e9b5c8558a"
+}

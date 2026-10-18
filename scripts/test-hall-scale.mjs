@@ -1,11 +1,13 @@
 import { execFileSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
-const actor = randomUUID(),
-  season = randomUUID(),
-  tour = randomUUID(),
-  template = randomUUID(),
-  token = randomUUID();
-let query = `begin;
+import { pathToFileURL } from "node:url";
+export function createHallScaleFixture(tableCount = 12) {
+  const actor = randomUUID(),
+    season = randomUUID(),
+    tour = randomUUID(),
+    template = randomUUID(),
+    token = randomUUID();
+  let query = `begin;
 insert into auth.users(id,email,raw_user_meta_data) values('${actor}','scale-${actor}@test.invalid','{"display_name":"Scale Fixture"}');
 insert into public.staff_accounts(id,email,display_name) values('${actor}','scale-${actor}@test.invalid','Scale Fixture');
 insert into public.staff_roles values('${actor}','organizer');
@@ -14,12 +16,12 @@ select set_config('request.jwt.claims','{"sub":"${actor}","role":"authenticated"
 select public.save_season('${season}','Scale ${token}',2026,'2026-01-01','2026-12-31');
 do $$declare club uuid; person uuid; subteam record; club_index integer; player_index integer; amount integer; begin
  for club_index in 1..24 loop
-  club:=md5('${token}-club-'||club_index)::uuid;
+  club:=gen_random_uuid();
   perform public.save_team(club,'Scale ${token} '||club_index,'Synthetic');
   perform public.register_season_team('${season}',club);
   for subteam in select id,age_group from public.subteams where team_id=club loop
    for player_index in 1..5 loop
-    person:=md5('${token}-player-'||club_index||'-'||subteam.age_group||'-'||player_index)::uuid;
+    person:=gen_random_uuid();
     perform public.save_player(person,club,'Synthetic',club_index||'-'||subteam.age_group||'-'||player_index,case when player_index in(2,4) then 'girl'::public.player_gender else 'boy'::public.player_gender end,make_date(2026-case subteam.age_group when 'U13' then 12 when 'U15' then 14 else 16 end,6,15),'right','attack','junior',null);
     perform public.add_roster_player('${season}',subteam.id,person);
    end loop;
@@ -32,9 +34,9 @@ do $$declare club uuid; person uuid; subteam record; club_index integer; player_
  if exists(select 1 from public.roster_memberships m join public.players p on p.id=m.player_id join public.subteams s on s.id=m.subteam_id where m.season_id='${season}' and public.age_group_for_birth_year(extract(year from p.date_of_birth)::integer,2026) is distinct from s.age_group::text) then raise exception 'Ineligible scale fixture'; end if;
 end $$;
 rollback;`;
-query = query.replace(
-  "rollback;",
-  () => `select public.save_tour('${tour}','${season}','Scale tour',1,(clock_timestamp() at time zone 'Asia/Almaty')::date,(clock_timestamp() at time zone 'Asia/Almaty')::date);
+  query = query.replace(
+    "rollback;",
+    () => `select public.save_tour('${tour}','${season}','Scale tour',1,(clock_timestamp() at time zone 'Asia/Almaty')::date,(clock_timestamp() at time zone 'Asia/Almaty')::date);
 select public.create_stage_template('${template}','Scale format','{"nodes":[{"ordinal":1,"kind":"round_robin","group_count":4,"group_size":6},{"ordinal":2,"kind":"knockout","size":8,"source_ordinal":1,"place_from":1,"place_to":2},{"ordinal":3,"kind":"knockout","size":8,"source_ordinal":1,"place_from":3,"place_to":4},{"ordinal":4,"kind":"knockout","size":8,"source_ordinal":1,"place_from":5,"place_to":6}]}');
 select public.configure_tour_stages('${tour}','${template}',array['U13','U15','U17']::public.age_group[]);
 select public.save_tournament_settings(gen_random_uuid(),'${tour}',0,32,12,60,true,'Asia/Almaty');
@@ -71,30 +73,41 @@ do $$declare amount integer;begin
  if exists(select player from public.match_table_leases l join public.singles_games g on g.match_id=l.match_id join public.team_matches m on m.id=g.match_id join public.draw_revisions d on d.id=m.draw_id join public.tour_stage_plans p on p.id=d.plan_id cross join lateral unnest(array[g.player_a,g.player_b]) player where p.tour_id='${tour}' group by player having count(*)>1) then raise exception 'Duplicate allocated player';end if;
 end;$$;
 rollback;`,
-);
-const start = Date.now();
-try {
-  execFileSync(
-    "docker",
-    [
-      "exec",
-      "-i",
-      "supabase_db_tennora",
-      "psql",
-      "-U",
-      "postgres",
-      "-d",
-      "postgres",
-      "-v",
-      "ON_ERROR_STOP=1",
-      "-Atc",
-      query,
-    ],
-    { stdio: ["ignore", "pipe", "pipe"] },
   );
-} catch (error) {
-  throw new Error(error.stderr?.toString() || "Hall scale failed");
+  query = query
+    .replace("0,32,12,60", `0,32,${tableCount},60`)
+    .replace("amount<>12", `amount<>${Math.min(tableCount, 36)}`);
+  return { query, actor, season, tour, template, token };
 }
-console.log(
-  `PASS: 72 subteams/360 players, three published composite draws, 288 match queue nodes, 180 jointly revealed group lineups and 12 conflict-free allocations through authenticated RPCs (${Date.now() - start} ms); transaction rolled back.`,
-);
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  const { query } = createHallScaleFixture();
+  const start = Date.now();
+  try {
+    execFileSync(
+      "docker",
+      [
+        "exec",
+        "-i",
+        "supabase_db_tennora",
+        "psql",
+        "-U",
+        "postgres",
+        "-d",
+        "postgres",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-Atc",
+        query,
+      ],
+      { stdio: ["ignore", "pipe", "pipe"] },
+    );
+  } catch (error) {
+    throw new Error(error.stderr?.toString() || "Hall scale failed");
+  }
+  console.log(
+    `PASS: 72 subteams/360 players, three published composite draws, 288 match queue nodes, 180 jointly revealed group lineups and 12 conflict-free allocations through authenticated RPCs (${Date.now() - start} ms); transaction rolled back.`,
+  );
+}

@@ -36,7 +36,12 @@
     "test:match-start-concurrency": "node scripts/test-match-start-concurrency.mjs",
     "test:score-concurrency": "node scripts/test-score-concurrency.mjs",
     "test:hall-concurrency": "node scripts/test-hall-concurrency.mjs",
-    "test:hall-scale": "node scripts/test-hall-scale.mjs"
+    "test:hall-scale": "node scripts/test-hall-scale.mjs",
+    "test:restore": "node scripts/test-restore.mjs",
+    "test:load:local": "node scripts/test-load-local.mjs",
+    "serve:readiness": "node scripts/serve-local-production.mjs",
+    "release:check": "node scripts/check-release.mjs",
+    "test:browser-secrets": "node --env-file-if-exists=.env.local scripts/check-browser-secrets.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.5.0",

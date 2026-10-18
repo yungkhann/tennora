@@ -1,0 +1,53 @@
+{
+  "scope": "local HTTPS production runtime; not hosted/venue acceptance",
+  "viewers": 2000,
+  "active_matches": 30,
+  "requested_seconds": 60,
+  "connected": 200,
+  "local_targets_passed": false,
+  "failure": "Readiness run failed before completion; inspect local logs and service capacity",
+  "metrics": {
+    "tap_ack": {
+      "samples": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null,
+      "max_ms": 0
+    },
+    "rpc_round_trip": {
+      "samples": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null,
+      "max_ms": 0
+    },
+    "tap_to_viewer": {
+      "samples": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null,
+      "max_ms": 0
+    },
+    "connect_snapshot": {
+      "samples": 200,
+      "p50_ms": 35,
+      "p95_ms": 50,
+      "p99_ms": 58,
+      "max_ms": 60
+    },
+    "reconnect": {
+      "samples": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null,
+      "max_ms": 0
+    },
+    "public_read": {
+      "samples": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null,
+      "max_ms": 0
+    }
+  }
+}
