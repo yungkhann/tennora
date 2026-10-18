@@ -260,6 +260,32 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
       page.getByRole("button", { name: "Retry last command" }),
     ).toBeVisible();
     await expect(page.getByTestId("point-a")).toBeDisabled();
+    await page.route(
+      "**/api/scoring",
+      (route) =>
+        route.fulfill({
+          status: 429,
+          contentType: "application/json",
+          headers: { "Retry-After": "60" },
+          body: JSON.stringify({ error: "rate_limited" }),
+        }),
+      { times: 1 },
+    );
+    await page.getByRole("button", { name: "Retry last command" }).click();
+    await expect(
+      page.getByText(
+        "Too many requests. Wait one minute, then check the connection.",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    await expect(page.getByTestId("point-a")).toBeDisabled();
+    expect(
+      await page.evaluate(() =>
+        Object.keys(sessionStorage)
+          .filter((key) => key.startsWith("tennora-score:"))
+          .map((key) => JSON.parse(sessionStorage.getItem(key)!).command_id),
+      ),
+    ).toEqual([uncertainId]);
     await page.getByRole("button", { name: "Retry last command" }).click();
     await expect(page.getByTestId("point-a")).toBeEnabled();
     await expect(page.getByTestId("points-a")).toHaveText("1");

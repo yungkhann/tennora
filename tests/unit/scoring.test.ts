@@ -89,3 +89,29 @@ it("team match stops at three wins and has no sixth game", () => {
   expect(() => teamOutcome(["a", "a", "a", "a"])).toThrow();
   expect(() => teamOutcome([null, null, null, null, null, null])).toThrow();
 });
+
+it.each(["a", "b"] as const)(
+  "deciding-set ends change at %s's fifth point and reverse on undo",
+  (side) => {
+    const state: ScoreState = {
+      ...initialScore("a"),
+      sets: [
+        { a: 11, b: 0 },
+        { a: 0, b: 11 },
+        { a: 11, b: 0 },
+        { a: 0, b: 11 },
+        { a: side === "a" ? 4 : 0, b: side === "b" ? 4 : 0 },
+      ],
+    };
+    expect(scoreSummary(state).ends_swapped).toBe(false);
+    const changed = scoreTransition(state, { kind: "point", side });
+    expect(scoreSummary(changed).ends_swapped).toBe(true);
+    expect(
+      scoreSummary(scoreTransition(changed, { kind: "undo_point", side }))
+        .ends_swapped,
+    ).toBe(false);
+    expect(
+      scoreSummary(scoreTransition(changed, { kind: "undo_set" })).ends_swapped,
+    ).toBe(false);
+  },
+);

@@ -192,17 +192,22 @@ export function Scoreboard({
       });
       if (!mounted.current) return;
       if (!response.ok) {
-        if ([400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
+        if ([400, 409, 422].includes(response.status)) {
           forget();
           setConnection("checking");
           setMessage(
-            response.status === 429
-              ? t.rate
-              : response.status === 422 || response.status === 400
-                ? t.invalid
-                : t.conflict,
+            response.status === 422 || response.status === 400
+              ? t.invalid
+              : t.conflict,
           );
           refresh.current();
+          return;
+        }
+        // A rejected HTTP retry does not establish the original command's
+        // transaction outcome. Keep its UUID until the RPC reconciles it.
+        if ([401, 403, 404, 429].includes(response.status)) {
+          setConnection("stale");
+          setMessage(response.status === 429 ? t.rate : t.uncertain);
           return;
         }
         throw new Error("Unknown outcome");

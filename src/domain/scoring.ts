@@ -67,7 +67,9 @@ export function scoreSummary(state: ScoreState) {
     sets_b: wins.b,
     winner,
     server: winner ? null : changes % 2 ? opposite(first) : first,
-    ends_swapped: (state.sets.length - 1) % 2 === 1,
+    ends_swapped:
+      ((state.sets.length - 1) % 2 === 1) !==
+      (state.sets.length === 5 && Math.max(current.a, current.b) >= 5),
   };
 }
 /** The authoritative RPC must derive undo side from its last active point log. */

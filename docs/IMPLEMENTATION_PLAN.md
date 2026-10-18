@@ -2,17 +2,17 @@
 
 The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md](TABLE_TENNIS_IMPLEMENTATION_PLAN.md). Confirmed: Next.js/Supabase, one league, coexisting staff roles. This file records actual status; proposed dates are in the detailed plan and are not completion claims. Original tennis Phase 1 roadmap is archived in archive/PHASE_1_IMPLEMENTATION_PLAN.md; its historical verification remains in VERIFICATION.md.
 
-| Task                      | Status             | Next gate                                                                                        |
-| ------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ |
-| A - Rebaseline            | Complete           | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                    |
-| B - Staff foundation      | Complete           | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md  |
-| C - Seasons/teams/players | Complete           | C1/C2/C3a/C3b verified; see milestone reports                                                    |
-| D - Draws/lineups         | Complete           | D1/D2/D3a/D3b/D3c verified; see milestone reports                                                |
-| E - Scoring/Elo           | Complete           | E1/E2/E3 corrections and continuation verified; see MILESTONE_E3B2_VERIFICATION.md               |
-| F - Hall operations       | Complete           | Hall allocation, bulk start, table/day controls and scale proof; see MILESTONE_F_VERIFICATION.md |
-| G - Public/locales/live   | Complete           | Public projections, rankings, committed live/recovery/PWA; see MILESTONE_G_VERIFICATION.md       |
-| H - Readiness             | In progress        | CI/observability/local restore/load tooling implemented; hosted capacity/recovery proof remains  |
-| I - Rehearsal/release     | Blocked externally | Release validator/runbook prepared; provider, hosted load and venue evidence required            |
+| Task                      | Status                  | Next gate                                                                                       |
+| ------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------- |
+| A - Rebaseline            | Complete                | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                   |
+| B - Staff foundation      | Complete                | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
+| C - Seasons/teams/players | Complete                | C1/C2/C3a/C3b verified; see milestone reports                                                   |
+| D - Draws/lineups         | Complete                | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
+| E - Scoring/Elo           | Audit fixes in progress | Correction, retirement and recovery defects; see AUDIT_FIXES.md                                 |
+| F - Hall operations       | Complete                | Continuing-player reservation/rest regression fixed and verified; see AUDIT_FIXES.md            |
+| G - Public/locales/live   | Audit fixes in progress | Historical public profile defect; see AUDIT_FIXES.md                                            |
+| H - Readiness             | In progress             | CI/observability/local restore/load tooling implemented; hosted capacity/recovery proof remains |
+| I - Rehearsal/release     | Blocked externally      | Release validator/runbook prepared; provider, hosted load and venue evidence required           |
 
 ## A: exact files and changes
 

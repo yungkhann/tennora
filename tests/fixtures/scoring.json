@@ -740,6 +740,90 @@
         "points_b": 0,
         "server": "b"
       }
+    },
+    {
+      "name": "deciding end change when a reaches five",
+      "initial": {
+        "initial_server": "a",
+        "sets": [
+          {
+            "a": 11,
+            "b": 0
+          },
+          {
+            "a": 0,
+            "b": 11
+          },
+          {
+            "a": 11,
+            "b": 0
+          },
+          {
+            "a": 0,
+            "b": 11
+          },
+          {
+            "a": 4,
+            "b": 0
+          }
+        ],
+        "timeouts": {
+          "a": false,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "point",
+          "side": "a"
+        }
+      ],
+      "expected": {
+        "ends_swapped": true,
+        "set_number": 5
+      }
+    },
+    {
+      "name": "deciding end change when b reaches five",
+      "initial": {
+        "initial_server": "a",
+        "sets": [
+          {
+            "a": 11,
+            "b": 0
+          },
+          {
+            "a": 0,
+            "b": 11
+          },
+          {
+            "a": 11,
+            "b": 0
+          },
+          {
+            "a": 0,
+            "b": 11
+          },
+          {
+            "a": 0,
+            "b": 4
+          }
+        ],
+        "timeouts": {
+          "a": false,
+          "b": false
+        }
+      },
+      "commands": [
+        {
+          "kind": "point",
+          "side": "b"
+        }
+      ],
+      "expected": {
+        "ends_swapped": true,
+        "set_number": 5
+      }
     }
   ],
   "elo": [
