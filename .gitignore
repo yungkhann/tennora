@@ -14,3 +14,8 @@ supabase/.branches/
 tmp/pdfs/
 
 .next-readiness/
+
+# Local prompt files
+prompts/
+prompts.md
+prompts.mds
