@@ -2,17 +2,17 @@
 
 The user authorized sequential execution of [TABLE_TENNIS_IMPLEMENTATION_PLAN.md](TABLE_TENNIS_IMPLEMENTATION_PLAN.md). Confirmed: Next.js/Supabase, one league, coexisting staff roles. This file records actual status; proposed dates are in the detailed plan and are not completion claims. Original tennis Phase 1 roadmap is archived in archive/PHASE_1_IMPLEMENTATION_PLAN.md; its historical verification remains in VERIFICATION.md.
 
-| Task                      | Status      | Next gate                                                                                       |
-| ------------------------- | ----------- | ----------------------------------------------------------------------------------------------- |
-| A - Rebaseline            | Complete    | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                   |
-| B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md |
-| C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                   |
-| D - Draws/lineups         | Complete    | D1/D2/D3a/D3b/D3c verified; see milestone reports                                               |
-| E - Scoring/Elo           | Complete    | E1/E2/E3 corrections and continuation verified; see MILESTONE_E3B2_VERIFICATION.md              |
-| F - Hall operations       | Not started | D09 venue/rest/finals/device policy                                                             |
-| G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                            |
-| H - Readiness             | Not started | Provider/recovery feasibility and complete integration evidence                                 |
-| I - Rehearsal/release     | Not started | All measured go-live gates pass; no silent integrity/privacy waivers                            |
+| Task                      | Status      | Next gate                                                                                        |
+| ------------------------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| A - Rebaseline            | Complete    | Verified revised PDF and requirement mapping; see MILESTONE_A_VERIFICATION.md                    |
+| B - Staff foundation      | Complete    | Staff roles, Auth administration and session/permission proofs; see MILESTONE_B_VERIFICATION.md  |
+| C - Seasons/teams/players | Complete    | C1/C2/C3a/C3b verified; see milestone reports                                                    |
+| D - Draws/lineups         | Complete    | D1/D2/D3a/D3b/D3c verified; see milestone reports                                                |
+| E - Scoring/Elo           | Complete    | E1/E2/E3 corrections and continuation verified; see MILESTONE_E3B2_VERIFICATION.md               |
+| F - Hall operations       | Complete    | Hall allocation, bulk start, table/day controls and scale proof; see MILESTONE_F_VERIFICATION.md |
+| G - Public/locales/live   | Not started | Committed public-safe projections and recovery tests                                             |
+| H - Readiness             | Not started | Provider/recovery feasibility and complete integration evidence                                  |
+| I - Rehearsal/release     | Not started | All measured go-live gates pass; no silent integrity/privacy waivers                             |
 
 ## A: exact files and changes
 
@@ -51,3 +51,5 @@ E3a rating anchors, linked-history integrity and private chronological saved-K r
 E3b1 immutable correction proposals and deterministic team/qualifier/dependency preview are verified; see MILESTONE_E3B1_VERIFICATION.md (726 database assertions, 125 unit tests, 30 responsive browser scenarios, Auth, parity/concurrency and production build pass). The current official result remains unchanged during review. E3b2 atomic application, dependency resolution, continuation and official UI are the next batch before Task E is complete.
 
 E3b2 atomic correction application, preserved dependent attempts, saved-K replay and continuation are verified in MILESTONE_E3B2_VERIFICATION.md. Task E is complete. Next is F: full hall allocation, start-all, ownership/override and continuation controls. Production deployment/load/recovery acceptance remains H/I.
+
+F is verified in MILESTONE_F_VERIFICATION.md: 809 database assertions, 128 unit tests, 34 responsive browser scenarios, Auth, real allocation/start-all races and a 72-subteam/288-match queue with twelve conflict-free initial allocations. Next is G: public safe projections, rankings/season scores, localized public pages and live/recovery/PWA delivery. H/I retain production deployment/load/restore/venue gates.

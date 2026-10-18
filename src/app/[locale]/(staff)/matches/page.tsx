@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { hallMessages } from "@/features/hall/messages";
 import { notFound } from "next/navigation";
 import { requireStaff } from "@/lib/auth";
 import { localeOf, messages } from "@/lib/locales";
@@ -75,6 +76,14 @@ export default async function Page({
                 {name(match.id, "a")} / {name(match.id, "b")}
               </h2>
               <p className="mt-2 text-sm">{t[match.status]}</p>
+              {official && (
+                <Link
+                  className="mt-4 mr-5 inline-block text-sm underline"
+                  href={`/${locale}/matches/${match.id}/manage`}
+                >
+                  {hallMessages(locale).manage}
+                </Link>
+              )}
               {match.subteam_a && match.subteam_b ? (
                 <Link
                   className="mt-4 inline-block text-sm underline"

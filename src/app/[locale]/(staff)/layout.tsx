@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { hallMessages } from "@/features/hall/messages";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { requireStaff } from "@/lib/auth";
@@ -21,8 +22,14 @@ export default async function StaffLayout({
       <aside className="border-b bg-card p-6 md:border-r">
         <Brand />
         <p className="eyebrow mt-8 mb-5">{t.league}</p>
-        <nav aria-label={t.workspace} className="grid gap-4 text-sm">
+        <nav
+          aria-label={t.workspace}
+          className="grid grid-cols-2 gap-4 text-sm md:grid-cols-1"
+        >
           <Link href={`/${locale}/workspace`}>{t.workspace}</Link>
+          {roles.some((r) => r === "organizer" || r === "main_judge") && (
+            <Link href={`/${locale}/hall`}>{hallMessages(locale).title}</Link>
+          )}
           {roles.includes("organizer") && (
             <Link href={`/${locale}/organizer/staff`}>{t.staff}</Link>
           )}

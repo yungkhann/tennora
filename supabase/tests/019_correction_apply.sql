@@ -163,7 +163,14 @@ select lives_ok($$select public.apply_result_correction(gen_random_uuid(),'ffffe
 select is((select status::text from public.team_matches where id=(select match from lineup_fixture)),'scheduled','continuation waits for fresh table assignment');
 select is((select count(*)::int from public.singles_games where match_id=(select match from lineup_fixture) and status='pending'),2,'unplayed cancelled singles reactivate');
 select throws_ok($$select public.resume_corrected_match(gen_random_uuid(),(select match from lineup_fixture),(select version from public.team_matches where id=(select match from lineup_fixture)),'Resume without table')$$,'55000','Current-day table required','resuming requires a current-day table');
+select throws_ok($$select public.manage_match(gen_random_uuid(),id,'assign',127,version,'Too early continuation assignment') from public.team_matches where id=(select match from lineup_fixture)$$,'55000','Player rest incomplete','continuation allocation also honors actual rest');
+reset role;
+update public.player_rest_heads set last_ended_at=clock_timestamp()-interval '61 minutes' where player_id in(select unnest(players_a||players_b) from lineup_fixture);
+set local role authenticated;
 select public.manage_match(gen_random_uuid(),id,'assign',127,version,'Continuation table') from public.team_matches where id=(select match from lineup_fixture);
+reset role;
+update public.player_rest_heads set last_ended_at=clock_timestamp() where player_id=(select players_a[4] from lineup_fixture);
+set local role authenticated;
 select throws_ok($$select public.resume_corrected_match(gen_random_uuid(),id,version,'Too soon') from public.team_matches where id=(select match from lineup_fixture)$$,'55000','Player rest incomplete','correction does not bypass physical rest');
 reset role;
 -- Trusted clock fixture: move only the rest projection back to simulate waiting.

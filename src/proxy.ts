@@ -43,6 +43,7 @@ export const config = {
     "/(ru|kk|en)/team/:path*",
     "/(ru|kk|en)/draws/:path*",
     "/(ru|kk|en)/matches/:path*",
+    "/(ru|kk|en)/hall/:path*",
     "/(ru|kk|en)/corrections/:path*",
     "/(ru|kk|en)/linear-judge/:path*",
     "/(ru|kk|en)/subteam/:path*",

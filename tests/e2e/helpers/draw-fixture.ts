@@ -59,6 +59,10 @@ export async function drawFixture(
         admin.from("player_rest_heads").delete().in("player_id", players),
       );
 
+    await remove(
+      "hall commands",
+      admin.from("hall_commands").delete().eq("tour_id", tour),
+    );
     const plans = await admin
       .from("tour_stage_plans")
       .select("id")

@@ -555,6 +555,49 @@ export type Database = {
           },
         ];
       };
+      hall_commands: {
+        Row: {
+          actor_id: string;
+          created_at: string;
+          id: string;
+          request: NonNullable<Json>;
+          response: NonNullable<Json>;
+          tour_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          actor_id: string;
+          created_at?: string;
+          id: string;
+          request: NonNullable<Json>;
+          response: NonNullable<Json>;
+          tour_id: string;
+        };
+        Update: {
+          actor_id?: string;
+          created_at?: string;
+          id?: string;
+          request?: NonNullable<Json>;
+          response?: NonNullable<Json>;
+          tour_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "hall_commands_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "staff_accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "hall_commands_tour_id_fkey";
+            columns: ["tour_id"];
+            isOneToOne: false;
+            referencedRelation: "tours";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       knockout_seed_maps: {
         Row: {
           seeds: NonNullable<Json>;
@@ -3378,6 +3421,7 @@ export type Database = {
         Returns: string;
       };
       get_game_score: { Args: { game: string }; Returns: Json };
+      get_hall_snapshot: { Args: { tournament: string }; Returns: Json };
       get_judge_desk: { Args: Record<PropertyKey, never>; Returns: Json };
       get_lineup_status: { Args: { match: string }; Returns: Json };
       get_match_operation: { Args: { match: string }; Returns: Json };
@@ -3442,6 +3486,15 @@ export type Database = {
           reason: string;
         };
         Returns: undefined;
+      };
+      run_hall_command: {
+        Args: {
+          command_id: string;
+          operation: string;
+          reason: string;
+          tournament: string;
+        };
+        Returns: Json;
       };
       save_player: {
         Args: {
