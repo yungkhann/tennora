@@ -4,6 +4,7 @@ const base = {
   game: z.uuid(),
   expected_version: z.number().int().nonnegative().max(2147483647),
   note: z.string().trim().max(500).default(""),
+  confirmed: z.boolean().default(false),
 };
 export const scoreCommandSchema = z.discriminatedUnion("kind", [
   z.strictObject({
@@ -23,8 +24,11 @@ export const scoreCommandSchema = z.discriminatedUnion("kind", [
       side: z.enum(["a", "b"]).nullable(),
     })
     .superRefine((v, ctx) => {
-      if (v.side !== null && !v.note.trim())
-        ctx.addIssue({ code: "custom", message: "Retirement reason required" });
+      if (v.side !== null && !v.confirmed)
+        ctx.addIssue({
+          code: "custom",
+          message: "Action confirmation required",
+        });
     }),
 ]);
 export type ScoreCommand = z.infer<typeof scoreCommandSchema>;

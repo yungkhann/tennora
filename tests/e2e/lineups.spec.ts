@@ -24,7 +24,7 @@ test("Trainers lock hidden lineups; officials and opponents cannot read them; jo
   request,
 }, testInfo) => {
   test.setTimeout(120000);
-  const f = await drawFixture(),
+  const f = await drawFixture({ age: "U15" }),
     aContext = await browser.newContext({
       baseURL: "http://127.0.0.1:3000",
       viewport: page.viewportSize() ?? { width: 1280, height: 720 },
@@ -72,7 +72,7 @@ test("Trainers lock hidden lineups; officials and opponents cannot read them; jo
         await f.operator.rpc("generate_tour_draw", {
           draw_id: draw,
           tournament: f.tour,
-          age: "U13",
+          age: "U15",
           expected_revision: 0,
         })
       ).error,
@@ -148,6 +148,47 @@ test("Trainers lock hidden lineups; officials and opponents cannot read them; jo
         girls = roster.filter((p) => p.gender === "girl");
       return [boys[0].id, girls[0].id, boys[1].id, girls[1].id, boys[2].id];
     }
+    // Roster choices use the same season cutoff as SQL, including playing up.
+    const older = randomUUID(),
+      younger = randomUUID();
+    for (const [id, dob] of [
+      [older, "2010-01-01"],
+      [younger, "2014-01-01"],
+    ]) {
+      f.players.push(id);
+      expect(
+        (
+          await f.operator.rpc("save_player", {
+            player_id: id,
+            club: aSub.team_id,
+            first_name: "Eligibility",
+            last_name: id,
+            gender: "boy",
+            dob,
+            hand: "right",
+            style: "attack",
+            sports_level: "junior",
+          })
+        ).error,
+      ).toBeNull();
+    }
+    await login(page, f.emails[0], f.password);
+    await page.goto(`/en/subteam/${aSub.id}?seasonId=${f.season}`);
+    await expect(
+      page.locator(`select[name="player"] option[value="${younger}"]`),
+    ).toHaveCount(1);
+    await expect(
+      page.locator(`select[name="player"] option[value="${older}"]`),
+    ).toHaveCount(0);
+    expect(
+      (
+        await f.operator.rpc("add_roster_player", {
+          parent_season: f.season,
+          target_subteam: aSub.id,
+          player: older,
+        })
+      ).error?.message,
+    ).toBe("Player exceeds lineup age limit");
     const aPlayers = ordered(aSub.team_id),
       bPlayers = ordered(bSub.team_id),
       reserve = randomUUID();
@@ -305,9 +346,7 @@ test("Trainers lock hidden lineups; officials and opponents cannot read them; jo
     await replace
       .getByRole("combobox", { name: "Replacement player", exact: true })
       .selectOption(reserve);
-    await replace
-      .getByLabel("Reason", { exact: true })
-      .fill("Pre-game reserve approved");
+    await replace.getByLabel("I confirm this action", { exact: true }).check();
     await replace
       .getByRole("button", { name: "Replace locked player", exact: true })
       .click();
@@ -351,7 +390,7 @@ test("Trainers lock hidden lineups; officials and opponents cannot read them; jo
       .filter({ hasText: "Replacement history" })
       .click();
     await expect(
-      aCard.getByText("Pre-game reserve approved", { exact: false }),
+      aCard.getByRole("listitem").filter({ hasText: "I confirm this action" }),
     ).toBeVisible();
     expect(
       await page.evaluate(

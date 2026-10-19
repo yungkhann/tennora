@@ -207,9 +207,7 @@ test("private photo and evidence require Organizer review; public JPEG strips me
     await review
       .getByRole("combobox", { name: "Publication decision", exact: true })
       .selectOption("approve");
-    await review
-      .getByLabel("Reason", { exact: true })
-      .fill("Written guardian consent reviewed");
+    await review.getByLabel("I confirm this action", { exact: true }).check();
     await review
       .getByRole("button", { name: "Save publication decision", exact: true })
       .click();
@@ -241,9 +239,7 @@ test("private photo and evidence require Organizer review; public JPEG strips me
     await review
       .getByRole("combobox", { name: "Publication decision", exact: true })
       .selectOption("revoke");
-    await review
-      .getByLabel("Reason", { exact: true })
-      .fill("Guardian withdrew consent");
+    await review.getByLabel("I confirm this action", { exact: true }).check();
     await review
       .getByRole("button", { name: "Save publication decision", exact: true })
       .click();

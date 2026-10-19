@@ -22,7 +22,7 @@ export const proposalSchema = z
     kind: z.enum(["played", "withdrawal"]),
     winner: z.enum(["a", "b"]),
     score: correctionScore,
-    reason: z.string().trim().min(1).max(500),
+    confirm: z.literal("yes"),
   })
   .superRefine((v, ctx) => {
     if (v.kind !== "played") return;
@@ -39,7 +39,6 @@ export const applySchema = z.object({
   id: z.uuid(),
   request: z.uuid(),
   digest: z.string().regex(/^[a-f0-9]{32}$/),
-  reason: z.string().trim().min(1).max(500),
   confirm: z.literal("yes"),
 });
 export const teamProposalSchema = z
@@ -49,7 +48,7 @@ export const teamProposalSchema = z
     base: z.uuid(),
     kind: z.enum(["team_forfeit", "reopen"]),
     winner: z.enum(["a", "b"]).nullable(),
-    reason: z.string().trim().min(1).max(500),
+    confirm: z.literal("yes"),
   })
   .superRefine((v, ctx) => {
     if ((v.kind === "reopen") !== (v.winner === null))

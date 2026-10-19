@@ -44,10 +44,10 @@ select set_config('request.jwt.claims','{"sub":"aaaaa027-0000-4000-8000-00000000
 select public.submit_lineup('ffffa027-0000-4000-8000-000000000001',match,subteam_a,players_a) from lineup_fixture;
 
 select set_config('request.jwt.claims','{"sub":"aaaaa027-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select public.manage_match(gen_random_uuid(),id,'assign',127,version,'Forfeit table') from public.team_matches where id=(select match from lineup_fixture);
-select public.manage_match(gen_random_uuid(),id,'start',null,version,'Forfeit start') from public.team_matches where id=(select match from lineup_fixture);
-create temp table seeded_review as select public.submit_team_result_correction(gen_random_uuid(),id,result_id,'reopen',null,'Reopen seeded forfeit') value,null::uuid fresh from public.team_matches where id=(select match from lineup_fixture);
-update seeded_review set fresh=(public.apply_result_correction(gen_random_uuid(),(value->>'id')::uuid,value->'plan'->>'digest',false,'Apply seeded reopening')->>'match_id')::uuid;
+select public.manage_match(gen_random_uuid(),id,'assign',127,version,true) from public.team_matches where id=(select match from lineup_fixture);
+select public.manage_match(gen_random_uuid(),id,'start',null,version,true) from public.team_matches where id=(select match from lineup_fixture);
+create temp table seeded_review as select public.submit_team_result_correction(gen_random_uuid(),id,result_id,'reopen',null,true) value,null::uuid fresh from public.team_matches where id=(select match from lineup_fixture);
+update seeded_review set fresh=(public.apply_result_correction(gen_random_uuid(),(value->>'id')::uuid,value->'plan'->>'digest',false,true)->>'match_id')::uuid;
 select is((select count(*)::int from public.match_sources where match_id=(select fresh from seeded_review) and source_entry_id is not null),2,'reopened seeded root retains both frozen entry sources');
 select is((select count(*)::int from public.lineups where match_id=(select fresh from seeded_review)),0,'unrevealed forfeited lineup is not copied into fresh play');
 reset role;

@@ -56,7 +56,14 @@ export async function addRosterPlayer(
     target_subteam: d.subteam,
     player: d.player,
   });
-  if (error) return { status: "error", message: t.rosterInvalid };
+  if (error)
+    return {
+      status: "error",
+      message:
+        error.message === "Player exceeds lineup age limit"
+          ? t.ageIneligible
+          : t.rosterInvalid,
+    };
   refresh(locale);
   return { status: "success", message: t.saved };
 }
@@ -71,7 +78,7 @@ export async function endMembership(
   if (!p.success) return { status: "error", message: t.invalid };
   const { error } = await supabase.rpc("end_roster_membership", {
     membership: p.data.membership,
-    reason: p.data.reason,
+    confirmed: true,
   });
   if (error) return { status: "error", message: t.failed };
   refresh(locale);
@@ -89,7 +96,7 @@ export async function dropPlayer(
   const { error } = await supabase.rpc("drop_player", {
     player: p.data.player,
     effective_date: p.data.date,
-    reason: p.data.reason,
+    confirmed: true,
   });
   if (error) return { status: "error", message: t.failed };
   refresh(locale);
@@ -107,7 +114,7 @@ export async function transferPlayer(
   const { error } = await supabase.rpc("transfer_player", {
     player: p.data.player,
     new_club: p.data.club,
-    reason: p.data.reason,
+    confirmed: true,
   });
   if (error) return { status: "error", message: t.failed };
   refresh(locale);

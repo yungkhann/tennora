@@ -3497,6 +3497,7 @@ export type Database = {
         Row: {
           age_group: Database["public"]["Enums"]["age_group"] | null;
           first_name: string | null;
+          gender: Database["public"]["Enums"]["player_gender"] | null;
           has_photo: boolean | null;
           id: string | null;
           last_name: string | null;
@@ -3517,28 +3518,52 @@ export type Database = {
         Args: { birth_year: number; season_year: number };
         Returns: string;
       };
-      apply_result_correction: {
-        Args: {
-          command_id: string;
-          expected_digest: string;
-          reason: string;
-          request_id: string;
-          resolve_started: boolean;
-        };
-        Returns: Json;
-      };
-      assign_table_judge: {
-        Args: {
-          assignment_id: string;
-          expected_version: number;
-          reason: string;
-          staff: string;
-          table_no: number;
-          tournament: string;
-          venue_day: string;
-        };
-        Returns: string;
-      };
+      apply_result_correction:
+        | {
+            Args: {
+              command_id: string;
+              confirmed: boolean;
+              expected_digest: string;
+              request_id: string;
+              resolve_started: boolean;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              command_id: string;
+              expected_digest: string;
+              reason: string;
+              request_id: string;
+              resolve_started: boolean;
+            };
+            Returns: Json;
+          };
+      assign_table_judge:
+        | {
+            Args: {
+              assignment_id: string;
+              confirmed: boolean;
+              expected_version: number;
+              staff: string;
+              table_no: number;
+              tournament: string;
+              venue_day: string;
+            };
+            Returns: string;
+          }
+        | {
+            Args: {
+              assignment_id: string;
+              expected_version: number;
+              reason: string;
+              staff: string;
+              table_no: number;
+              tournament: string;
+              venue_day: string;
+            };
+            Returns: string;
+          };
       assign_team_trainer: {
         Args: { club: string; coached_subteams: string[]; trainer: string };
         Returns: undefined;
@@ -3656,14 +3681,25 @@ export type Database = {
         Args: { expected_revision: number; group_id: string };
         Returns: string;
       };
-      drop_player: {
-        Args: { effective_date: string; player: string; reason: string };
-        Returns: undefined;
-      };
-      end_roster_membership: {
-        Args: { membership: string; reason: string };
-        Returns: undefined;
-      };
+      drop_player:
+        | {
+            Args: {
+              confirmed: boolean;
+              effective_date: string;
+              player: string;
+            };
+            Returns: undefined;
+          }
+        | {
+            Args: { effective_date: string; player: string; reason: string };
+            Returns: undefined;
+          };
+      end_roster_membership:
+        | {
+            Args: { confirmed: boolean; membership: string };
+            Returns: undefined;
+          }
+        | { Args: { membership: string; reason: string }; Returns: undefined };
       finish_player_photo: { Args: { asset: string }; Returns: undefined };
       finish_staff_job: {
         Args: { job_id: string; succeeded: boolean };
@@ -3689,6 +3725,14 @@ export type Database = {
       get_public_player_history: { Args: { player: string }; Returns: Json };
       get_public_season_standings: { Args: { season: string }; Returns: Json };
       get_result_correction: { Args: { request_id: string }; Returns: Json };
+      is_eligible_for_age_group: {
+        Args: {
+          birth_year: number;
+          season_year: number;
+          target_group: Database["public"]["Enums"]["age_group"];
+        };
+        Returns: boolean;
+      };
       is_player_photo_approved: { Args: { asset: string }; Returns: boolean };
       lineup_match_names: {
         Args: { matches: string[] };
@@ -3700,17 +3744,29 @@ export type Database = {
           subteam_id: string;
         }[];
       };
-      manage_match: {
-        Args: {
-          command_id: string;
-          expected_version: number;
-          match: string;
-          operation: string;
-          reason: string;
-          table_no: number;
-        };
-        Returns: Json;
-      };
+      manage_match:
+        | {
+            Args: {
+              command_id: string;
+              confirmed: boolean;
+              expected_version: number;
+              match: string;
+              operation: string;
+              table_no: number;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              command_id: string;
+              expected_version: number;
+              match: string;
+              operation: string;
+              reason: string;
+              table_no: number;
+            };
+            Returns: Json;
+          };
       publish_tour_draw: {
         Args: { draw: string; expected_revision: number };
         Returns: undefined;
@@ -3720,45 +3776,88 @@ export type Database = {
         Args: { club: string; parent_season: string };
         Returns: undefined;
       };
-      replace_lineup_player: {
-        Args: {
-          expected_lineup_version: number;
-          match: string;
-          player: string;
-          reason: string;
-          replacement_id: string;
-          slot: number;
-          subteam: string;
-        };
-        Returns: Json;
-      };
-      resume_corrected_match: {
-        Args: {
-          command_id: string;
-          expected_version: number;
-          match: string;
-          reason: string;
-        };
-        Returns: Json;
-      };
-      review_player_photo: {
-        Args: {
-          asset: string;
-          decision: string;
-          publication?: Json;
-          reason: string;
-        };
-        Returns: undefined;
-      };
-      run_hall_command: {
-        Args: {
-          command_id: string;
-          operation: string;
-          reason: string;
-          tournament: string;
-        };
-        Returns: Json;
-      };
+      replace_lineup_player:
+        | {
+            Args: {
+              confirmed: boolean;
+              expected_lineup_version: number;
+              match: string;
+              player: string;
+              replacement_id: string;
+              slot: number;
+              subteam: string;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              expected_lineup_version: number;
+              match: string;
+              player: string;
+              reason: string;
+              replacement_id: string;
+              slot: number;
+              subteam: string;
+            };
+            Returns: Json;
+          };
+      resume_corrected_match:
+        | {
+            Args: {
+              command_id: string;
+              confirmed: boolean;
+              expected_version: number;
+              match: string;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              command_id: string;
+              expected_version: number;
+              match: string;
+              reason: string;
+            };
+            Returns: Json;
+          };
+      review_player_photo:
+        | {
+            Args: {
+              asset: string;
+              confirmed: boolean;
+              decision: string;
+              publication?: Json;
+            };
+            Returns: undefined;
+          }
+        | {
+            Args: {
+              asset: string;
+              decision: string;
+              publication?: Json;
+              reason: string;
+            };
+            Returns: undefined;
+          };
+      run_hall_command:
+        | {
+            Args: {
+              command_id: string;
+              confirmed: boolean;
+              operation: string;
+              tournament: string;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              command_id: string;
+              operation: string;
+              reason: string;
+              tournament: string;
+            };
+            Returns: Json;
+          };
       save_player: {
         Args: {
           club: string;
@@ -3812,17 +3911,30 @@ export type Database = {
         };
         Returns: string;
       };
-      score_command: {
-        Args: {
-          command_id: string;
-          expected_version: number;
-          game: string;
-          kind: string;
-          note?: string;
-          side: string;
-        };
-        Returns: Json;
-      };
+      score_command:
+        | {
+            Args: {
+              command_id: string;
+              confirmed: boolean;
+              expected_version: number;
+              game: string;
+              kind: string;
+              note?: string;
+              side: string;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              command_id: string;
+              expected_version: number;
+              game: string;
+              kind: string;
+              note?: string;
+              side: string;
+            };
+            Returns: Json;
+          };
       season_configuration_readiness: {
         Args: { parent_season: string };
         Returns: Json;
@@ -3851,55 +3963,109 @@ export type Database = {
         };
         Returns: Json;
       };
-      submit_result_correction: {
-        Args: {
-          base_result: string;
-          game: string;
-          kind: string;
-          reason: string;
-          request_id: string;
-          score: Json;
-          winner: string;
-        };
-        Returns: Json;
-      };
-      submit_team_result_correction: {
-        Args: {
-          base_result: string;
-          kind: string;
-          match: string;
-          reason: string;
-          request_id: string;
-          winner: string;
-        };
-        Returns: Json;
-      };
-      swap_draw_seeds: {
-        Args: {
-          draw_id: string;
-          expected_revision: number;
-          reason: string;
-          seed_a: number;
-          seed_b: number;
-          source_draw: string;
-        };
-        Returns: string;
-      };
-      takeover_table: {
-        Args: {
-          assignment_id: string;
-          expected_version: number;
-          reason: string;
-          table_no: number;
-          tournament: string;
-          venue_day: string;
-        };
-        Returns: string;
-      };
-      transfer_player: {
-        Args: { new_club: string; player: string; reason: string };
-        Returns: undefined;
-      };
+      submit_result_correction:
+        | {
+            Args: {
+              base_result: string;
+              confirmed: boolean;
+              game: string;
+              kind: string;
+              request_id: string;
+              score: Json;
+              winner: string;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              base_result: string;
+              game: string;
+              kind: string;
+              reason: string;
+              request_id: string;
+              score: Json;
+              winner: string;
+            };
+            Returns: Json;
+          };
+      submit_team_result_correction:
+        | {
+            Args: {
+              base_result: string;
+              confirmed: boolean;
+              kind: string;
+              match: string;
+              request_id: string;
+              winner: string;
+            };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              base_result: string;
+              kind: string;
+              match: string;
+              reason: string;
+              request_id: string;
+              winner: string;
+            };
+            Returns: Json;
+          };
+      swap_draw_seeds:
+        | {
+            Args: {
+              confirmed: boolean;
+              draw_id: string;
+              expected_revision: number;
+              seed_a: number;
+              seed_b: number;
+              source_draw: string;
+            };
+            Returns: string;
+          }
+        | {
+            Args: {
+              draw_id: string;
+              expected_revision: number;
+              reason: string;
+              seed_a: number;
+              seed_b: number;
+              source_draw: string;
+            };
+            Returns: string;
+          };
+      takeover_table:
+        | {
+            Args: {
+              assignment_id: string;
+              confirmed: boolean;
+              expected_version: number;
+              table_no: number;
+              tournament: string;
+              venue_day: string;
+            };
+            Returns: string;
+          }
+        | {
+            Args: {
+              assignment_id: string;
+              expected_version: number;
+              reason: string;
+              table_no: number;
+              tournament: string;
+              venue_day: string;
+            };
+            Returns: string;
+          };
+      transfer_player:
+        | {
+            Args: { confirmed: boolean; new_club: string; player: string };
+            Returns: undefined;
+          }
+        | {
+            Args: { new_club: string; player: string; reason: string };
+            Returns: undefined;
+          };
       update_staff_name: { Args: { new_name: string }; Returns: undefined };
     };
     Enums: {

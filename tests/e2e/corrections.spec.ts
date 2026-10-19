@@ -124,7 +124,7 @@ test("official reviews a correction and atomically applies its saved-K result", 
         venue_day: today,
         staff: f.users[1],
         expected_version: 0,
-        reason: "Browser scoring fixture",
+        confirmed: true,
       }),
     );
     for (const [operation, version] of [
@@ -139,7 +139,7 @@ test("official reviews a correction and atomically applies its saved-K result", 
           operation,
           table_no: operation === "assign" ? table : null!,
           expected_version: version,
-          reason: "Browser scoring fixture",
+          confirmed: true,
         }),
       );
     const games = await f.admin
@@ -162,6 +162,7 @@ test("official reviews a correction and atomically applies its saved-K result", 
     );
     check(
       await judge.rpc("score_command", {
+        confirmed: true,
         command_id: randomUUID(),
         game,
         kind: "start",
@@ -172,6 +173,7 @@ test("official reviews a correction and atomically applies its saved-K result", 
     for (let i = 0; i < 33; i++)
       check(
         await judge.rpc("score_command", {
+          confirmed: true,
           command_id: randomUUID(),
           game,
           kind: "point",
@@ -187,9 +189,7 @@ test("official reviews a correction and atomically applies its saved-K result", 
     const response = await page.goto(`/en/matches/${m.id}/corrections`);
     expect(response?.headers()["cache-control"]).toContain("no-store");
     await page.getByLabel("1 B", { exact: true }).fill("2");
-    await page
-      .getByLabel("Reason", { exact: true })
-      .fill("Correct the recorded opening set");
+    await page.getByLabel("I confirm this action", { exact: true }).check();
     await page
       .getByRole("button", { name: "Review correction", exact: true })
       .click();
@@ -203,14 +203,7 @@ test("official reviews a correction and atomically applies its saved-K result", 
       path: testInfo.outputPath("correction-review.png"),
       fullPage: true,
     });
-    await page
-      .getByLabel("Reason", { exact: true })
-      .fill("Reviewed against the score sheet");
-    await page
-      .getByLabel("I reviewed the proposed result and its effects.", {
-        exact: true,
-      })
-      .check();
+    await page.getByLabel("I confirm this action", { exact: true }).check();
     await page
       .getByRole("button", { name: "Apply reviewed correction", exact: true })
       .click();
@@ -343,7 +336,7 @@ test("official corrects a team forfeit and reopens a fresh match without fabrica
                 : 127
               : null!,
           expected_version: version,
-          reason: "One team cannot field a lineup",
+          confirmed: true,
         }),
       );
     await page.goto("/en/login");
@@ -363,18 +356,14 @@ test("official corrects a team forfeit and reopens a fresh match without fabrica
     await revise
       .getByRole("combobox", { name: "Winner", exact: true })
       .selectOption("b");
-    await revise
-      .getByLabel("Reason", { exact: true })
-      .fill("The absent side was entered incorrectly");
+    await revise.getByLabel("I confirm this action", { exact: true }).check();
     await revise
       .getByRole("button", { name: "Review correction", exact: true })
       .click();
     await expect(
       page.getByRole("heading", { name: "Correction review", exact: true }),
     ).toBeVisible();
-    await page
-      .getByLabel("Reason", { exact: true })
-      .fill("Reviewed the forfeit record");
+    await page.getByLabel("I confirm this action", { exact: true }).check();
     await page.getByRole("checkbox").check();
     await page
       .getByRole("button", { name: "Apply reviewed correction", exact: true })
@@ -393,9 +382,7 @@ test("official corrects a team forfeit and reopens a fresh match without fabrica
       })
       .locator("..")
       .getByRole("form");
-    await reopen
-      .getByLabel("Reason", { exact: true })
-      .fill("Both teams can play after the review");
+    await reopen.getByLabel("I confirm this action", { exact: true }).check();
     await reopen
       .getByRole("button", { name: "Review correction", exact: true })
       .click();
@@ -408,9 +395,7 @@ test("official corrects a team forfeit and reopens a fresh match without fabrica
         { exact: true },
       ),
     ).toBeVisible();
-    await page
-      .getByLabel("Reason", { exact: true })
-      .fill("Approved fresh play and new lineups");
+    await page.getByLabel("I confirm this action", { exact: true }).check();
     await page.getByRole("checkbox").check();
     await page
       .getByRole("button", { name: "Apply reviewed correction", exact: true })

@@ -72,7 +72,7 @@ try {
   if (!overlap) throw new Error("No publication lock barrier");
   const began = Date.now(),
     second = session(
-      `begin;${claims}select public.swap_draw_seeds('${attemptedDraw}','${draw}',1,1,2,'Publication race');commit;`,
+      `begin;${claims}select public.swap_draw_seeds('${attemptedDraw}','${draw}',1,1,2,true);commit;`,
     ),
     [a, b] = await Promise.all([first, second]),
     blocked = Date.now() - began;

@@ -45,18 +45,18 @@ select public.submit_lineup('ffffe3a0-0000-4000-8000-000000000001',match,subteam
 select set_config('request.jwt.claims','{"sub":"aaaae3a0-0000-4000-8000-000000000004","role":"authenticated"}',true);
 select public.submit_lineup('ffffe3a0-0000-4000-8000-000000000002',match,subteam_b,players_b) from lineup_fixture;
 select set_config('request.jwt.claims','{"sub":"aaaae3a0-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select public.assign_table_judge('ffffe3a0-0000-4000-8000-000000000003','cccce3a0-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaae3a0-0000-4000-8000-000000000006',0,'Lifecycle fixture judge');
-select public.manage_match('dddde3a0-0000-4000-8000-000000000010',match,'assign',127,2,'Scoring fixture table') from lineup_fixture;
-select public.manage_match('dddde3a0-0000-4000-8000-000000000011',match,'call',null,3,'Scoring fixture call') from lineup_fixture;
-select public.manage_match('dddde3a0-0000-4000-8000-000000000012',match,'start',null,4,'Scoring fixture ready') from lineup_fixture;
+select public.assign_table_judge('ffffe3a0-0000-4000-8000-000000000003','cccce3a0-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaae3a0-0000-4000-8000-000000000006',0,true);
+select public.manage_match('dddde3a0-0000-4000-8000-000000000010',match,'assign',127,2,true) from lineup_fixture;
+select public.manage_match('dddde3a0-0000-4000-8000-000000000011',match,'call',null,3,true) from lineup_fixture;
+select public.manage_match('dddde3a0-0000-4000-8000-000000000012',match,'start',null,4,true) from lineup_fixture;
 create temp table score_fixture(games uuid[],first_point uuid,last_command uuid,last_expected integer);
 grant all on score_fixture to authenticated;
 insert into score_fixture(games,first_point) select array_agg(id order by slot),'ffffe3a0-0000-4000-8000-000000000020'::uuid from public.singles_games where match_id=(select match from lineup_fixture);
 select set_config('request.jwt.claims','{"sub":"aaaae3a0-0000-4000-8000-000000000006","role":"authenticated"}',true);
-select public.score_command('ffffe3a0-0000-4000-8000-000000000010',(select games[1] from score_fixture),'start','a',0,'Initial server');
+select public.score_command('ffffe3a0-0000-4000-8000-000000000010',(select games[1] from score_fixture),'start','a',0,true);
 -- First result uses the real command path. Later saved historical fixtures use
 -- trusted private completion to test cross-match chronology without a venue wait.
-do $$declare i integer;v integer;target uuid;begin select games[1] into target from score_fixture;for i in 1..33 loop select score_version into v from public.singles_games where id=target;perform public.score_command(gen_random_uuid(),target,'point','a',v,'Original first singles');end loop;end;$$;
+do $$declare i integer;v integer;target uuid;begin select games[1] into target from score_fixture;for i in 1..33 loop select score_version into v from public.singles_games where id=target;perform public.score_command(gen_random_uuid(),target,'point','a',v,true);end loop;end;$$;
 select set_config('request.jwt.claims','{"sub":"aaaae3a0-0000-4000-8000-000000000001","role":"authenticated"}',true);
 select public.save_tournament_settings(gen_random_uuid(),'cccce3a0-0000-4000-8000-000000000001',1,64,128,60,true,'Asia/Almaty');
 reset role;

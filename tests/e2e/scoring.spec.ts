@@ -126,7 +126,7 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
         venue_day: today,
         staff: f.users[1],
         expected_version: 0,
-        reason: "Browser scoring fixture",
+        confirmed: true,
       }),
     );
     for (const [operation, version] of [
@@ -141,7 +141,7 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
           operation,
           table_no: operation === "assign" ? table : null!,
           expected_version: version,
-          reason: "Browser scoring fixture",
+          confirmed: true,
         }),
       );
     const games = await f.admin
@@ -347,7 +347,7 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
         table_no: table,
         venue_day: today,
         expected_version: 1,
-        reason: "Tablet takeover test",
+        confirmed: true,
       }),
     );
     await page
@@ -368,6 +368,7 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
       check(g);
       check(
         await f.operator.rpc("score_command", {
+          confirmed: true,
           command_id: randomUUID(),
           game,
           kind: "point",
@@ -411,8 +412,8 @@ test("judge scores committed points, survives lost acknowledgement/reload and lo
       exact: true,
     });
     await retirement
-      .getByLabel("Retirement reason", { exact: true })
-      .fill("Injury during this singles only");
+      .getByLabel("I confirm this action", { exact: true })
+      .check();
     await retirement.getByRole("checkbox").check();
     await retirement
       .getByRole("button", { name: "Record singles retirement", exact: true })

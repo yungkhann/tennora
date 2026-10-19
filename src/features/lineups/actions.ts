@@ -27,7 +27,14 @@ export async function submitLineup(
     subteam: d.subteam,
     players: d.players,
   });
-  if (error) return { status: "error", message: t.lineupInvalid };
+  if (error)
+    return {
+      status: "error",
+      message:
+        error.message === "Player exceeds lineup age limit"
+          ? t.ageIneligible
+          : t.lineupInvalid,
+    };
   revalidatePath(`/${locale}/matches`, "layout");
   return { status: "success", message: t.saved };
 }
@@ -51,10 +58,17 @@ export async function replacePlayer(
     subteam: d.subteam,
     slot: d.slot,
     player: d.player,
-    reason: d.reason,
+    confirmed: true,
     expected_lineup_version: d.revision,
   });
-  if (error) return { status: "error", message: t.replacementInvalid };
+  if (error)
+    return {
+      status: "error",
+      message:
+        error.message === "Player exceeds lineup age limit"
+          ? t.ageIneligible
+          : t.replacementInvalid,
+    };
   revalidatePath(`/${locale}/matches`, "layout");
   return { status: "success", message: t.saved };
 }

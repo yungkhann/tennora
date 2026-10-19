@@ -1,3 +1,4 @@
+import { actionNote } from "@/lib/locales";
 import Link from "next/link";
 import { z } from "zod";
 import { notFound } from "next/navigation";
@@ -43,7 +44,7 @@ export default async function Page({
           {t.savedK}: <span className="font-mono">{r.original.k}</span>
         </p>
       )}
-      <p className="mt-4 break-words">{r.reason}</p>
+      <p className="mt-4 break-words">{actionNote(locale, r.reason)}</p>
       <p className="mt-3">
         {r.winner && `${t.winner}: ${r.winner.toUpperCase()} · `}
         {r.kind === "reopen"

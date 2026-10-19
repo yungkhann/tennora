@@ -25,7 +25,7 @@ async function mutate(
         command_id: d.id,
         tournament: d.tour,
         operation: d.operation,
-        reason: d.reason,
+        confirmed: true,
       });
     if (r.error) return { status: "error", message: t.failed };
   } else if (kind === "match") {
@@ -38,7 +38,7 @@ async function mutate(
             command_id: d.id,
             match: d.match,
             expected_version: d.version,
-            reason: d.reason,
+            confirmed: true,
           })
         : await staff.supabase.rpc("manage_match", {
             command_id: d.id,
@@ -46,7 +46,7 @@ async function mutate(
             operation: d.operation,
             table_no: d.operation === "assign" ? d.table! : null!,
             expected_version: d.version,
-            reason: d.reason,
+            confirmed: true,
           });
     if (r.error) return { status: "error", message: t.failed };
   } else {
@@ -61,7 +61,7 @@ async function mutate(
       table_no: d.table,
       venue_day: d.day,
       expected_version: d.version,
-      reason: d.reason,
+      confirmed: true,
     };
     const r =
       d.operation === "takeover"

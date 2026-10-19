@@ -170,17 +170,13 @@ export function EndMembershipForm({
   const t = messages(locale);
   return (
     <MutationForm
+      confirmation
       action={endMembership}
       locale={locale}
       hidden={{ membership }}
       label={t.removeRoster}
       once
-    >
-      <label className="field">
-        {t.reason}
-        <Input name="reason" required maxLength={500} />
-      </label>
-    </MutationForm>
+    ></MutationForm>
   );
 }
 export function DropPlayerForm({
@@ -193,6 +189,7 @@ export function DropPlayerForm({
   const t = messages(locale);
   return (
     <MutationForm
+      confirmation
       action={dropPlayer}
       locale={locale}
       hidden={{ player }}
@@ -207,10 +204,6 @@ export function DropPlayerForm({
           required
           max={new Date().toISOString().slice(0, 10)}
         />
-      </label>
-      <label className="field">
-        {t.reason}
-        <Input name="reason" required maxLength={500} />
       </label>
     </MutationForm>
   );
@@ -227,6 +220,7 @@ export function TransferPlayerForm({
   const t = messages(locale);
   return (
     <MutationForm
+      confirmation
       action={transferPlayer}
       locale={locale}
       hidden={{ player }}
@@ -245,10 +239,6 @@ export function TransferPlayerForm({
             </option>
           ))}
         </select>
-      </label>
-      <label className="field">
-        {t.reason}
-        <Input name="reason" required maxLength={500} />
       </label>
       <p className="text-sm leading-6 text-muted-foreground">
         {t.transferHelp}

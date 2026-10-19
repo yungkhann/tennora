@@ -27,7 +27,7 @@ const en = {
   hidden: "Waiting for both lineups",
   source: "Waiting for upstream results",
   blocked: "Both teams unavailable; reschedule or resolve lineups.",
-  help: "Every operation rechecks current staff, venue day, players, rest and table availability. A reason is saved in the audit log.",
+  help: "Every operation rechecks current staff, venue day, players, rest and table availability. Confirmation is saved in the audit log.",
   failed:
     "Operation failed. Refresh and check current assignment, rest, lineups and permissions.",
   saved: "Operation committed. Refresh to see current outcomes.",
@@ -74,7 +74,7 @@ const ru: typeof en = {
   hidden: "Ожидаются оба состава",
   source: "Ожидаются предыдущие результаты",
   blocked: "Обе команды недоступны; перенесите матч или исправьте составы.",
-  help: "Каждая операция проверяет права, дату, игроков, отдых и стол. Причина сохраняется в журнале.",
+  help: "Каждая операция проверяет права, дату, игроков, отдых и стол. Подтверждение сохраняется в журнале.",
   failed:
     "Операция не выполнена. Обновите страницу, проверьте стол, отдых, составы и права.",
   saved: "Операция сохранена. Обновите состояние.",
@@ -121,7 +121,7 @@ const kk: typeof en = {
   source: "Алдыңғы нәтижелер күтілуде",
   blocked:
     "Екі команда да қолжетімсіз; матчты ауыстырыңыз немесе құрамды түзетіңіз.",
-  help: "Әр әрекет құқықтарды, күнді, ойыншыларды, демалысты және үстелді тексереді. Себеп журналда сақталады.",
+  help: "Әр әрекет құқықтарды, күнді, ойыншыларды, демалысты және үстелді тексереді. Растау журналда сақталады.",
   failed:
     "Әрекет орындалмады. Бетті жаңартып, үстелді, демалысты, құрамды және құқықтарды тексеріңіз.",
   saved: "Әрекет сақталды. Күйді жаңартыңыз.",

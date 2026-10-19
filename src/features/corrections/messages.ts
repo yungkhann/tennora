@@ -19,7 +19,7 @@ const en = {
   stale:
     "This review is stale. Return to the match and prepare a new proposal.",
   failed:
-    "Correction failed. Refresh and check the result, score, reason and current review.",
+    "Correction failed. Refresh and check the result, score, confirmation and current review.",
   applied:
     "Correction applied. Ratings and dependent matches were updated together.",
   empty: "No completed singles results are available for correction.",
@@ -59,7 +59,7 @@ const ru: typeof en = {
   blocked: "Начатые встречи должен разрешить организатор.",
   stale: "Проверка устарела. Вернитесь к матчу и создайте новое предложение.",
   failed:
-    "Не удалось исправить. Обновите страницу и проверьте результат, счёт и причину.",
+    "Не удалось исправить. Обновите страницу и проверьте результат, счёт и подтверждение.",
   applied:
     "Исправление применено. Рейтинги и зависимые матчи обновлены вместе.",
   empty: "Нет завершённых одиночных встреч для исправления.",
@@ -98,7 +98,7 @@ const kk: typeof en = {
   blocked: "Басталған ойындарды ұйымдастырушы шешуі керек.",
   stale: "Тексеру ескірді. Матчқа оралып, жаңа ұсыныс жасаңыз.",
   failed:
-    "Түзету орындалмады. Бетті жаңартып, нәтиже, есеп пен себепті тексеріңіз.",
+    "Түзету орындалмады. Бетті жаңартып, нәтиже, есеп пен растауды тексеріңіз.",
   applied:
     "Түзету қолданылды. Рейтингтер мен тәуелді матчтар бірге жаңартылды.",
   empty: "Түзетуге болатын аяқталған жеке ойындар жоқ.",

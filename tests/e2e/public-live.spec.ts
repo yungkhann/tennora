@@ -125,7 +125,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
         venue_day: today,
         staff: f.users[1],
         expected_version: 0,
-        reason: "Browser scoring fixture",
+        confirmed: true,
       }),
     );
     for (const [operation, version] of [
@@ -140,7 +140,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
           operation,
           table_no: operation === "assign" ? table : null!,
           expected_version: version,
-          reason: "Browser scoring fixture",
+          confirmed: true,
         }),
       );
     const games = await f.admin
@@ -163,6 +163,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
     );
     check(
       await judge.rpc("score_command", {
+        confirmed: true,
         command_id: randomUUID(),
         game,
         kind: "start",
@@ -189,6 +190,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
     await page.route("**/api/public/matches/**", (route) => route.abort());
     check(
       await judge.rpc("score_command", {
+        confirmed: true,
         command_id: randomUUID(),
         game,
         kind: "point",
@@ -207,6 +209,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
     await page.reload();
     check(
       await judge.rpc("score_command", {
+        confirmed: true,
         command_id: randomUUID(),
         game,
         kind: "point",
@@ -223,6 +226,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
     ).toBeVisible();
     check(
       await judge.rpc("score_command", {
+        confirmed: true,
         command_id: randomUUID(),
         game,
         kind: "point",
@@ -307,6 +311,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
     for (let i = 0; i < 31; i++)
       check(
         await judge.rpc("score_command", {
+          confirmed: true,
           command_id: randomUUID(),
           game,
           kind: "point",
@@ -318,7 +323,7 @@ test("anonymous public scoring receives committed Realtime, polling fallback and
       await f.operator.rpc("drop_player", {
         player,
         effective_date: today,
-        reason: "Leaving after a completed result",
+        confirmed: true,
       }),
     );
     const current = await f.admin

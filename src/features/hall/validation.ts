@@ -3,7 +3,6 @@ export const hallActionSchema = z.object({
   id: z.uuid(),
   tour: z.uuid(),
   operation: z.enum(["allocate", "start_all"]),
-  reason: z.string().trim().min(1).max(500),
   confirm: z.literal("yes"),
 });
 export const matchActionSchema = z.object({
@@ -12,7 +11,7 @@ export const matchActionSchema = z.object({
   operation: z.enum(["assign", "release", "call", "start", "resume"]),
   version: z.coerce.number().int().nonnegative().max(2147483647),
   table: z.coerce.number().int().min(1).max(128).optional(),
-  reason: z.string().trim().min(1).max(500),
+  confirm: z.literal("yes"),
 });
 export const judgeActionSchema = z.object({
   id: z.uuid(),
@@ -22,7 +21,7 @@ export const judgeActionSchema = z.object({
   version: z.coerce.number().int().nonnegative().max(2147483647),
   operation: z.enum(["assign", "release", "takeover"]),
   staff: z.preprocess((v) => (v === "" ? undefined : v), z.uuid().optional()),
-  reason: z.string().trim().min(1).max(500),
+  confirm: z.literal("yes"),
 });
 export const hallSnapshotSchema = z.object({
   tour_id: z.uuid(),

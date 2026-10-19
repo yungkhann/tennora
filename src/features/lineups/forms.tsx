@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { MutationForm } from "@/components/mutation-form";
-import { Input } from "@/components/ui/input";
 import { selectClass } from "@/features/teams/forms";
 import { lineupGender } from "@/domain/lineups";
 import { messages, type Locale } from "@/lib/locales";
@@ -100,6 +99,7 @@ export function ReplacementForm({
     return <p className="text-sm text-muted-foreground">{t.noReplacement}</p>;
   return (
     <MutationForm
+      confirmation
       locale={locale}
       action={replacePlayer}
       label={t.replacePlayer}
@@ -140,10 +140,6 @@ export function ReplacementForm({
               </option>
             ))}
         </select>
-      </label>
-      <label className="field">
-        {t.reason}
-        <Input name="reason" required maxLength={500} />
       </label>
       <p className="text-sm leading-6 text-muted-foreground">
         {t.replacementHelp}

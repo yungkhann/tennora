@@ -69,7 +69,7 @@ export async function swapSeeds(
     expected_revision: d.revision,
     seed_a: d.seedA,
     seed_b: d.seedB,
-    reason: d.reason,
+    confirmed: true,
   });
   if (error) return { status: "error", message: t.swapInvalid };
   revalidatePath(`/${locale}/draws`, "layout");

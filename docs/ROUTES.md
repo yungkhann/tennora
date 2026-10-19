@@ -113,3 +113,11 @@ The authorized judge's score screen includes a localized retirement form with pl
 The existing match correction route now offers a completed team forfeit's winner revision or reopening for actual play. Team proposals use the same private review/application route, show club identities and dependency effects, and require Organizer confirmation for started play. Applied reopening links to the fresh match's lineup route. Staff snapshots remain no-store; no early player identities or staff sessions are exposed publicly.
 
 Historical public player routes and metadata now use `get_public_player`, independently of the active ranking list. Approved profiles and effective match/rating history remain accessible after dropout, roster exit or transfer in RU/KK/EN; unknown/unpublished players remain 404. No DOB, contact, consent evidence or new unpublished transfer association is returned.
+
+## User feedback — 19 October 2026
+
+`/[locale]/ranking` adds a boys/girls segmented link control and `gender=boy|girl` (boys default). Switching groups retains age/search and resets pagination; filtering and previous/next links retain gender. Existing age filters continue to use the published roster category. Each group starts at position one and retains existing Elo/tie order. RU/KK/EN copy and the existing table/responsive design are preserved.
+
+All earlier references here to mandatory action reasons are superseded by C26. Roster exit/dropout/transfer, locked replacement, seed adjustment, photo review, hall/match/judge operations, correction proposal/application and singles retirement use explicit localized confirmation. Shared forms disable submission until checked and reset on details/dialog reopening and after a response. Important action summaries, correction review and separate Organizer consent to resolve started dependencies remain. Private sessions/snapshots remain no-store; no routes or public private-data grants are added.
+
+Public result refreshes coalesce transaction bursts and discard queued requests when their URL has changed, preserving ranking navigation under Realtime updates.

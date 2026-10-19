@@ -1,3 +1,4 @@
+import { actionNote } from "@/lib/locales";
 import { correctionMessages } from "@/features/corrections/messages";
 import { randomUUID } from "node:crypto";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import {
 } from "@/features/lineups/forms";
 import { LineupRefresh } from "@/features/lineups/refresh";
 import { localeOf, messages } from "@/lib/locales";
-import { ageGroupForBirthYear } from "@/domain/eligibility";
+import { isEligibleForGroup } from "@/domain/eligibility";
 import { Card } from "@/components/ui/card";
 export default async function Page({
   params,
@@ -62,10 +63,11 @@ export default async function Page({
           ({ players: v }) =>
             v.status === "active" &&
             v.team_id === team.club &&
-            ageGroupForBirthYear(
+            isEligibleForGroup(
               Number(v.date_of_birth.slice(0, 4)),
               context.year,
-            ) === context.age,
+              context.age,
+            ),
         )
         .map(({ players: v }): LineupCandidate => ({
           id: v.id,
@@ -211,7 +213,7 @@ export default async function Page({
                           {t.slot} {r.slot}: {r.old_player_name} →{" "}
                           {r.new_player_name}
                           <br />
-                          {r.reason}
+                          {actionNote(locale, r.reason)}
                         </li>
                       ))}
                   </ol>

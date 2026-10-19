@@ -53,7 +53,7 @@ describe("player mutation contracts", () => {
       false,
     );
   });
-  it("rejects duplicate subteam links and missing transfer reason", () => {
+  it("rejects duplicate subteam links and missing transfer confirmation", () => {
     expect(
       trainerAssignmentSchema.safeParse({
         club: id,

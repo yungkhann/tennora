@@ -13,8 +13,8 @@ describe("confirmed age bands", () => {
   ])("classifies $birth in season 2026", ({ birth, group }) =>
     expect(ageGroupForBirthYear(birth, 2026)).toBe(group),
   );
-  it("forbids playing up and ages players into the next group by season year", () => {
-    expect(isEligibleForGroup(2014, 2026, "U15")).toBe(false);
+  it("permits playing up using the season reference year", () => {
+    expect(isEligibleForGroup(2014, 2026, "U15")).toBe(true);
     expect(isEligibleForGroup(2014, 2027, "U15")).toBe(true);
   });
   it.each([NaN, 2014.5, 1899])("rejects invalid birth year %s", (year) =>
@@ -50,3 +50,22 @@ describe("confirmed age bands", () => {
     expect(tourSchema.safeParse({ ...base, ordinal: 0 }).success).toBe(false);
   });
 });
+
+it.each([
+  [2014, "U13", true],
+  [2014, "U15", true],
+  [2014, "U17", true],
+  [2012, "U13", false],
+  [2012, "U15", true],
+  [2012, "U17", true],
+  [2010, "U13", false],
+  [2010, "U15", false],
+  [2010, "U17", true],
+  [2009, "U17", false],
+  [2027, "U17", false],
+] as const)(
+  "birth year %i eligibility for %s is %s",
+  (birth, group, allowed) => {
+    expect(isEligibleForGroup(birth, 2026, group)).toBe(allowed);
+  },
+);

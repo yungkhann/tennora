@@ -11,10 +11,10 @@ const en = {
   seedA: "First seed position",
   seedB: "Second seed position",
   swapHelp:
-    "Swap two positions using the frozen players and ratings. Earlier drafts remain in history. Record a reason before publishing.",
+    "Swap two positions using the frozen players and ratings. Earlier drafts remain in history. Confirm the action before publishing.",
   swapConfirm: "I reviewed both clubs and confirm this seed swap.",
   swapInvalid:
-    "Seed swap failed. Refresh and check distinct seed positions, the reason, current draft version and publication status.",
+    "Seed swap failed. Refresh and check distinct seed positions, confirmation, current draft version and publication status.",
   seedAdjustment: "Manual seed adjustment",
   chooseSeed: "Choose a seed",
 
@@ -66,7 +66,7 @@ const en = {
   replacePlayer: "Replace locked player",
   replacementPlayer: "Replacement player",
   replacementInvalid:
-    "Replacement failed. Refresh the lineup and check the player, slot, reason and that this singles has not started.",
+    "Replacement failed. Refresh the lineup and check the player, slot, confirmation and that this singles has not started.",
   replacementHelp:
     "Only a distinct eligible roster player of the same gender may replace a pending singles player. Original submission and replacement history are retained.",
   noReplacement:
@@ -246,11 +246,14 @@ const en = {
     "Check player details. Date of birth must preserve all active roster age groups.",
   addRoster: "Add to roster",
   rosterHelp:
-    "Only active players in this age group may join. Maximum 10 per season roster. Tournaments use this active roster directly.",
+    "Active players in this age group or younger may join. Maximum 10 per season roster. Tournaments use this active roster directly.",
   rosterInvalid:
     "Could not add player. Check registration, age, current club, active status and roster capacity.",
   removeRoster: "End roster membership",
   reason: "Reason",
+  confirmAction: "I confirm this action",
+  ageIneligible:
+    "This player exceeds the lineup age limit for the season. Younger players may play in older categories.",
   dropPlayer: "Mark dropped out",
   effectiveDate: "Effective date",
   transferPlayer: "Approve transfer",
@@ -301,7 +304,7 @@ const en = {
   noSeasons: "No seasons yet.",
   configLocked: "Season configuration is locked.",
   ageRule:
-    "Age on December 31: U13 under 13, U15 ages 13–14, U17 ages 15–16. No playing up.",
+    "Age on December 31: U13 under 13, U15 ages 13–14, U17 ages 15–16. Younger players may play in older categories.",
   seasonInvalid:
     "Check the season name, year and dates. Dates must contain all existing tournaments.",
   tourInvalid:
@@ -395,10 +398,10 @@ const ru: Messages = {
   seedA: "Первая позиция посева",
   seedB: "Вторая позиция посева",
   swapHelp:
-    "Поменяйте две позиции с сохранением зафиксированных игроков и рейтингов. Предыдущие версии остаются в истории. Укажите причину до публикации.",
+    "Поменяйте две позиции с сохранением зафиксированных игроков и рейтингов. Предыдущие версии остаются в истории. Подтвердите действие до публикации.",
   swapConfirm: "Я проверил оба клуба и подтверждаю обмен позициями.",
   swapInvalid:
-    "Не удалось поменять посев. Обновите страницу и проверьте разные позиции, причину, версию и статус публикации.",
+    "Не удалось поменять посев. Обновите страницу и проверьте разные позиции, подтверждение, версию и статус публикации.",
   seedAdjustment: "Ручная корректировка посева",
   chooseSeed: "Выберите позицию",
 
@@ -451,7 +454,7 @@ const ru: Messages = {
   replacePlayer: "Заменить игрока в составе",
   replacementPlayer: "Игрок на замену",
   replacementInvalid:
-    "Замена не выполнена. Обновите состав и проверьте игрока, позицию, причину и что одиночная игра ещё не началась.",
+    "Замена не выполнена. Обновите состав и проверьте игрока, позицию, подтверждение и что одиночная игра ещё не началась.",
   replacementHelp:
     "Для ещё не начавшейся игры можно выбрать другого допущенного игрока состава того же пола. Исходная заявка и история замен сохраняются.",
   noReplacement:
@@ -631,11 +634,14 @@ const ru: Messages = {
     "Проверьте данные игрока. Дата рождения должна соответствовать всем активным составам.",
   addRoster: "Добавить в состав",
   rosterHelp:
-    "В состав входят только активные игроки этой возрастной группы. Максимум 10 на сезон. Турниры используют этот активный состав.",
+    "В состав входят активные игроки этой возрастной группы или младше. Максимум 10 на сезон. Турниры используют этот активный состав.",
   rosterInvalid:
     "Не удалось добавить игрока. Проверьте регистрацию, возраст, текущий клуб, статус и лимит состава.",
   removeRoster: "Завершить участие в составе",
   reason: "Причина",
+  confirmAction: "Подтверждаю действие",
+  ageIneligible:
+    "Игрок старше допустимого возраста состава в этом сезоне. Младшие игроки могут играть в старших категориях.",
   dropPlayer: "Отметить выбытие",
   effectiveDate: "Дата события",
   transferPlayer: "Одобрить переход",
@@ -687,7 +693,7 @@ const ru: Messages = {
   noSeasons: "Сезонов пока нет.",
   configLocked: "Настройки сезона заблокированы.",
   ageRule:
-    "Возраст на 31 декабря: U13 — до 13 лет, U15 — 13–14 лет, U17 — 15–16 лет. Игра в старшей группе запрещена.",
+    "Возраст на 31 декабря: U13 — до 13 лет, U15 — 13–14 лет, U17 — 15–16 лет. Младшие игроки могут играть в старших категориях.",
   seasonInvalid:
     "Проверьте название, год и даты сезона. Даты должны включать все существующие турниры.",
   tourInvalid:
@@ -779,10 +785,10 @@ const kk: Messages = {
   seedA: "Бірінші себу орны",
   seedB: "Екінші себу орны",
   swapHelp:
-    "Бекітілген ойыншылар мен рейтингтерді сақтап, екі орынды ауыстырыңыз. Алдыңғы нұсқалар тарихта қалады. Жариялауға дейін себебін жазыңыз.",
+    "Бекітілген ойыншылар мен рейтингтерді сақтап, екі орынды ауыстырыңыз. Алдыңғы нұсқалар тарихта қалады. Жариялауға дейін әрекетті растаңыз.",
   swapConfirm: "Екі клубты тексердім және орындарды ауыстыруды растаймын.",
   swapInvalid:
-    "Себу ауыстырылмады. Бетті жаңартып, әртүрлі орындарды, себебін, нұсқаны және жариялау күйін тексеріңіз.",
+    "Себу ауыстырылмады. Бетті жаңартып, әртүрлі орындарды, растауды, нұсқаны және жариялау күйін тексеріңіз.",
   seedAdjustment: "Себуді қолмен түзету",
   chooseSeed: "Себу орнын таңдаңыз",
 
@@ -834,7 +840,7 @@ const kk: Messages = {
   replacePlayer: "Бекітілген ойыншыны ауыстыру",
   replacementPlayer: "Алмастыратын ойыншы",
   replacementInvalid:
-    "Ауыстыру орындалмады. Құрамды жаңартып, ойыншыны, орынды, себепті және жеке ойынның басталмағанын тексеріңіз.",
+    "Ауыстыру орындалмады. Құрамды жаңартып, ойыншыны, орынды, растауды және жеке ойынның басталмағанын тексеріңіз.",
   replacementHelp:
     "Басталмаған ойынға құрамдағы сол жыныстағы басқа жарамды ойыншы таңдалады. Бастапқы өтінім мен ауыстыру тарихы сақталады.",
   noReplacement: "Бос жарамды қосалқы ойыншы немесе басталмаған ойын орны жоқ.",
@@ -1012,11 +1018,14 @@ const kk: Messages = {
     "Ойыншы деректерін тексеріңіз. Туған күні барлық белсенді құрамдардың жас тобына сәйкес болуы керек.",
   addRoster: "Құрамға қосу",
   rosterHelp:
-    "Тек осы жас тобындағы белсенді ойыншылар қосылады. Маусымдық құрамда ең көбі 10 ойыншы. Турнирлер осы белсенді құрамды пайдаланады.",
+    "Осы жас тобындағы немесе одан кіші белсенді ойыншылар қосылады. Маусымдық құрамда ең көбі 10 ойыншы. Турнирлер осы белсенді құрамды пайдаланады.",
   rosterInvalid:
     "Ойыншы қосылмады. Тіркелуін, жасын, қазіргі клубын, күйін және құрам шегін тексеріңіз.",
   removeRoster: "Құрамға қатысуды аяқтау",
   reason: "Себеп",
+  confirmAction: "Әрекетті растаймын",
+  ageIneligible:
+    "Ойыншы осы маусымдағы құрамның жас шегінен үлкен. Кіші ойыншылар үлкен санаттарда ойнай алады.",
   dropPlayer: "Шыққанын белгілеу",
   effectiveDate: "Оқиға күні",
   transferPlayer: "Ауысуды мақұлдау",
@@ -1067,7 +1076,7 @@ const kk: Messages = {
   noSeasons: "Маусымдар әлі жоқ.",
   configLocked: "Маусым баптаулары бұғатталған.",
   ageRule:
-    "31 желтоқсандағы жас: U13 — 13 жасқа дейін, U15 — 13–14 жас, U17 — 15–16 жас. Үлкен жас тобына қатысуға болмайды.",
+    "31 желтоқсандағы жас: U13 — 13 жасқа дейін, U15 — 13–14 жас, U17 — 15–16 жас. Кіші ойыншылар үлкен санаттарда ойнай алады.",
   seasonInvalid:
     "Маусымның атауын, жылын және күндерін тексеріңіз. Күндер барлық турнирлерді қамтуы керек.",
   tourInvalid:
@@ -1153,4 +1162,9 @@ const kk: Messages = {
 };
 export function messages(locale: Locale): Messages {
   return { ru, kk, en }[locale];
+}
+
+// New confirmations retain the legacy audit-note storage without inventing explanations.
+export function actionNote(locale: Locale, note: string | null | undefined) {
+  return note === "Action confirmed" ? messages(locale).confirmAction : note;
 }

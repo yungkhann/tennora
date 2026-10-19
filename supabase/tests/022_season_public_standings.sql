@@ -51,17 +51,17 @@ select public.submit_lineup('fffff200-0000-4000-8000-000000000001',match,subteam
 select set_config('request.jwt.claims','{"sub":"aaaaf200-0000-4000-8000-000000000004","role":"authenticated"}',true);
 select public.submit_lineup('fffff200-0000-4000-8000-000000000002',match,subteam_b,players_b) from lineup_fixture;
 select set_config('request.jwt.claims','{"sub":"aaaaf200-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select public.assign_table_judge('fffff200-0000-4000-8000-000000000003','ccccf200-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaf200-0000-4000-8000-000000000006',0,'Lifecycle fixture judge');
-select public.manage_match('ddddf200-0000-4000-8000-000000000010',match,'assign',127,2,'Scoring fixture table') from lineup_fixture;
-select public.manage_match('ddddf200-0000-4000-8000-000000000011',match,'call',null,3,'Scoring fixture call') from lineup_fixture;
-select public.manage_match('ddddf200-0000-4000-8000-000000000012',match,'start',null,4,'Scoring fixture ready') from lineup_fixture;
+select public.assign_table_judge('fffff200-0000-4000-8000-000000000003','ccccf200-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaf200-0000-4000-8000-000000000006',0,true);
+select public.manage_match('ddddf200-0000-4000-8000-000000000010',match,'assign',127,2,true) from lineup_fixture;
+select public.manage_match('ddddf200-0000-4000-8000-000000000011',match,'call',null,3,true) from lineup_fixture;
+select public.manage_match('ddddf200-0000-4000-8000-000000000012',match,'start',null,4,true) from lineup_fixture;
 create temp table score_fixture(games uuid[],first_point uuid,last_command uuid,last_expected integer);
 grant all on score_fixture to authenticated;
 insert into score_fixture(games,first_point) select array_agg(id order by slot),'fffff200-0000-4000-8000-000000000020'::uuid from public.singles_games where match_id=(select match from lineup_fixture);
 select set_config('request.jwt.claims','{"sub":"aaaaf200-0000-4000-8000-000000000006","role":"authenticated"}',true);
-select public.score_command('fffff200-0000-4000-8000-000000000010',(select games[1] from score_fixture),'start','a',0,'Initial server');
+select public.score_command('fffff200-0000-4000-8000-000000000010',(select games[1] from score_fixture),'start','a',0,true);
 
-do $$declare i integer;j integer;v integer;target uuid;begin for j in 1..3 loop select games[j] into target from score_fixture;if j>1 then perform public.score_command(gen_random_uuid(),target,'start','a',0,'Original game');end if;for i in 1..33 loop select score_version into v from public.singles_games where id=target;perform public.score_command(gen_random_uuid(),target,'point','a',v,'Original point');end loop;end loop;end;$$;
+do $$declare i integer;j integer;v integer;target uuid;begin for j in 1..3 loop select games[j] into target from score_fixture;if j>1 then perform public.score_command(gen_random_uuid(),target,'start','a',0,true);end if;for i in 1..33 loop select score_version into v from public.singles_games where id=target;perform public.score_command(gen_random_uuid(),target,'point','a',v,true);end loop;end loop;end;$$;
 reset role;
 select is((select count(*)::int from public.tour_placements where draw_id='eeeef200-0000-4000-8000-000000000001'),2,'final single-group tour projects both placements');
 select is((select (configuration->'tours'->1->>'placement_weight')::int from public.season_configuration_snapshots where season_id='bbbbf200-0000-4000-8000-000000000001'),2,'season start freezes tour placement weights');
@@ -85,12 +85,12 @@ do $$declare ordinal integer;tour uuid;draw uuid;tm public.team_matches;sub uuid
    perform set_config('request.jwt.claims',jsonb_build_object('sub',trainer,'role','authenticated')::text,true);perform public.submit_lineup(gen_random_uuid(),tm.id,sub,players);
   end loop;
   perform set_config('request.jwt.claims','{"sub":"aaaaf200-0000-4000-8000-000000000001","role":"authenticated"}',true);
-  perform public.manage_match(gen_random_uuid(),tm.id,'assign',127,2,'Standings fixture assignment');perform public.manage_match(gen_random_uuid(),tm.id,'start',null,3,'Standings fixture start');
+  perform public.manage_match(gen_random_uuid(),tm.id,'assign',127,2,true);perform public.manage_match(gen_random_uuid(),tm.id,'start',null,3,true);
   select case ordinal when 2 then subteam_b else subteam_a end into winning_subteam from lineup_fixture;winning_side:=case when tm.subteam_a=winning_subteam then 'a' else 'b' end;
   perform set_config('request.jwt.claims','{"sub":"aaaaf200-0000-4000-8000-000000000006","role":"authenticated"}',true);
   for target in select * from public.singles_games where match_id=tm.id and slot<=3 order by slot loop
-   perform public.score_command(gen_random_uuid(),target.id,'start','a',0,'Standings initial server');
-   for i in 1..33 loop select score_version into v from public.singles_games where id=target.id;perform public.score_command(gen_random_uuid(),target.id,'point',winning_side,v,'Standings point');end loop;
+   perform public.score_command(gen_random_uuid(),target.id,'start','a',0,true);
+   for i in 1..33 loop select score_version into v from public.singles_games where id=target.id;perform public.score_command(gen_random_uuid(),target.id,'point',winning_side,v,true);end loop;
   end loop;
   -- The next iteration simulates an hour of venue time passing.
   perform pg_temp.wait_for_rest();

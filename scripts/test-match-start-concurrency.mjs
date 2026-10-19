@@ -98,11 +98,11 @@ try {
     .split("\n")
     .filter(Boolean);
   sql(
-    `begin;${claims(users[0])}select public.manage_match('${randomUUID()}','${fixture.match}','assign',127,2,'Race assignment');select public.manage_match('${randomUUID()}','${fixture.match}','call',null,3,'Race call');commit;`,
+    `begin;${claims(users[0])}select public.manage_match('${randomUUID()}','${fixture.match}','assign',127,2,true);select public.manage_match('${randomUUID()}','${fixture.match}','call',null,3,true);commit;`,
   );
   const application = `tennora-match-start-${token}`;
   const payload = (id) =>
-    `select public.manage_match('${id}','${fixture.match}','start',null,4,'Start ready match');`;
+    `select public.manage_match('${id}','${fixture.match}','start',null,4,true);`;
   const first = session(
     `set application_name='${application}';begin;${claims(users[0])}${payload(startA)}select pg_sleep(2);commit;`,
   );

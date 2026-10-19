@@ -17,17 +17,23 @@ export const publicDirectory = cache(async () => {
 });
 export const publicPlayers = cache(async () => {
   if (!publicSupabaseEnv()) return [];
-  const r = await anonymousClient()
-    .from("public_league_players")
-    .select(
-      "id,first_name,last_name,rating,team_id,team_name,age_group,has_photo",
-    )
-    .order("rating", { ascending: false })
-    .order("last_name")
-    .order("id")
-    .limit(1000);
-  if (r.error) throw new Error("Public ranking unavailable");
-  return publicPlayerSchema.array().parse(r.data);
+  // Fetch every approved row in stable order; a global cap could omit one gender.
+  const players = [];
+  for (let offset = 0; ; offset += 1000) {
+    const r = await anonymousClient()
+      .from("public_league_players")
+      .select(
+        "id,first_name,last_name,rating,team_id,team_name,age_group,has_photo,gender",
+      )
+      .order("rating", { ascending: false })
+      .order("last_name")
+      .order("id")
+      .range(offset, offset + 999);
+    if (r.error) throw new Error("Public ranking unavailable");
+    const batch = publicPlayerSchema.array().parse(r.data);
+    players.push(...batch);
+    if (batch.length < 1000) return players;
+  }
 });
 export const publicPlayer = cache(async (id: string) => {
   if (!publicSupabaseEnv()) return null;

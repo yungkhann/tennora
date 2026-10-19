@@ -45,7 +45,7 @@ select public.submit_lineup('fffff000-0000-4000-8000-000000000001',match,subteam
 select set_config('request.jwt.claims','{"sub":"aaaaf000-0000-4000-8000-000000000004","role":"authenticated"}',true);
 select public.submit_lineup('fffff000-0000-4000-8000-000000000002',match,subteam_b,players_b) from lineup_fixture;
 select set_config('request.jwt.claims','{"sub":"aaaaf000-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select public.assign_table_judge('fffff000-0000-4000-8000-000000000003','ccccf000-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaf000-0000-4000-8000-000000000006',0,'Lifecycle fixture judge');
+select public.assign_table_judge('fffff000-0000-4000-8000-000000000003','ccccf000-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaf000-0000-4000-8000-000000000006',0,true);
 
 create temp table hall_fixture(snapshot jsonb,receipt jsonb,id uuid);
 grant all on hall_fixture to authenticated;
@@ -58,27 +58,27 @@ select ok(not ((select snapshot from hall_fixture)::text like '%Hidden%'),'hall 
 reset role;
 insert into public.player_rest_heads(player_id,last_ended_at) select players_a[1],clock_timestamp() from lineup_fixture;
 set local role authenticated;
-select throws_ok($$select public.manage_match(gen_random_uuid(),match,'assign',127,2,'Too early assignment') from lineup_fixture$$,'55000','Player rest incomplete','manual allocation cannot bypass actual rest');
-select is(jsonb_array_length(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','allocate','Rest-aware automatic allocation')->'outcomes'),1,'allocator records blocked readiness outcome');
+select throws_ok($$select public.manage_match(gen_random_uuid(),match,'assign',127,2,true) from lineup_fixture$$,'55000','Player rest incomplete','manual allocation cannot bypass actual rest');
+select is(jsonb_array_length(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','allocate',true)->'outcomes'),1,'allocator records blocked readiness outcome');
 select is((select count(*)::int from public.match_table_leases where match_id=(select match from lineup_fixture)),0,'allocator leaves resting players unassigned');
 reset role;
 update public.player_rest_heads set last_ended_at=clock_timestamp()-interval '61 minutes' where player_id=(select players_a[1] from lineup_fixture);
 set local role authenticated;
-update hall_fixture set receipt=public.run_hall_command(id,'ccccf000-0000-4000-8000-000000000001','allocate','Allocate ready matches');
+update hall_fixture set receipt=public.run_hall_command(id,'ccccf000-0000-4000-8000-000000000001','allocate',true);
 select is((select count(*)::int from public.match_table_leases where match_id=(select match from lineup_fixture)),1,'allocator assigns a rested ready match once');
-select is(public.run_hall_command((select id from hall_fixture),'ccccf000-0000-4000-8000-000000000001','allocate','Allocate ready matches'),(select receipt from hall_fixture),'exact bulk retry returns original outcome');
-select throws_ok($$select public.run_hall_command((select id from hall_fixture),'ccccf000-0000-4000-8000-000000000001','start_all','Changed command')$$,'22023','Hall command ID conflict','hall command ID cannot change meaning');
+select is(public.run_hall_command((select id from hall_fixture),'ccccf000-0000-4000-8000-000000000001','allocate',true),(select receipt from hall_fixture),'exact bulk retry returns original outcome');
+select throws_ok($$select public.run_hall_command((select id from hall_fixture),'ccccf000-0000-4000-8000-000000000001','start_all',true)$$,'22023','Hall command ID conflict','hall command ID cannot change meaning');
 -- No owner on the automatically chosen table: bulk start reports a blocked item.
-select is(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','start_all','Try before judge assignment')->'outcomes'->0->>'ok','false','bulk start retains blocked matches for official resolution');
-select public.assign_table_judge(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,null,1,'Release prior fixture duty');
-select public.assign_table_judge(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001',(select table_number from public.match_table_leases where match_id=(select match from lineup_fixture)),(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaf000-0000-4000-8000-000000000006',0,'Current line judge assignment');
-select is(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','start_all','Start rested ready match')->'outcomes'->0->>'ok','true','bulk start starts a ready owned table');
+select is(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','start_all',true)->'outcomes'->0->>'ok','false','bulk start retains blocked matches for official resolution');
+select public.assign_table_judge(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,null,1,true);
+select public.assign_table_judge(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001',(select table_number from public.match_table_leases where match_id=(select match from lineup_fixture)),(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaf000-0000-4000-8000-000000000006',0,true);
+select is(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','start_all',true)->'outcomes'->0->>'ok','true','bulk start starts a ready owned table');
 select is((select status::text from public.team_matches where id=(select match from lineup_fixture)),'in_progress','bulk start commits actual match state');
 select is((select count(*)::int from public.live_players where match_id=(select match from lineup_fixture)),10,'bulk start reserves ten exclusive players');
-select is(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','allocate','Nothing new')->'outcomes','[]'::jsonb,'allocator never reassigns live matches');
+select is(public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','allocate',true)->'outcomes','[]'::jsonb,'allocator never reassigns live matches');
 select set_config('request.jwt.claims','{"sub":"aaaaf000-0000-4000-8000-000000000003","role":"authenticated"}',true);
 select throws_ok($$select public.get_hall_snapshot('ccccf000-0000-4000-8000-000000000001')$$,'42501','Match management permission required','Trainer cannot read hall operations');
-select throws_ok($$select public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','allocate','Forged allocation')$$,'42501','Match management permission required','Trainer cannot allocate directly');
+select throws_ok($$select public.run_hall_command(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001','allocate',true)$$,'42501','Match management permission required','Trainer cannot allocate directly');
 select throws_ok($$insert into public.hall_commands(id,tour_id,actor_id,request,response) values(gen_random_uuid(),'ccccf000-0000-4000-8000-000000000001',auth.uid(),'{}','{}')$$,'42501',null,'staff cannot forge hall receipts');
 reset role;
 set local role anon;

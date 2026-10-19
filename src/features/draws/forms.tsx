@@ -84,6 +84,7 @@ export function SwapSeedsForm({
   const t = messages(locale);
   return (
     <MutationForm
+      confirmation
       locale={locale}
       action={swapSeeds}
       label={t.swapSeeds}
@@ -111,25 +112,7 @@ export function SwapSeedsForm({
           </label>
         ))}
       </div>
-      <label className="grid gap-2 text-sm">
-        {t.reason}
-        <textarea
-          name="reason"
-          required
-          maxLength={500}
-          className="min-h-20 rounded-lg border bg-background p-2"
-        />
-      </label>
-      <label className="flex items-start gap-3 text-sm leading-6">
-        <input
-          type="checkbox"
-          name="confirm"
-          value="yes"
-          required
-          className="mt-1 size-4 shrink-0"
-        />
-        {t.swapConfirm}
-      </label>
+      <p className="text-sm text-muted-foreground">{t.swapConfirm}</p>
     </MutationForm>
   );
 }

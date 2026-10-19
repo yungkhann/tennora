@@ -19,23 +19,23 @@ select public.save_tour('cccce200-0000-4000-8000-000000000001','bbbbe200-0000-40
 select public.save_tournament_settings('dddde200-0000-4000-8000-000000000001','cccce200-0000-4000-8000-000000000001',0,32,128,60,true,'Asia/Almaty');
 -- MATCH_DAY_FIXTURE_END: shared by scripts/test-table-owner-concurrency.mjs
 select throws_ok($$select public.save_tournament_settings(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',1,9007199254740992,12,60,true,'Asia/Almaty')$$,'22023','Invalid tournament settings','unsafe K rejected before match day');
-select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',129,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,'Assignment')$$,'22023','Valid table, venue date and reason required','table must be configured for tour');
-select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day+1 from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,'Assignment')$$,'22023','Valid table, venue date and reason required','assignment date must be a tour day');
-select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000005',0,'Assignment')$$,'22023','Active Line Judge required','Trainer authority cannot become scoring ownership');
-select lives_ok($$select public.assign_table_judge('eeeee200-0000-4000-8000-000000000001','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,'Initial table assignment')$$,'Organizer assigns active Line Judge');
-select lives_ok($$select public.assign_table_judge('eeeee200-0000-4000-8000-000000000001','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,'Initial table assignment')$$,'exact assignment retry is idempotent');
-select throws_ok($$select public.assign_table_judge('eeeee200-0000-4000-8000-000000000001','cccce200-0000-4000-8000-000000000001',128,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,'Initial table assignment')$$,'22023','Assignment ID conflict','changed payload cannot reuse assignment receipt');
-select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',128,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,'Assignment')$$,'22023','Judge already assigned to another table','one judge cannot own two tables for same venue date');
+select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',129,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,true)$$,'22023','Valid table, venue date and reason required','table must be configured for tour');
+select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day+1 from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,true)$$,'22023','Valid table, venue date and reason required','assignment date must be a tour day');
+select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000005',0,true)$$,'22023','Active Line Judge required','Trainer authority cannot become scoring ownership');
+select lives_ok($$select public.assign_table_judge('eeeee200-0000-4000-8000-000000000001','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,true)$$,'Organizer assigns active Line Judge');
+select lives_ok($$select public.assign_table_judge('eeeee200-0000-4000-8000-000000000001','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,true)$$,'exact assignment retry is idempotent');
+select throws_ok($$select public.assign_table_judge('eeeee200-0000-4000-8000-000000000001','cccce200-0000-4000-8000-000000000001',128,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,true)$$,'22023','Assignment ID conflict','changed payload cannot reuse assignment receipt');
+select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',128,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,true)$$,'22023','Judge already assigned to another table','one judge cannot own two tables for same venue date');
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000003","role":"authenticated"}',true);
 select is((select count(*)::int from public.table_day_heads where venue_day=(select day from day_fixture)),1,'assigned Line Judge can read own current head');
-select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',128,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,'Assignment')$$,'42501','Match management permission required','Line Judge cannot grant scoring assignments');
-select throws_ok($$select public.takeover_table(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),1,'Tablet failure')$$,'42501','Match management permission required','Line Judge cannot use official takeover');
+select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',128,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000003',0,true)$$,'42501','Match management permission required','Line Judge cannot grant scoring assignments');
+select throws_ok($$select public.takeover_table(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),1,true)$$,'42501','Match management permission required','Line Judge cannot use official takeover');
 reset role;
 select ok(private.owns_scoring_table(127,'cccce200-0000-4000-8000-000000000001'),'current assigned judge owns table today in venue timezone');
 select ok(not private.owns_scoring_table(128,'cccce200-0000-4000-8000-000000000001'),'same judge has no authority at another table');
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000002","role":"authenticated"}',true);
-select lives_ok($$select public.takeover_table('eeeee200-0000-4000-8000-000000000002','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),1,'Line Judge tablet failed')$$,'Main Judge records self takeover');
+select lives_ok($$select public.takeover_table('eeeee200-0000-4000-8000-000000000002','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),1,true)$$,'Main Judge records self takeover');
 reset role;
 select ok(private.owns_scoring_table(127,'cccce200-0000-4000-8000-000000000001'),'audited acting Main Judge owns scoring table');
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000003","role":"authenticated"}',true);
@@ -45,11 +45,11 @@ select is((select count(*)::int from public.table_day_heads where venue_day=(sel
 select is((select count(*)::int from public.table_judge_assignments where context_tour_id='cccce200-0000-4000-8000-000000000001'),1,'old judge retains only own assignment history');
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000002","role":"authenticated"}',true);
 select is((select count(*)::int from public.table_judge_assignments where context_tour_id='cccce200-0000-4000-8000-000000000001'),2,'Main Judge sees retained assignment revisions');
-select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000004',1,'Restore judge')$$,'40001','Assignment version conflict','stale assignment change rejected');
-select public.assign_table_judge('eeeee200-0000-4000-8000-000000000003','cccce200-0000-4000-8000-000000000001',127,day,'aaaae200-0000-4000-8000-000000000004',2,'Replacement tablet ready') from day_fixture;
-select lives_ok($$select public.takeover_table('eeeee200-0000-4000-8000-000000000002','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),1,'Line Judge tablet failed')$$,'old exact takeover receipt returns without retaking ownership');
+select throws_ok($$select public.assign_table_judge(gen_random_uuid(),'cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),'aaaae200-0000-4000-8000-000000000004',1,true)$$,'40001','Assignment version conflict','stale assignment change rejected');
+select public.assign_table_judge('eeeee200-0000-4000-8000-000000000003','cccce200-0000-4000-8000-000000000001',127,day,'aaaae200-0000-4000-8000-000000000004',2,true) from day_fixture;
+select lives_ok($$select public.takeover_table('eeeee200-0000-4000-8000-000000000002','cccce200-0000-4000-8000-000000000001',127,(select day from day_fixture),1,true)$$,'old exact takeover receipt returns without retaking ownership');
 select is((select version from public.table_day_heads where venue_day=(select day from day_fixture) and table_number=127),3,'old receipt does not rewind head');
-select public.assign_table_judge('eeeee200-0000-4000-8000-000000000004','cccce200-0000-4000-8000-000000000001',127,day,null,3,'End of duty') from day_fixture;
+select public.assign_table_judge('eeeee200-0000-4000-8000-000000000004','cccce200-0000-4000-8000-000000000001',127,day,null,3,true) from day_fixture;
 select is((select staff_id from public.table_day_heads where venue_day=(select day from day_fixture) and table_number=127),null::uuid,'release removes current scoring owner');
 select is((select count(*)::int from public.table_judge_assignments where context_tour_id='cccce200-0000-4000-8000-000000000001'),4,'release preserves all prior assignments');
 reset role;
@@ -57,7 +57,7 @@ select is((select count(*)::int from public.audit_logs where entity_id='eeeee200
 select throws_ok($$update public.table_day_heads set version=99 where venue_day=(select day from day_fixture) and table_number=127$$,'22023','Consistent table assignment head required','head pointer cannot claim another version');
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000001","role":"authenticated"}',true);
 -- Reserve high synthetic table numbers so normal twelve-table local activity is untouched.
-select public.assign_table_judge('eeeee200-0000-4000-8000-000000000005','cccce200-0000-4000-8000-000000000001',128,day,'aaaae200-0000-4000-8000-000000000003',0,'Active status check') from day_fixture;
+select public.assign_table_judge('eeeee200-0000-4000-8000-000000000005','cccce200-0000-4000-8000-000000000001',128,day,'aaaae200-0000-4000-8000-000000000003',0,true) from day_fixture;
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000003","role":"authenticated"}',true);
 select ok(private.owns_scoring_table(128,'cccce200-0000-4000-8000-000000000001'),'new active assignment grants its exact table only');
 update public.staff_accounts set active=false where id='aaaae200-0000-4000-8000-000000000003';
@@ -69,8 +69,8 @@ insert into public.staff_roles values('aaaae200-0000-4000-8000-000000000003','li
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000001","role":"authenticated"}',true);
 select public.save_tour('cccce200-0000-4000-8000-000000000002','bbbbe200-0000-4000-8000-000000000001','Other Day Tour',2,case when extract(month from day)=12 and extract(day from day)=31 then day-1 else day+1 end,case when extract(month from day)=12 and extract(day from day)=31 then day-1 else day+1 end) from day_fixture;
 select public.save_tournament_settings('dddde200-0000-4000-8000-000000000002','cccce200-0000-4000-8000-000000000002',0,32,128,60,true,'Asia/Almaty');
-select public.assign_table_judge('eeeee200-0000-4000-8000-000000000006','cccce200-0000-4000-8000-000000000002',127,case when extract(month from day)=12 and extract(day from day)=31 then day-1 else day+1 end,'aaaae200-0000-4000-8000-000000000003',0,'Other venue day') from day_fixture;
-select throws_ok($$select public.takeover_table(gen_random_uuid(),'cccce200-0000-4000-8000-000000000002',127,(select case when extract(month from day)=12 and extract(day from day)=31 then day-1 else day+1 end from day_fixture),1,'Not current venue day')$$,'42501','Acting official and current venue day required','fallback takeover is limited to actual venue day');
+select public.assign_table_judge('eeeee200-0000-4000-8000-000000000006','cccce200-0000-4000-8000-000000000002',127,case when extract(month from day)=12 and extract(day from day)=31 then day-1 else day+1 end,'aaaae200-0000-4000-8000-000000000003',0,true) from day_fixture;
+select throws_ok($$select public.takeover_table(gen_random_uuid(),'cccce200-0000-4000-8000-000000000002',127,(select case when extract(month from day)=12 and extract(day from day)=31 then day-1 else day+1 end from day_fixture),1,true)$$,'42501','Acting official and current venue day required','fallback takeover is limited to actual venue day');
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000003","role":"authenticated"}',true);
 select ok(not private.owns_scoring_table(127,'cccce200-0000-4000-8000-000000000002'),'assignment on another venue day grants no current scoring authority');
 select set_config('request.jwt.claims','{"sub":"aaaae200-0000-4000-8000-000000000001","role":"authenticated"}',true);
@@ -90,7 +90,7 @@ select throws_ok($$select private.owns_scoring_table(127,'cccce200-0000-4000-800
 reset role;
 set local role anon;
 select throws_ok($$select * from public.table_day_heads$$,'42501',null,'anonymous cannot read private scoring owners');
-select throws_ok($$select public.takeover_table(gen_random_uuid(),gen_random_uuid(),1,current_date,0,'Takeover')$$,'42501',null,'anonymous cannot take over scoring');
+select throws_ok($$select public.takeover_table(gen_random_uuid(),gen_random_uuid(),1,current_date,0,true)$$,'42501',null,'anonymous cannot take over scoring');
 reset role;
 select * from finish();
 rollback;

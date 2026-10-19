@@ -149,7 +149,7 @@ test("transfer between hidden submissions reveals atomically and an official rep
       await f.operator.rpc("transfer_player", {
         player: playersA[0],
         new_club: subB.team_id,
-        reason: "Organizer-approved season transfer",
+        confirmed: true,
       }),
     );
     check(
@@ -218,9 +218,7 @@ test("transfer between hidden submissions reveals atomically and an official rep
     await replace
       .getByRole("combobox", { name: "Replacement player", exact: true })
       .selectOption(reserve);
-    await replace
-      .getByLabel("Reason", { exact: true })
-      .fill("Eligible reserve after approved transfer");
+    await replace.getByLabel("I confirm this action", { exact: true }).check();
     await replace
       .getByRole("button", { name: "Replace locked player", exact: true })
       .click();

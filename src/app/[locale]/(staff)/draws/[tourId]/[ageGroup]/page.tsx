@@ -1,3 +1,4 @@
+import { actionNote } from "@/lib/locales";
 import { randomUUID } from "node:crypto";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -168,7 +169,8 @@ export default async function Page({
       )}
       {adjustmentResult?.data && (
         <p className="mt-4 break-words text-sm">
-          <strong>{t.seedAdjustment}:</strong> {adjustmentResult.data.reason}
+          <strong>{t.seedAdjustment}:</strong>{" "}
+          {actionNote(locale, adjustmentResult.data.reason)}
         </p>
       )}
       {!draw?.published_at && (

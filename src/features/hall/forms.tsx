@@ -17,26 +17,14 @@ export function HallBatchForm({
   const t = hallMessages(locale);
   return (
     <MutationForm
+      confirmation
       once
       locale={locale}
       action={hallCommand}
       label={operation === "allocate" ? t.allocate : t.startAll}
       hidden={{ id: randomUUID(), tour, operation }}
     >
-      <label>
-        {t.reason}
-        <Input name="reason" maxLength={500} required />
-      </label>
-      <label className="flex gap-3 text-sm">
-        <input
-          type="checkbox"
-          className="mt-1 size-4 shrink-0"
-          name="confirm"
-          value="yes"
-          required
-        />
-        {t.bulk}
-      </label>
+      <p className="text-sm text-muted-foreground">{t.bulk}</p>
     </MutationForm>
   );
 }
@@ -56,6 +44,7 @@ export function MatchOperationForm({
   const t = hallMessages(locale);
   return (
     <MutationForm
+      confirmation
       once
       locale={locale}
       action={matchCommand}
@@ -68,10 +57,6 @@ export function MatchOperationForm({
           <Input name="table" type="number" min="1" max={tables} required />
         </label>
       )}
-      <label>
-        {t.reason}
-        <Input name="reason" maxLength={500} required />
-      </label>
     </MutationForm>
   );
 }
@@ -87,6 +72,7 @@ export function JudgeAssignmentForm({
   const t = hallMessages(locale);
   return (
     <MutationForm
+      confirmation
       once
       locale={locale}
       action={judgeCommand}
@@ -121,10 +107,6 @@ export function JudgeAssignmentForm({
           </option>
         ))}
       </select>
-      <label>
-        {t.reason}
-        <Input name="reason" maxLength={500} required />
-      </label>
     </MutationForm>
   );
 }

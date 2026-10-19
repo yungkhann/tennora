@@ -5,6 +5,7 @@ import type { Database } from "../../../src/lib/supabase/database.types";
 export async function drawFixture(
   options: {
     knockoutSize?: number;
+    age?: "U13" | "U15" | "U17";
     currentDay?: boolean;
     tables?: number;
   } = {},
@@ -517,7 +518,7 @@ export async function drawFixture(
       .from("subteams")
       .select("id,team_id")
       .in("team_id", clubs)
-      .eq("age_group", "U13");
+      .eq("age_group", options.age ?? "U13");
     check(subs);
     const people: Database["public"]["Tables"]["players"]["Insert"][] = [],
       members: Database["public"]["Tables"]["roster_memberships"]["Insert"][] =

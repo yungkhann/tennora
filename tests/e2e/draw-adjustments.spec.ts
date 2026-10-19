@@ -67,9 +67,7 @@ test("Organizer appends a frozen seed swap, then publishes a locked bracket", as
     await form
       .getByRole("combobox", { name: "Second seed position", exact: true })
       .selectOption("2");
-    await form
-      .getByLabel("Reason", { exact: true })
-      .fill("Reviewed competition seed order");
+    await form.getByLabel("I confirm this action", { exact: true }).check();
     await form.getByRole("checkbox").check();
     await form.screenshot({ path: testInfo.outputPath("seed-swap-form.png") });
     await form
@@ -81,10 +79,9 @@ test("Organizer appends a frozen seed swap, then publishes a locked bracket", as
         .filter({ hasText: "Version 2 · Draft · Matches: 12" }),
     ).toBeVisible();
     await expect(
-      page.getByText(
-        "Manual seed adjustment: Reviewed competition seed order",
-        { exact: true },
-      ),
+      page.getByText("Manual seed adjustment: I confirm this action", {
+        exact: true,
+      }),
     ).toBeVisible();
     const receipt = await f.admin
       .from("draw_seed_adjustments")

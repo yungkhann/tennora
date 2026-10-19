@@ -1,3 +1,4 @@
+import { actionNote } from "@/lib/locales";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireStaff } from "@/lib/auth";
@@ -6,7 +7,7 @@ import { uuidSchema } from "@/lib/validation";
 import { Card } from "@/components/ui/card";
 import { selectClass } from "@/features/teams/forms";
 import { RosterForm, EndMembershipForm } from "@/features/players/forms";
-import { ageGroupForBirthYear } from "@/domain/eligibility";
+import { isEligibleForGroup } from "@/domain/eligibility";
 export default async function Page({
   params,
   searchParams,
@@ -70,10 +71,11 @@ export default async function Page({
     available = players.data.filter(
       (p) =>
         season &&
-        ageGroupForBirthYear(
+        isEligibleForGroup(
           Number(p.date_of_birth.slice(0, 4)),
           season.year,
-        ) === subteam.age_group &&
+          subteam.age_group,
+        ) &&
         !active.some((m) => m.player_id === p.id),
     );
   return (
@@ -138,7 +140,7 @@ export default async function Page({
                     </p>
                     {m.ended_at && (
                       <p className="mt-2 break-words text-sm">
-                        {m.ended_reason}
+                        {actionNote(locale, m.ended_reason)}
                       </p>
                     )}
                     {!m.ended_at && canEdit && (

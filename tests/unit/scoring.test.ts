@@ -118,19 +118,19 @@ it.each(["a", "b"] as const)(
   },
 );
 
-it("requires a reason and a valid side for match-specific retirement", () => {
+it("requires confirmation and a valid side for match-specific retirement", () => {
   const command = {
     command_id: "aaaaa026-0000-4000-8000-000000000090",
     game: "aaaaa026-0000-4000-8000-000000000091",
     kind: "withdrawal",
     side: "a",
     expected_version: 1,
-    note: "Injury",
+    confirmed: true,
   };
   expect(scoreCommandSchema.safeParse(command).success).toBe(true);
-  expect(scoreCommandSchema.safeParse({ ...command, note: " " }).success).toBe(
-    false,
-  );
+  expect(
+    scoreCommandSchema.safeParse({ ...command, confirmed: false }).success,
+  ).toBe(false);
   expect(scoreCommandSchema.safeParse({ ...command, side: "c" }).success).toBe(
     false,
   );
@@ -147,7 +147,7 @@ it("reopening a team forfeit cannot award a winner", () => {
     base: "aaaaa025-0000-4000-8000-000000000092",
     kind: "reopen",
     winner: null,
-    reason: "Play the match",
+    confirm: "yes",
   };
   expect(teamProposalSchema.safeParse(proposal).success).toBe(true);
   expect(

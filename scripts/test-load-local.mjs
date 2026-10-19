@@ -323,7 +323,7 @@ try {
         operation: "assign",
         table_no: free[i],
         expected_version: match.version,
-        reason: "Disposable local load reservation",
+        confirmed: true,
       }),
     );
     check(
@@ -334,7 +334,7 @@ try {
         venue_day: today,
         staff: created.user.id,
         expected_version: 0,
-        reason: "Disposable local load scoring owner",
+        confirmed: true,
       }),
     );
     const judge = await signedClient(email, pass),
@@ -360,7 +360,7 @@ try {
       command_id: randomUUID(),
       tournament: f.tour,
       operation: "start_all",
-      reason: "Thirty local load tables ready",
+      confirmed: true,
     }),
   );
   for (const judge of judges) {

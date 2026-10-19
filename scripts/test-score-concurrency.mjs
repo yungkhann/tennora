@@ -111,13 +111,13 @@ try {
     .filter(Boolean);
   const prepare = (target, start, count) =>
     sql(
-      `begin;${claims(users[5])}${start ? `select public.score_command('${randomUUID()}','${target}','start','a',0,'Initial server');` : ""}do $$declare v integer;i integer;begin for i in 1..${count} loop select score_version into v from public.singles_games where id='${target}';perform public.score_command(gen_random_uuid(),'${target}','point','a',v,'Race preparation');end loop;end;$$;commit;`,
+      `begin;${claims(users[5])}${start ? `select public.score_command('${randomUUID()}','${target}','start','a',0,true);` : ""}do $$declare v integer;i integer;begin for i in 1..${count} loop select score_version into v from public.singles_games where id='${target}';perform public.score_command(gen_random_uuid(),'${target}','point','a',v,true);end loop;end;$$;commit;`,
     );
   async function compete(target, duplicate, suffix) {
     const command = randomUUID(),
       application = `tennora-score-${token}-${suffix}`;
     const payload = (id) =>
-      `select public.score_command('${id}','${target}','point','a',33,'Finishing point');`;
+      `select public.score_command('${id}','${target}','point','a',33,true);`;
     const first = session(
       `set application_name='${application}';begin;${claims(users[5])}${payload(command)}select pg_sleep(2);commit;`,
     );
@@ -198,7 +198,7 @@ try {
   const originalResult = sql(
     `select result_id from public.singles_games where id='${games[0]}'`,
   ).trim();
-  const reviewPayload = `select public.submit_result_correction('${reviewId}','${games[0]}','${originalResult}','played','a','{"initial_server":"a","sets":[{"a":11,"b":1},{"a":11,"b":0},{"a":11,"b":0}],"timeouts":{"a":false,"b":false}}','Review race');`;
+  const reviewPayload = `select public.submit_result_correction('${reviewId}','${games[0]}','${originalResult}','played','a','{"initial_server":"a","sets":[{"a":11,"b":1},{"a":11,"b":0},{"a":11,"b":0}],"timeouts":{"a":false,"b":false}}',true);`;
   const reviewA = session(
     `set application_name='${reviewApp}';begin;${claims(users[0])}${reviewPayload}select pg_sleep(2);commit;`,
   );
@@ -245,7 +245,7 @@ try {
     .split("\n")
     .find((v) => /^[a-f0-9]{32}$/.test(v));
   if (!digest) throw new Error("Current correction digest required");
-  const applyPayload = `select public.apply_result_correction('${applyId}','${reviewId}','${digest}',false,'Apply race');`;
+  const applyPayload = `select public.apply_result_correction('${applyId}','${reviewId}','${digest}',false,true);`;
   const applyA = session(
     `set application_name='${reviewApp}';begin;${claims(users[0])}${applyPayload}select pg_sleep(2);commit;`,
   );

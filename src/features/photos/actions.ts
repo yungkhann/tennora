@@ -131,7 +131,7 @@ export async function reviewPhoto(
         await supabase.rpc("review_player_photo", {
           asset: d.asset,
           decision: d.decision,
-          reason: d.reason,
+          confirmed: true,
           publication,
         })
       ).error

@@ -22,5 +22,8 @@ export function isEligibleForGroup(
   seasonYear: number,
   group: AgeGroup,
 ) {
-  return ageGroupForBirthYear(birthYear, seasonYear) === group;
+  const category = ageGroupForBirthYear(birthYear, seasonYear);
+  return (
+    category !== null && ageGroups.indexOf(category) <= ageGroups.indexOf(group)
+  );
 }

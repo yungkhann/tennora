@@ -77,7 +77,7 @@ try {
     .replaceAll("@test.invalid", `-${token}@test.invalid`);
   sql(
     setup +
-      `select public.assign_table_judge('${assignment}','${tour}',128,day,'${users[2]}',0,'Owner concurrency fixture') from day_fixture;commit;`,
+      `select public.assign_table_judge('${assignment}','${tour}',128,day,'${users[2]}',0,true) from day_fixture;commit;`,
   );
   const application = `tennora-owner-lock-${token}`;
   const first = session(
@@ -98,7 +98,7 @@ try {
   if (!overlap) throw new Error("Scoring-owner lock barrier not reached");
   const began = Date.now();
   const second = session(
-    `begin;${claims(users[0])}select public.takeover_table('${takeover}','${tour}',128,(clock_timestamp() at time zone 'Asia/Almaty')::date,1,'Tablet failed');commit;`,
+    `begin;${claims(users[0])}select public.takeover_table('${takeover}','${tour}',128,(clock_timestamp() at time zone 'Asia/Almaty')::date,1,true);commit;`,
   );
   const [a, b] = await Promise.all([first, second]),
     blocked = Date.now() - began;

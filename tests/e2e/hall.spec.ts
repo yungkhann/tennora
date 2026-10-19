@@ -122,11 +122,9 @@ test("hall allocates, takes over, calls and bulk-starts ready matches", async ({
       name: "Allocate ready matches",
       exact: true,
     });
+    await allocate.getByLabel("I confirm this action", { exact: true }).check();
     await allocate
-      .getByLabel("Reason", { exact: true })
-      .fill("Ready teams checked at the hall");
-    await allocate
-      .getByLabel("I confirm this action for the current tournament tables.", {
+      .getByLabel("I confirm this action", {
         exact: true,
       })
       .check();
@@ -152,18 +150,14 @@ test("hall allocates, takes over, calls and bulk-starts ready matches", async ({
       .locator("..");
     await card.locator("summary").click();
     await card.locator('select[name="operation"]').selectOption("takeover");
-    await card
-      .getByLabel("Reason", { exact: true })
-      .fill("Organizer takeover for the hall test");
+    await card.getByLabel("I confirm this action", { exact: true }).check();
     await card
       .getByRole("button", { name: "Assign judge", exact: true })
       .click();
     await expect(card.getByRole("status")).toBeVisible();
     await page.goto(`/en/matches/${m.id}/manage`);
     const call = page.getByRole("form", { name: "Call teams", exact: true });
-    await call
-      .getByLabel("Reason", { exact: true })
-      .fill("Teams called to their assigned table");
+    await call.getByLabel("I confirm this action", { exact: true }).check();
     await call.getByRole("button", { name: "Call teams", exact: true }).click();
     await expect(call.getByRole("status")).toBeVisible();
     await page.goto(`/en/hall?tour=${f.tour}`);
@@ -171,11 +165,9 @@ test("hall allocates, takes over, calls and bulk-starts ready matches", async ({
       name: "Start all assigned",
       exact: true,
     });
+    await start.getByLabel("I confirm this action", { exact: true }).check();
     await start
-      .getByLabel("Reason", { exact: true })
-      .fill("All assigned teams and judges ready");
-    await start
-      .getByLabel("I confirm this action for the current tournament tables.", {
+      .getByLabel("I confirm this action", {
         exact: true,
       })
       .check();

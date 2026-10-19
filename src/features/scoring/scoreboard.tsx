@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/locales";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { messages } from "@/lib/locales";
 import {
   scoreCommandSchema,
   scoreSnapshotSchema,
@@ -23,6 +23,7 @@ export function Scoreboard({
   staffId: string;
 }) {
   const t = scoringMessages(locale),
+    [retirementConfirmed, setRetirementConfirmed] = useState(false),
     [snapshot, setSnapshot] = useState(initial),
     [connection, setConnection] = useState<Connection>("checking"),
     [pending, setPending] = useState<ScoreCommand | null>(null),
@@ -251,7 +252,7 @@ export function Scoreboard({
   function send(
     kind: ScoreCommand["kind"],
     side: "a" | "b" | null = null,
-    note = "",
+    confirmed = false,
   ) {
     if (
       !writable ||
@@ -266,7 +267,7 @@ export function Scoreboard({
       kind,
       side,
       expected_version: current.current.version,
-      note,
+      confirmed,
     });
     void transmit(command);
   }
@@ -451,12 +452,10 @@ export function Scoreboard({
             event.preventDefault();
             const form = new FormData(event.currentTarget);
             const side = form.get("retiringSide");
-            if (side === "a" || side === "b")
-              send(
-                "withdrawal",
-                side,
-                String(form.get("retirementReason") ?? "").trim(),
-              );
+            if (retirementConfirmed && (side === "a" || side === "b")) {
+              send("withdrawal", side, retirementConfirmed);
+              setRetirementConfirmed(false);
+            }
           }}
         >
           <fieldset disabled={!writable} className="grid gap-3">
@@ -473,29 +472,24 @@ export function Scoreboard({
                 <option value="b">B · {snapshot.players.b.name}</option>
               </select>
             </label>
-            <label className="text-sm">
-              {t.retirementReason}
-              <Input
-                name="retirementReason"
-                required
-                minLength={1}
-                maxLength={500}
-              />
-            </label>
             <label className="flex items-start gap-3 text-sm">
               <input
                 type="checkbox"
                 required
                 name="confirmRetirement"
+                checked={retirementConfirmed}
+                onChange={(event) =>
+                  setRetirementConfirmed(event.target.checked)
+                }
                 className="mt-1 size-4 shrink-0"
               />
-              {t.retirementConfirm}
+              {messages(locale).confirmAction}
             </label>
             <Button
               type="submit"
               variant="outline"
               className="text-destructive"
-              disabled={!writable}
+              disabled={!writable || !retirementConfirmed}
             >
               {t.retirement}
             </Button>

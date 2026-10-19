@@ -43,7 +43,7 @@ export async function proposeCorrection(
     kind: d.kind,
     winner: d.winner,
     score: d.score,
-    reason: d.reason,
+    confirmed: true,
   });
   if (result.error) return { status: "error", message: t.failed };
   redirect(`/${locale}/corrections/${d.id}`);
@@ -63,7 +63,7 @@ export async function applyCorrection(
     request_id: d.request,
     expected_digest: d.digest,
     resolve_started: form.get("resolve") === "yes",
-    reason: d.reason,
+    confirmed: true,
   });
   if (result.error) return { status: "error", message: t.failed };
   revalidatePath(`/${locale}/matches`, "layout");
@@ -91,7 +91,7 @@ export async function proposeTeamCorrection(
     base_result: d.base,
     kind: d.kind,
     winner: d.winner!,
-    reason: d.reason,
+    confirmed: true,
   });
   if (result.error) return { status: "error", message: t.failed };
   redirect(`/${locale}/corrections/${d.id}`);

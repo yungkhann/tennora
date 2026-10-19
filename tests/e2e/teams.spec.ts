@@ -275,7 +275,27 @@ test("club staff create, roster, transfer and drop a player with private history
       exact: true,
     });
     await move.getByLabel("Receiving club").selectOption(clubs[1]);
-    await move.getByLabel("Reason").fill("Organizer-approved move");
+    const transferButton = move.getByRole("button", {
+      name: "Approve transfer",
+      exact: true,
+    });
+    await expect(move.locator('input[name="reason"]')).toHaveCount(0);
+    await expect(transferButton).toBeDisabled();
+    await move.getByLabel("I confirm this action", { exact: true }).check();
+    await expect(transferButton).toBeEnabled();
+    await transfer
+      .locator("summary")
+      .filter({ hasText: "Approve transfer" })
+      .click();
+    await transfer
+      .locator("summary")
+      .filter({ hasText: "Approve transfer" })
+      .click();
+    await expect(
+      move.getByLabel("I confirm this action", { exact: true }),
+    ).not.toBeChecked();
+    await expect(transferButton).toBeDisabled();
+    await move.getByLabel("I confirm this action", { exact: true }).check();
     await move
       .getByRole("button", { name: "Approve transfer", exact: true })
       .click();
@@ -337,7 +357,7 @@ test("club staff create, roster, transfer and drop a player with private history
     await drop
       .getByLabel("Effective date")
       .fill(new Date().toISOString().slice(0, 10));
-    await drop.getByLabel("Reason").fill("Injury");
+    await drop.getByLabel("I confirm this action", { exact: true }).check();
     await drop
       .getByRole("button", { name: "Mark dropped out", exact: true })
       .click();

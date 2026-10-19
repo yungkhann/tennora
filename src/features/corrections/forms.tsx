@@ -26,6 +26,7 @@ export function CorrectionForm({
   const t = correctionMessages(locale);
   return (
     <MutationForm
+      confirmation
       locale={locale}
       action={proposeCorrection}
       label={t.propose}
@@ -82,10 +83,6 @@ export function CorrectionForm({
           </div>
         ))}
       </fieldset>
-      <label>
-        {t.reason}
-        <Input name="reason" required maxLength={500} />
-      </label>
     </MutationForm>
   );
 }
@@ -106,26 +103,14 @@ export function ApplyCorrectionForm({
   if (requiresOrganizer && !organizer) return <p role="status">{t.blocked}</p>;
   return (
     <MutationForm
+      confirmation
       locale={locale}
       action={applyCorrection}
       once
       label={t.apply}
       hidden={{ id: randomUUID(), request, digest }}
     >
-      <label>
-        {t.reason}
-        <Input name="reason" required maxLength={500} />
-      </label>
-      <label className="flex items-start gap-3 text-sm">
-        <input
-          className="mt-1 size-4 shrink-0"
-          type="checkbox"
-          name="confirm"
-          value="yes"
-          required
-        />
-        {t.confirm}
-      </label>
+      <p className="text-sm text-muted-foreground">{t.confirm}</p>
       {requiresOrganizer && (
         <label className="flex items-start gap-3 text-sm">
           <input
@@ -163,6 +148,7 @@ export function TeamCorrectionForm({
             {kind === "reopen" ? t.reopenHelp : t.forfeitHelp}
           </p>
           <MutationForm
+            confirmation
             locale={locale}
             action={proposeTeamCorrection}
             label={t.propose}
@@ -181,10 +167,6 @@ export function TeamCorrectionForm({
                 </select>
               </label>
             )}
-            <label>
-              {t.reason}
-              <Input name="reason" required maxLength={500} />
-            </label>
           </MutationForm>
         </section>
       ))}

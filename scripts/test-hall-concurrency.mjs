@@ -98,7 +98,7 @@ try {
   async function race(operation) {
     const id = randomUUID(),
       application = `tennora-hall-${token}`;
-    const payload = `select public.run_hall_command('${id}','${tour}','${operation}','Hall race');`;
+    const payload = `select public.run_hall_command('${id}','${tour}','${operation}',true);`;
     const first = session(
       `set application_name='${application}';begin;${claims(users[0])}${payload}select pg_sleep(2);commit;`,
     );
@@ -142,7 +142,7 @@ try {
     ).trim(),
   );
   sql(
-    `begin;${claims(users[0])}select public.assign_table_judge('${randomUUID()}','${tour}',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,null,1,'Move race judge');select public.assign_table_judge('${randomUUID()}','${tour}',${table},(clock_timestamp() at time zone 'Asia/Almaty')::date,'${users[5]}',0,'Race judge');commit;`,
+    `begin;${claims(users[0])}select public.assign_table_judge('${randomUUID()}','${tour}',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,null,1,true);select public.assign_table_judge('${randomUUID()}','${tour}',${table},(clock_timestamp() at time zone 'Asia/Almaty')::date,'${users[5]}',0,true);commit;`,
   );
   const started = await race("start_all");
   const state = sql(

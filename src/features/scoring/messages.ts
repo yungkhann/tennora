@@ -46,7 +46,6 @@ const en = {
   changeEnds: "Ends changed",
   retirement: "Record singles retirement",
   retiringSide: "Retiring player",
-  retirementReason: "Retirement reason",
   retirementHelp:
     "The opponent wins this singles without an Elo change. The player stays on the roster.",
   retirementConfirm: "I confirm this player is retiring from this singles.",
@@ -102,7 +101,6 @@ const ru: typeof en = {
   changeEnds: "Стороны сменились",
   retirement: "Зафиксировать отказ в одиночной игре",
   retiringSide: "Отказавшийся игрок",
-  retirementReason: "Причина отказа",
   retirementHelp:
     "Сопернику присуждается победа без изменения Elo. Игрок остаётся в составе.",
   retirementConfirm: "Подтверждаю отказ игрока от этой одиночной игры.",
@@ -156,7 +154,6 @@ const kk: typeof en = {
   changeEnds: "Тараптар ауысты",
   retirement: "Жеке ойыннан бас тартуды тіркеу",
   retiringSide: "Бас тартқан ойыншы",
-  retirementReason: "Бас тарту себебі",
   retirementHelp: "Қарсылас Elo өзгерісінсіз жеңеді. Ойыншы құрамда қалады.",
   retirementConfirm: "Ойыншының осы жеке ойыннан бас тартқанын растаймын.",
   timeoutUsed: "Тайм-аут пайдаланылды",

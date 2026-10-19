@@ -140,6 +140,7 @@ export const directorySchema = z.object({
 });
 export type PublicDirectory = z.infer<typeof directorySchema>;
 export const publicPlayerSchema = z.object({
+  gender: z.enum(["boy", "girl"]),
   id: z.uuid(),
   first_name: z.string(),
   last_name: z.string(),

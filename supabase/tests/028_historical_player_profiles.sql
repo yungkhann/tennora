@@ -45,18 +45,18 @@ select public.submit_lineup('ffffa028-0000-4000-8000-000000000001',match,subteam
 select set_config('request.jwt.claims','{"sub":"aaaaa028-0000-4000-8000-000000000004","role":"authenticated"}',true);
 select public.submit_lineup('ffffa028-0000-4000-8000-000000000002',match,subteam_b,players_b) from lineup_fixture;
 select set_config('request.jwt.claims','{"sub":"aaaaa028-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select public.assign_table_judge('ffffa028-0000-4000-8000-000000000003','cccca028-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaa028-0000-4000-8000-000000000006',0,'Lifecycle fixture judge');
-select public.manage_match('dddda028-0000-4000-8000-000000000010',match,'assign',127,2,'Scoring fixture table') from lineup_fixture;
-select public.manage_match('dddda028-0000-4000-8000-000000000011',match,'call',null,3,'Scoring fixture call') from lineup_fixture;
-select public.manage_match('dddda028-0000-4000-8000-000000000012',match,'start',null,4,'Scoring fixture ready') from lineup_fixture;
+select public.assign_table_judge('ffffa028-0000-4000-8000-000000000003','cccca028-0000-4000-8000-000000000001',127,(clock_timestamp() at time zone 'Asia/Almaty')::date,'aaaaa028-0000-4000-8000-000000000006',0,true);
+select public.manage_match('dddda028-0000-4000-8000-000000000010',match,'assign',127,2,true) from lineup_fixture;
+select public.manage_match('dddda028-0000-4000-8000-000000000011',match,'call',null,3,true) from lineup_fixture;
+select public.manage_match('dddda028-0000-4000-8000-000000000012',match,'start',null,4,true) from lineup_fixture;
 create temp table score_fixture(games uuid[],first_point uuid,last_command uuid,last_expected integer);
 grant all on score_fixture to authenticated;
 insert into score_fixture(games,first_point) select array_agg(id order by slot),'ffffa028-0000-4000-8000-000000000020'::uuid from public.singles_games where match_id=(select match from lineup_fixture);
 select set_config('request.jwt.claims','{"sub":"aaaaa028-0000-4000-8000-000000000006","role":"authenticated"}',true);
-select public.score_command('ffffa028-0000-4000-8000-000000000010',(select games[1] from score_fixture),'start','a',0,'Initial server');
+select public.score_command('ffffa028-0000-4000-8000-000000000010',(select games[1] from score_fixture),'start','a',0,true);
 
 do $$declare v integer;i integer;begin
- for i in 1..33 loop select score_version into v from public.singles_games where id=(select games[1] from score_fixture);perform public.score_command(gen_random_uuid(),(select games[1] from score_fixture),'point','a',v,'Played history');end loop;
+ for i in 1..33 loop select score_version into v from public.singles_games where id=(select games[1] from score_fixture);perform public.score_command(gen_random_uuid(),(select games[1] from score_fixture),'point','a',v,true);end loop;
 end;$$;
 reset role;
 create temp table public_profile_fixture(a uuid,b uuid,old_team uuid,other_team uuid,reserve uuid);
@@ -64,26 +64,26 @@ insert into public_profile_fixture select players_a[1],players_b[1],(select team
 grant select on public_profile_fixture to anon,authenticated;
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"aaaaa028-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select public.drop_player(a,current_date,'Leaving league after played result') from public_profile_fixture;
+select public.drop_player(a,current_date,true) from public_profile_fixture;
 set local role anon;
 select lives_ok($$select public.get_public_player(a) from public_profile_fixture$$,'anonymous historical player projection is available');
 select is((select public.get_public_player(a)->>'id' from public_profile_fixture),(select a::text from public_profile_fixture),'dropped player keeps their public profile');
 select is((select public.get_public_player(a)->>'team_id' from public_profile_fixture),(select old_team::text from public_profile_fixture),'historical profile retains published club context');
 select is((select jsonb_array_length(public.get_public_player_history(a)) from public_profile_fixture),1,'effective played history remains available after dropout');
 select is((select count(*)::int from public.public_league_players where id=(select a from public_profile_fixture)),0,'dropped player stays outside current ranking roster');
-select is((select count(*)::int from jsonb_object_keys((select public.get_public_player(a) from public_profile_fixture))),8,'historical projection has exactly the approved eight fields');
+select is((select count(*)::int from jsonb_object_keys((select public.get_public_player(a) from public_profile_fixture))),9,'historical projection has exactly the approved nine fields including gender');
 select ok(not (select public.get_public_player(a) from public_profile_fixture) ?| array['date_of_birth','status','email','consent','team_id_private','submitted_by'],'historical profile exposes no private attributes');
 select is(public.get_public_player(gen_random_uuid()),null::jsonb,'unknown player is indistinguishable from unpublished');
 reset role;
 select set_config('request.jwt.claims','{"sub":"aaaaa028-0000-4000-8000-000000000001","role":"authenticated"}',true);
 set local role authenticated;
-select public.transfer_player(b,old_team,'Approved transfer after finished singles') from public_profile_fixture;
+select public.transfer_player(b,old_team,true) from public_profile_fixture;
 set local role anon;
 select is((select public.get_public_player(b)->>'team_id' from public_profile_fixture),(select other_team::text from public_profile_fixture),'transfer without new roster does not reveal an unpublished club association');
 reset role;
 -- A reserve added after publication was also public and keeps their history path.
 set local role authenticated;
-select public.end_roster_membership(id,'Roster exit') from public.roster_memberships where player_id=(select reserve from public_profile_fixture) and ended_at is null;
+select public.end_roster_membership(id,true) from public.roster_memberships where player_id=(select reserve from public_profile_fixture) and ended_at is null;
 reset role;
 -- Model publication in an earlier committed RPC; now() inside this pgTAP
 -- transaction otherwise predates the draw's clock_timestamp() publication.

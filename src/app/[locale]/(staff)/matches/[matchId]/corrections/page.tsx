@@ -1,3 +1,4 @@
+import { actionNote } from "@/lib/locales";
 import Link from "next/link";
 import { z } from "zod";
 import { notFound } from "next/navigation";
@@ -106,7 +107,8 @@ export default async function Page({
         {[...requests.data, ...teamRequests.data].map((r) => (
           <li key={r.id}>
             <Link className="underline" href={`/${locale}/corrections/${r.id}`}>
-              {r.reason} · {r.result_correction_states?.status}
+              {actionNote(locale, r.reason)} ·{" "}
+              {r.result_correction_states?.status}
             </Link>
           </li>
         ))}

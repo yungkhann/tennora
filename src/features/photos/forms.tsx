@@ -64,6 +64,7 @@ export function PhotoReviewForm({
   const t = messages(locale);
   return (
     <MutationForm
+      confirmation
       action={reviewPhoto}
       locale={locale}
       hidden={{ asset }}
@@ -90,10 +91,6 @@ export function PhotoReviewForm({
             <option value="revoke">{t.revokePhoto}</option>
           )}
         </select>
-      </label>
-      <label className="field">
-        {t.reason}
-        <Input name="reason" required maxLength={500} />
       </label>
       <p className="text-sm leading-6 text-muted-foreground">
         {t.reviewPhotoHelp}

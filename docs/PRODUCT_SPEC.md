@@ -1,6 +1,6 @@
 # Tennora product specification
 
-Status: approved league specification, updated after the 18 October 2026 audit. Product direction is approved; implementation status is tracked in IMPLEMENTATION_PLAN.md. The previous tennis SaaS specification is preserved in archive/PHASE_1_PRODUCT_SPEC.md.
+Status: approved league specification, updated for the 19 October 2026 user feedback. Product direction is approved; implementation status is tracked in IMPLEMENTATION_PLAN.md. The previous tennis SaaS specification is preserved in archive/PHASE_1_PRODUCT_SPEC.md.
 
 ## Product
 
@@ -16,9 +16,9 @@ An active Organizer manages seasons/settings/accounts and all operations. Main J
 
 ## Core rules
 
-- Birth-year eligibility, maximum 10 active players per subteam, persistent dropout history and linked-or-free-text first/personal trainers.
+- December 31 season-year age limits allow playing up (U13 → U13/U15/U17, U15 → U15/U17, U17 → U17), with one active season roster per player, maximum 10 active players per subteam, persistent dropout history and linked-or-free-text first/personal trainers.
 - Lineup slots: boy, girl, boy, girl, boy. Submit locks the lineup; opponent/public and officials cannot read selections before both sides submit; an assigned Trainer can read their own side (C21). Reveal is one committed revision, not a promise of identical network arrival time.
-- Only Organizer/Main Judge can replace a locked player, and only before that singles starts (C19); every replacement has a reason and audit entry. A full three-boy/two-girl lineup is required to start; later withdrawals lose their singles without automatic-loss Elo. If both teams cannot start, the match stays unresolved for the Main Judge (C12/C20). A confirmed singles retirement records a reason and does not deactivate the player or end roster memberships (I12).
+- Only Organizer/Main Judge can replace a locked player, and only before that singles starts (C19); every replacement requires explicit action confirmation and an audit entry. A full three-boy/two-girl lineup is required to start; later withdrawals lose their singles without automatic-loss Elo. If both teams cannot start, the match stays unresolved for the Main Judge (C12/C20). A confirmed singles retirement records its confirmation and does not deactivate the player or end roster memberships (I12).
 - Each team match is up to five singles games, first to three wins. Remaining games cancel once decided. Singles are best of five sets; sets reach 11 with a two-point margin and unbounded deuce. Serving changes every two points, every point after 10:10; derive the indicator from history. Change ends between sets and when either player first reaches five in the deciding set, including undo across that boundary. Do not implement the archived tennis advantage/tie-break rules.
 - Every point/undo is a versioned, idempotent command. PostgreSQL commits score, result, synchronous Elo, completion/advancement and audit atomically. Undo appends history. Organizer/Main Judge corrections preserve prior results and saved K; invalidating affected started play requires explicit Organizer resolution. Team forfeits can be revised or reopened as fresh attempts (I13).
 - Initial Elo defaults to 1000; automatic-loss games do not change ratings. Preserve the K used per result. Whole-rating rounding/minimum zero, per-tour saved K and weighted placement/missing-tour rules follow C10/C13 and I02/I11 in DECISIONS.md.
@@ -28,7 +28,9 @@ An active Organizer manages seasons/settings/accounts and all operations. Main J
 
 Russian is default/fallback; Russian, Kazakh and English are included because FR-17 requires all three. Externalize every UI string. Public pages provide live matches, timetable, draws, clubs/rosters, individual ratings/history and season standings; include a hall scoreboard and landscape judge interface.
 
-Publish only name, team, age group, rating and consented photo. DOB, trainer contacts, draft/hidden lineups and consent evidence stay private. Keep historical results and approved player profile URLs on dropout, roster exit and transfer; current roster/ranking eligibility is separate. A historical profile uses a previously published club context and never exposes a new unpublished association. Public projections and Storage policies must enforce privacy independently of the UI.
+Publish only name, team, age group, defined gender, rating and consented photo. Personal rankings have independent boys/girls views using unchanged Elo ordering, with combined age/search/pagination controls. DOB, trainer contacts, draft/hidden lineups and consent evidence stay private. Keep historical results and approved player profile URLs on dropout, roster exit and transfer; current roster/ranking eligibility is separate. A historical profile uses a previously published club context and never exposes a new unpublished association. Public projections and Storage policies must enforce privacy independently of the UI.
+
+Administrative reason inputs are replaced by an unchecked “Подтверждаю действие” checkbox (localized in KK/EN). Final actions remain disabled until checked, reopening a confirmation resets it, and application schemas/database RPCs validate confirmation. Preserve historical reasons, audit actors/timestamps and all existing authority checks.
 
 ## Release scope
 

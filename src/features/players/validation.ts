@@ -23,17 +23,17 @@ export const rosterSchema = z.object({
 });
 export const endRosterSchema = z.object({
   membership: z.uuid(),
-  reason: z.string().trim().min(1).max(500),
+  confirm: z.literal("yes"),
 });
 export const dropSchema = z.object({
   player: z.uuid(),
   date: z.iso.date(),
-  reason: z.string().trim().min(1).max(500),
+  confirm: z.literal("yes"),
 });
 export const transferSchema = z.object({
   player: z.uuid(),
   club: z.uuid(),
-  reason: z.string().trim().min(1).max(500),
+  confirm: z.literal("yes"),
 });
 export const trainerRefSchema = z
   .object({

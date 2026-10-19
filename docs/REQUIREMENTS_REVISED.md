@@ -1,6 +1,10 @@
 # Technical Requirements: Table Tennis League Management
 
-Revision 0.3 - 18 October 2026. The audit amendments I12–I14 clarify match retirement, team-forfeit correction and the current synchronous processing design; the original source PDF and generated revision 0.2 requirements PDF remain historical artifacts. Based on the source document dated 17 October 2026, attributed to @kelliosli. This revision records the user's confirmed Next.js/Supabase, single-league and multiple-staff-role choices. It is a requirements baseline, not a claim that the application implements the league. Preserve the original 16-page PDF unchanged.
+Revision 0.4 - 19 October 2026. C26 adds upper-bound age eligibility, action confirmation and independent boys/girls personal rankings. The earlier audit amendments I12–I14 clarify match retirement, team-forfeit correction and the current synchronous processing design; the original source PDF and generated revision 0.2 requirements PDF remain historical artifacts. Based on the source document dated 17 October 2026, attributed to @kelliosli. This revision records the user's confirmed Next.js/Supabase, single-league and multiple-staff-role choices. It is a requirements baseline, not a claim that the application implements the league. Preserve the original 16-page PDF unchanged.
+
+## User feedback amendment — 19 October 2026
+
+C26 supersedes earlier playing-up prohibitions and mandatory textual administrative reasons. Keep December 31 season-year classification; allow each category and all older categories, reject older-to-younger selection. Roster capacity, one active roster per season, team/slot/gender/resource constraints remain. Replace action reason inputs with unchecked localized confirmation, gate final submission and validate at the server/database boundary. Historical reason/audit records stay intact. Individual rankings separate the defined boy/girl values, preserve Elo and tie ordering, and combine gender with existing age/search/pagination filters. Public gender is approved; DOB stays private. See USER_FEEDBACK_VERIFICATION.md for exact scope and evidence.
 
 ## Revision summary
 
@@ -29,7 +33,7 @@ Age group and division are synonyms. A team is a club with three subteams, one p
 
 A season has one or more tours configured before it starts; each tour has its own ordered stages. A stage uses round-robin groups, single elimination or a composite. Composite formats are ordered stage templates plus placement-to-seed mapping data, not hard-coded special cases. Generate groups using subteam ratings and preserve the seeding snapshot. Formats actually used this season, qualifiers and tie-breaks must be agreed before implementation.
 
-Determine age eligibility using year of birth only, with explicit season reference year/cutoffs. Do not infer birthday-based eligibility. Players can drop out mid-event: preserve all results/history and reject new lineup selections for a dropped-out player. Active roster capacity is at most ten per subteam, without a roster gender quota. Playing-up and transfer rules remain decisions.
+Determine age eligibility using year of birth only, with explicit season reference year/cutoffs. Do not infer birthday-based eligibility. Players can drop out mid-event: preserve all results/history and reject new lineup selections for a dropped-out player. Active roster capacity is at most ten per subteam, without a roster gender quota. Playing up follows C26; transfers follow C08.
 
 ### 2.2 Team match and lineups
 
@@ -43,7 +47,7 @@ Determine age eligibility using year of birth only, with explicit season referen
 
 The Trainer submits the lineup before the match; submission locks it. Each side's lineup is hidden from the opponent and public until both submit. Reveal both in one committed revision; networks may deliver that revision at different times.
 
-The source requires at least three boys and two girls while also specifying an automatic singles loss for an unfilled slot. The valid partial-lineup and both-empty cases must be resolved explicitly. A no-show team loses the match. Only Main Judge or Organizer may replace a player after lock, including replacing a player who drops out; record old/new player, reason and actor. Mid-game score and Elo attribution need a signed-off rule.
+The source requires at least three boys and two girls while also specifying an automatic singles loss for an unfilled slot. The valid partial-lineup and both-empty cases must be resolved explicitly. A no-show team loses the match. Only Main Judge or Organizer may replace a player after lock, including replacing a player who drops out; record old/new player, confirmation and actor; preserve older reason history. Mid-game score and Elo attribution need a signed-off rule.
 
 The team match ends when one side reaches three singles wins. Cancel the remaining games automatically and exactly once; do not invent rating results for unplayed games.
 
@@ -251,7 +255,7 @@ Overlaps assume the stated three-person team and stable contracts. Freeze UI str
 
 ### Open decisions and dependencies
 
-Resolved: Next.js/Supabase, one league, coexisting staff roles and no player accounts. Remaining decisions: exact age cutoffs/playing up/roster transfers; partial and both-empty lineups; this season's groups/qualifiers/brackets/tie-breaks; seed freeze inputs; Elo rounding/K scope and weighted/missing-tour scores; undo cascades after completion; mid-game replacement score/Elo; first serve across sets/timeouts; judge fallback; rest/finals/manual override rules; timezone/devices/network; hosting region, consent process, provider recovery budget and alert recipients. See docs/DECISIONS.md for dependency IDs. Unsettled rules are not silently replaced by invented defaults.
+Resolved: Next.js/Supabase, one league, coexisting staff roles and no player accounts. Age cutoffs/playing up and roster transfers are resolved by C07/C26 and C08. Remaining decisions: partial and both-empty lineups; this season's groups/qualifiers/brackets/tie-breaks; seed freeze inputs; Elo rounding/K scope and weighted/missing-tour scores; undo cascades after completion; mid-game replacement score/Elo; first serve across sets/timeouts; judge fallback; rest/finals/manual override rules; timezone/devices/network; hosting region, consent process, provider recovery budget and alert recipients. See docs/DECISIONS.md for dependency IDs. Unsettled rules are not silently replaced by invented defaults.
 
 ## Source and implementation status
 

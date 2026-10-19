@@ -7,14 +7,22 @@ export function PublicDataRefresh() {
   const router = useRouter();
   useEffect(() => {
     let stopped = false;
+    let queued: ReturnType<typeof setTimeout> | undefined;
     const signatures = new Map<string, string>();
     const refresh = () => {
-      if (
-        !stopped &&
-        document.visibilityState === "visible" &&
-        !document.activeElement?.closest("form")
-      )
-        router.refresh();
+      // A draw/result transaction may emit many rows. One trailing refresh avoids
+      // racing ranking tab/pagination navigation with a burst of old-route requests.
+      clearTimeout(queued);
+      const href = window.location.href;
+      queued = setTimeout(() => {
+        if (
+          !stopped &&
+          window.location.href === href &&
+          document.visibilityState === "visible" &&
+          !document.activeElement?.closest("form")
+        )
+          router.refresh();
+      }, 250);
     };
     const client = publicBrowserClient(),
       channel = client
@@ -50,6 +58,7 @@ export function PublicDataRefresh() {
     return () => {
       stopped = true;
       clearInterval(timer);
+      clearTimeout(queued);
       window.removeEventListener("online", refresh);
       document.removeEventListener("visibilitychange", refresh);
       if (client && channel) void client.removeChannel(channel);

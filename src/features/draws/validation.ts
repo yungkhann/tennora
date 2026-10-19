@@ -19,7 +19,6 @@ export const swapSchema = z
     revision: z.coerce.number().int().positive(),
     seedA: z.coerce.number().int().positive(),
     seedB: z.coerce.number().int().positive(),
-    reason: z.string().trim().min(1).max(500),
     confirm: z.literal("yes"),
   })
   .refine((d) => d.seedA !== d.seedB);

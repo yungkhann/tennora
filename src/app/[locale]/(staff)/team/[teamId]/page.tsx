@@ -1,3 +1,4 @@
+import { actionNote } from "@/lib/locales";
 import { PhotoUploadForm, PhotoReviewForm } from "@/features/photos/forms";
 import Link from "next/link";
 import { randomUUID } from "node:crypto";
@@ -202,7 +203,7 @@ export default async function Page({
                           </div>
                           {a.review_reason && (
                             <p className="mt-3 break-words text-sm">
-                              {a.review_reason}
+                              {actionNote(locale, a.review_reason)}
                             </p>
                           )}
                           {roles.includes("organizer") &&

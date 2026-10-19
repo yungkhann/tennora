@@ -64,7 +64,7 @@ do $$declare m record;sub uuid;club uuid;coach uuid;players uuid[];begin
  end loop;
 end;$$;
 select set_config('request.jwt.claims','{"sub":"${actor}","role":"authenticated"}',true);
-select public.run_hall_command(gen_random_uuid(),'${tour}','allocate','72-subteam readiness proof');
+select public.run_hall_command(gen_random_uuid(),'${tour}','allocate',true);
 reset role;
 do $$declare amount integer;begin
  select count(*) into amount from public.team_matches m join public.draw_revisions d on d.id=m.draw_id join public.tour_stage_plans p on p.id=d.plan_id where p.tour_id='${tour}';if amount<>288 then raise exception 'Expected 288 group and classification matches, got %',amount;end if;
